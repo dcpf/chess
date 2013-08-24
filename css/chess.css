@@ -1,0 +1,88 @@
+/* Bootstrap over-rides*/
+
+legend {
+    border: 0;
+    line-height: 20px;
+    margin: 0;
+    padding: 0 2px 0 2px;
+    width: auto;
+}
+.modal {
+    min-width: 400px;
+    width: auto;
+}
+.modal-backdrop {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+.modal-body {
+    max-height: none;
+    padding: 20px 15px 0 15px;
+    text-align: center;
+}
+
+#confirmMoveDialog #possibleMoves {
+    width: 50%;
+    position: relative;
+    left: 40%;
+    text-align: left;
+}
+
+#confirmMoveDialog #possibleMoves ul {
+    margin-left: 0;
+}
+
+#confirmMoveDialog #possibleMoves li {
+    list-style-position: inside;
+}
+
+/* Chess styles */
+
+#moveHistoryContainer {
+    display: inline-block;
+    margin-right: 50px;
+    vertical-align: top;
+}
+#moveHistoryContainer td {
+    padding: 0 10px;
+}
+.moveHistoryLink {
+    color: #0088cc;
+    cursor: pointer;
+}
+
+#chessBoardContainer {
+    display: inline-block;
+}
+#chessBoard {
+    margin-bottom: 50px;
+}
+#chessBoard td {
+    height: 38px;
+    width: 36px;
+    text-align: center;
+}
+#chessBoard td img {
+    height: 32px;
+    width: 32px;
+}
+#chessBoard td.moveableSquare {
+    background-color: #99FF99;
+}
+
+#capturedPiecesContainer {
+    border: 1px solid #000;
+    height: 78px;
+    width: 520px;
+    padding: 5px 10px 10px 10px;
+}
+#capturedPiecesContainer div {
+    height: 32px;
+}
+
+#messageContainer {
+    display: inline-block;
+    font-size: 30px;
+    margin-left: 50px;
+    vertical-align: top;
+}
