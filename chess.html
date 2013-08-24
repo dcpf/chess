@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 
+TODO:
+* clickable move history
+* replay
+-->
+<head>
+    <meta charset="utf-8" />
+    <title>Dave's Chess</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
+    <link rel="stylesheet" href="css/chess.css" />
+</head>
+<body style="padding: 20px">
+
+    <table id="moveHistoryContainer">
+        <tr>
+            <td style="width: 20px;"></td>
+            <td style="width: 80px; text-align: center; border-bottom: solid 1px #000; border-right: solid 1px #000">White</td>
+            <td style="width: 80px; text-align: center; border-bottom: solid 1px #000">Black</td>
+        </tr>
+    </table>
+
+    <div style="display: inline-block">
+        <div id="chessBoardContainer"></div>
+        <div id="messageContainer"></div>
+        <fieldset id="capturedPiecesContainer">
+            <legend>Captured Pieces</legend>
+            <div id="capturedBlackPieces"></div>
+            <div id="capturedWhitePieces"></div>
+        </fieldset>
+    </div>
+
+</body>
+
+<div id="confirmMoveDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-body">
+        <p>Please verify your move</p>
+        <div id="possibleMoves"></div>
+    </div>
+</div>
+
+<div id="chessBoardSnapshotDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-body">
+        <p style="text-align: right"><a href="#" onclick="chess.boardSnapshotView.closeDialog();return false;">Close</a></p>
+        <div id="chessBoardSnapshotContainer"></div>
+    </div>
+</div>
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+
+<script src="js/util/eventHandler.js"></script>
+<script src="js/model/piece.js"></script>
+<script src="js/collection/capturedPieces.js"></script>
+<script src="js/model/board.js"></script>
+<script src="js/collection/moveHistory.js"></script>
+<script src="js/view/boardView.js"></script>
+<script src="js/view/boardSnapshotView.js"></script>
+<script src="js/view/confirmMoveDialogView.js"></script>
+<script src="js/view/capturedPiecesView.js"></script>
+<script src="js/view/moveHistoryView.js"></script>
+<script src="js/view/messagesView.js"></script>
+<script src="js/controller/chessController.js"></script>
+<script src="js/util/test.js"></script>
+
+
+</html>
