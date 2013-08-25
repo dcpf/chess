@@ -1,3 +1,8 @@
+/*
+* Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
+*/
+
+
 function movePiece ($obj, moveUp, moveRight, moveDown, moveLeft, targetOffset) {
      var keepMoving = false;
      if (moveUp && $obj.offset().top > targetOffset.top) {
