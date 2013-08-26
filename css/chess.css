@@ -29,11 +29,9 @@ legend {
     left: 40%;
     text-align: left;
 }
-
 #confirmMoveDialog #possibleMoves ul {
     margin-left: 0;
 }
-
 #confirmMoveDialog #possibleMoves li {
     list-style-position: inside;
 }
@@ -93,4 +91,8 @@ legend {
     font-size: 30px;
     margin-left: 50px;
     vertical-align: top;
+}
+
+#chessBoardSnapshotDialog {
+    height: 550px;
 }

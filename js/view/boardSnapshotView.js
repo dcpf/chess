@@ -13,14 +13,14 @@ chess.BoardSnapshotView = chess.BoardView.extend({
 
     initialize: function () {
         this.mode = 'view';
-        this.listenTo(chess.eventHandler, chess.eventHandler.messageNames.moveHistoryLinkClicked, this.render);
-        this.listenTo(chess.eventHandler, chess.eventHandler.messageNames.replayGameLinkClicked, function(){this.render();this._autoMove(0);});
+        this.listenTo(chess.eventHandler, chess.eventHandler.messageNames.moveHistoryLinkClicked, this._render);
+        this.listenTo(chess.eventHandler, chess.eventHandler.messageNames.replayGameLinkClicked, function(){this._render();this._autoMove(0);});
     },
 
     /*
     * Draw the board
     */
-    render: function (index) {
+    _render: function (index) {
         this.board = new chess.Board();
         var gameBoard = this._generateBoard();
         this.$('#chessBoardSnapshotContainer').html(gameBoard);
