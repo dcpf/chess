@@ -9,7 +9,8 @@ chess.MoveHistoryView = Backbone.View.extend({
     el: '#moveHistoryContainer',
 
     events: {
-        'click .moveHistoryLink': '_handleMoveHistoryLinkClick'
+        'click .moveHistoryLink': '_handleMoveHistoryLinkClick',
+        'click #replayGameLink': '_handleReplayGameLinkClick'
     },
 
     initialize: function () {
@@ -19,6 +20,9 @@ chess.MoveHistoryView = Backbone.View.extend({
     _updateMoveHistory: function () {
     	var html = '';
     	var count = 1;
+        if (chess.moveHistory.models.length > 1) {
+            this.$('#replayGameLink').css('visibility', 'visible');
+        }
     	for (var i in chess.moveHistory.models) {
     		var notation = chess.moveHistory.models[i].attributes.notation;
             var cell = '<td class="moveHistoryLink ' + i + '">' + notation + '</td>';
@@ -29,8 +33,8 @@ chess.MoveHistoryView = Backbone.View.extend({
     			html += cell + '</tr>';
     		}
     	}
-    	this.$('tr:first').siblings().remove();
-    	this.$('tr:first').after(html);
+    	this.$('#moveHistoryTable tr:first').siblings().remove();
+    	this.$('#moveHistoryTable tr:first').after(html);
     },
 
     /*
@@ -43,6 +47,10 @@ chess.MoveHistoryView = Backbone.View.extend({
         // We'll grab that, and pass it as an arg with the message.
         var index = cssClass.split(' ')[1];
         chess.eventHandler.trigger(chess.eventHandler.messageNames.moveHistoryLinkClicked, index);
+    },
+
+    _handleReplayGameLinkClick: function () {
+        chess.eventHandler.trigger(chess.eventHandler.messageNames.replayGameLinkClicked);
     }
 
 });

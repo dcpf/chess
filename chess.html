@@ -15,13 +15,16 @@ TODO:
 </head>
 <body style="padding: 20px">
 
-    <table id="moveHistoryContainer">
-        <tr>
-            <td style="width: 20px;"></td>
-            <td style="width: 80px; text-align: center; border-bottom: solid 1px #000; border-right: solid 1px #000">White</td>
-            <td style="width: 80px; text-align: center; border-bottom: solid 1px #000">Black</td>
-        </tr>
-    </table>
+    <div id="moveHistoryContainer">
+        <div id="replayGameLink"><a href="#">Replay Game</a></div>
+        <table id="moveHistoryTable">
+            <tr>
+                <td style="width: 20px;"></td>
+                <td style="width: 80px; text-align: center; border-bottom: solid 1px #000; border-right: solid 1px #000">White</td>
+                <td style="width: 80px; text-align: center; border-bottom: solid 1px #000">Black</td>
+            </tr>
+        </table>
+    </div>
 
     <div style="display: inline-block">
         <div id="chessBoardContainer"></div>
@@ -66,7 +69,5 @@ TODO:
 <script src="js/view/moveHistoryView.js"></script>
 <script src="js/view/messagesView.js"></script>
 <script src="js/controller/chessController.js"></script>
-<script src="js/util/test.js"></script>
-
 
 </html>

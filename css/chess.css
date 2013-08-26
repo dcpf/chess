@@ -45,7 +45,13 @@ legend {
     margin-right: 50px;
     vertical-align: top;
 }
-#moveHistoryContainer td {
+#replayGameLink {
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 10px;
+    visibility: hidden;
+}
+#moveHistoryTable td {
     padding: 0 10px;
 }
 .moveHistoryLink {

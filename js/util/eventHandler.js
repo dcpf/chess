@@ -7,7 +7,8 @@ var chess = chess || {};
 chess.eventHandler = {
 	messageNames: {
 		updatedLegalMoves: 'updatedLegalMoves',
-		moveHistoryLinkClicked: 'moveHistoryLinkClicked'
+		moveHistoryLinkClicked: 'moveHistoryLinkClicked',
+		replayGameLinkClicked: 'replayGameLinkClicked'
 	}
 };
 
