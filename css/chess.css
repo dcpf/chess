@@ -48,7 +48,7 @@ legend {
 #replayGameLink {
     font-size: 12px;
     text-align: center;
-    margin-bottom: 10px;
+    margin: 0 0 10px 30px;
     visibility: hidden;
 }
 #moveHistoryTable td {

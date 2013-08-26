@@ -179,9 +179,9 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             $obj.css('position', 'static');
             $obj.css('top', 'default');
             $obj.css('left', 'default');
-            // TODO: set the object's new ID
             $target.html($obj);
-            chess.boardSnapshotView._autoMove(++index);
+            // Call autoMove() after a 1 second pause
+            setTimeout(function(){chess.boardSnapshotView._autoMove(++index)}, 1000);
         }
     },
 
