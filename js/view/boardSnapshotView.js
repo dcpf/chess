@@ -63,6 +63,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             return;
         }
         var move = moveHistoryObj.attributes.notation;
+        var capturedPiece = moveHistoryObj.attributes.capturedPiece;
         var coords = this._convertNotationToCoords(move);
 
         // get the piece and its orig offset
@@ -162,10 +163,10 @@ chess.BoardSnapshotView = chess.BoardView.extend({
 
         // Update the display move and move the piece
         this._updateDisplayMove(index, move);
-        this._movePiece($img, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index)
+        this._movePiece($img, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece)
     },
 
-    _movePiece: function ($obj, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index) {
+    _movePiece: function ($obj, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece) {
         var keepMoving = false;
         if (moveUp && $obj.offset().top > targetOffset.top) {
             $obj.offset({top: $obj.offset().top - moveUp});
@@ -184,9 +185,12 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             keepMoving = true;
         }
         if (keepMoving) {
-            setTimeout(function(){chess.boardSnapshotView._movePiece($obj, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index)}, 5);
+            setTimeout(function(){chess.boardSnapshotView._movePiece($obj, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece)}, 5);
         } else {
-            // We've reached the destination. Reset the img positioning, put the piece on the square, and call autoMove() with the next index.
+            // We've reached the destination. Remove the captured piece (if any), reset the img positioning, put the piece on the square, and call autoMove() with the next index.
+            if (capturedPiece) {
+                this.$('#sq' + capturedPiece.row + capturedPiece.column).html('');
+            }
             $obj.css('position', 'static');
             $obj.css('top', 'default');
             $obj.css('left', 'default');

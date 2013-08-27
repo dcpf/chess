@@ -97,11 +97,14 @@ chess.controller = {
         var fromCol = piece.column;
         chess.board.boardArray[fromRow][fromCol] = ''; // Blank out the previous location
         chess.board.boardArray[toRow][toCol] = piece.qualifiedName; // Populate the new location
+        // Variable to track if a piece was captured
+        var capturedPiece;
 
         // If this is a pawn move, and it's capturing en-passant, remove the captured piece from the boardArray
         if (piece.isPawn()) {
             var enPassantCapturedPiece = chess.board.enPassantCapture['' + toRow + toCol];
             if (enPassantCapturedPiece) {
+                capturedPiece = enPassantCapturedPiece;
                 chess.capturedPieces.add(enPassantCapturedPiece);
                 // Remove it from the boardArray
                 chess.board.boardArray[enPassantCapturedPiece.row][enPassantCapturedPiece.column] = '';
@@ -134,6 +137,7 @@ chess.controller = {
         // If there's a piece in limbo, add it to the capturedPieces collection
         var purgedPiece = chess.board.limbo;
         if (purgedPiece) {
+            capturedPiece = purgedPiece;
             chess.capturedPieces.add(purgedPiece);
             chess.board.limbo = null;
         }
@@ -153,7 +157,7 @@ chess.controller = {
         chess.boardView.updateBoard();
 
         // Add the move to the 'moveHistory' collection
-        chess.moveHistory.add({notation: notation});
+        chess.moveHistory.add({notation: notation, capturedPiece: capturedPiece});
 
     }
 
