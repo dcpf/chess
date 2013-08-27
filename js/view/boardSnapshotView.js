@@ -71,7 +71,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         var origOffset = $img.offset();
 
         // blank out the square where it lives
-        $(fromSquare).html('');
+        this.$(fromSquare).html('');
 
         // Get a handle on the target square. If there is a piece there, get its offset. Else, put the piece we already have there, and get its new offset.
         var targetOffset;
@@ -142,7 +142,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             var distanceLeft = origOffset.left - targetOffset.left;
             if (distanceDown > distanceLeft) {
                 moveDown = 1;
-                moveLeft = 1/(distanceDown/distanceRight);
+                moveLeft = 1/(distanceDown/distanceLeft);
             } else if (distanceDown < distanceLeft) {
                 moveDown = 1/(distanceLeft/distanceDown);
                 moveLeft = 1;
