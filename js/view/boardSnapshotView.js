@@ -18,6 +18,15 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     },
 
     /*
+    * Called from the dialog
+    */
+    closeDialog: function () {
+        this.$('#chessBoardSnapshotContainer').html('');
+        this.$('.modal-body .move').text('');
+        this.$el.modal('hide');
+    },
+
+    /*
     * Draw the board
     */
     _render: function (index) {
@@ -26,24 +35,23 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         this.$('#chessBoardSnapshotContainer').html(gameBoard);
         this.updateBoard();
         this.$el.modal();
+        var move;
         if (index) {
+
+            // go through each move and update the board
             for (var i = 0; i <= index; i++) {
-                var move = chess.moveHistory.models[i].attributes.notation;
+                move = chess.moveHistory.models[i].attributes.notation;
                 var coords = this._convertNotationToCoords(move);
                 var piece = this.board.boardArray[coords.fromRow][coords.fromCol];
                 this.board.boardArray[coords.fromRow][coords.fromCol] = ''; // Blank out the previous location
                 this.board.boardArray[coords.toRow][coords.toCol] = piece; // Populate the new location
                 this.updateBoard();
             }
-        }
-    },
 
-    /*
-    * Called from the dialog
-    */
-    closeDialog: function () {
-        this.$('#chessBoardSnapshotContainer').html('');
-        this.$el.modal('hide');
+            // update the display move
+            this._updateDisplayMove(index, move);
+
+        }
     },
 
     _autoMove: function (index) {
@@ -151,6 +159,9 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         } else if (goLeft) {
             moveLeft = 1;
         }
+
+        // Update the display move and move the piece
+        this._updateDisplayMove(index, move);
         this._movePiece($img, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index)
     },
 
@@ -225,6 +236,20 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         var coords = {fromRow: fromRow, fromCol: fromCol, toRow: toRow, toCol: toCol};
         return coords;
 
+    },
+
+    /*
+    * Given an index from the moveHistory collection, figure out the move# to display in the UI. Then display the move# and the move notation.
+    */
+    _updateDisplayMove: function (index, move) {
+        var moveNum = parseInt(index) + 1;
+        var dots = '... ';
+        if (moveNum % 2 != 0) {
+            moveNum++;
+            dots = '. ';
+        }
+        moveNum = moveNum/2;
+        this.$('.modal-body .move').text(moveNum + dots + move);
     }
 
 });
