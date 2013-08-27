@@ -19,7 +19,7 @@ chess.BoardView = Backbone.View.extend({
         var draggable = (this.mode !== 'view' && legalMoves && legalMoves.length > 0) ? true : false;
         var imgTag = '<img id="' + piece.id + '" src="images/' + piece.qualifiedName + '.gif" draggable="' + draggable + '"';
         if (draggable) {
-            imgTag += ' ondragstart="chess.boardView.drag(event)" onmouseover="chess.boardView.showLegalMoves(event)" onmouseout="chess.boardView.hideLegalMoves()"';
+            imgTag += ' ondragstart="chess.boardView.drag(event)" ondragend="chess.boardView.dragEnd(this)" onmouseover="chess.boardView.showLegalMoves(event)" onmouseout="chess.boardView.hideLegalMoves()"';
         }
         imgTag += '/>';
         return imgTag;
@@ -29,7 +29,14 @@ chess.BoardView = Backbone.View.extend({
     * Called from the UI when a piece is dragged
     */
     drag: function (e) {
+        e.target.style.opacity = '.5';
         e.dataTransfer.setData("chessPiece", e.target.id);
+    },
+
+    // On drag-end, set the opacity of the object back to 1
+    dragEnd: function (obj) {
+        var pieceId = obj.id;
+        this.$('#' + pieceId).css('opacity', '1');
     },
 
     /*
