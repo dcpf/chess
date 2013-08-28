@@ -41,11 +41,14 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             // go through each move and update the board
             for (var i = 0; i <= index; i++) {
                 move = chess.moveHistory.models[i].attributes.notation;
-                var coords = this._convertNotationToCoords(move);
-                var piece = this.board.boardArray[coords.fromRow][coords.fromCol];
-                this.board.boardArray[coords.fromRow][coords.fromCol] = ''; // Blank out the previous location
-                this.board.boardArray[coords.toRow][coords.toCol] = piece; // Populate the new location
-                this.updateBoard();
+                var coordsArray = chess.notationConverter.convertNotationToCoords(this.board, move, i);
+                for (var j in coordsArray) {
+                    var coords = coordsArray[j];
+                    var piece = this.board.boardArray[coords.fromRow][coords.fromCol];
+                    this.board.boardArray[coords.fromRow][coords.fromCol] = ''; // Blank out the previous location
+                    this.board.boardArray[coords.toRow][coords.toCol] = piece; // Populate the new location
+                    this.updateBoard();
+                }
             }
 
             // update the display move
@@ -69,7 +72,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         }
         var move = moveHistoryObj.attributes.notation;
         var capturedPiece = moveHistoryObj.attributes.capturedPiece;
-        var coordsArray = this._convertNotationToCoords(move, index);
+        var coordsArray = chess.notationConverter.convertNotationToCoords(this.board, move, index);
  
         for (var i in coordsArray) {
 
@@ -212,80 +215,6 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             // Call autoMove() after a 1 second pause
             setTimeout(function(){chess.boardSnapshotView._autoMove(++index)}, 1000);
         }
-    },
-
-    /*
-    * Converts the move notation string to coords. Note that the return type is an array to handle a castle move, where both the rook and king need to move.
-    * Normally, the array will contain one set of coords, but for a castle move, it needs to contain two sets of coords: one for the rook, and one for the king.
-    */
-    _convertNotationToCoords: function (move, index) {
-
-        // If this is castle move, figure out the coords for king-side or queen-side castle for either white or black.
-        if (move.indexOf('O-O') == 0) {
-
-            // get the color
-            var color = (index == 0 || index % 2 == 0) ? 'W' : 'B';
-
-            // get the move
-            var rookCoords, kingCoords;
-            if (move === 'O-O') {
-                // king-side castle
-                if (color === 'W') {
-                    rookCoords = {fromRow: 7, fromCol: 7, toRow: 7, toCol: 5};
-                    kingCoords = {fromRow: 7, fromCol: 4, toRow: 7, toCol: 6};
-                } else {
-                    rookCoords = {fromRow: 0, fromCol: 7, toRow: 0, toCol: 5};
-                    kingCoords = {fromRow: 0, fromCol: 4, toRow: 0, toCol: 6};
-                }
-            } else if (move === 'O-O-O') {
-                // queen-side castle
-                if (color === 'W') {
-                    rookCoords = {fromRow: 7, fromCol: 0, toRow: 7, toCol: 3};
-                    kingCoords = {fromRow: 7, fromCol: 4, toRow: 7, toCol: 2};
-                } else {
-                    rookCoords = {fromRow: 0, fromCol: 0, toRow: 0, toCol: 3};
-                    kingCoords = {fromRow: 0, fromCol: 4, toRow: 0, toCol: 2};
-                }
-            }
-            return [rookCoords, kingCoords];
-        }
-
-        // If it's not a castle move, figure out the coords by parsing the move notation string.
-        var fromCol = move.substr(1, 1);
-        var fromRow = move.substr(2, 1);
-        var toCol = move.substr(4, 1);
-        var toRow = move.substr(5, 1);
-        for (var i in this.board.letters) {
-            var letter = this.board.letters[i];
-            if (letter == fromCol) {
-                fromCol = i;
-                break;
-            }
-        }
-        for (var i in this.board.letters) {
-            var letter = this.board.letters[i];
-            if (letter == toCol) {
-                toCol = i;
-                break;
-            }
-        }
-        for (var i in this.board.rowNums) {
-            var rowNum = this.board.rowNums[i];
-            if (rowNum == fromRow) {
-                fromRow = i;
-                break;
-            }
-        }
-        for (var i in this.board.rowNums) {
-            var rowNum = this.board.rowNums[i];
-            if (rowNum == toRow) {
-                toRow = i;
-                break;
-            }
-        }
-        var coords = {fromRow: fromRow, fromCol: fromCol, toRow: toRow, toCol: toCol};
-        return [coords];
-
     },
 
     /*

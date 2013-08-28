@@ -76,8 +76,6 @@ img[draggable=true] {
 
 #chessBoardContainer {
     display: inline-block;
-}
-#chessBoard {
     margin-bottom: 50px;
 }
 #chessBoard td {
@@ -111,7 +109,7 @@ img[draggable=true] {
 }
 
 #chessBoardSnapshotDialog {
-    height: 550px;
+    height: 525px;
 }
 #chessBoardSnapshotDialog .modal-body .move {
     margin-bottom: 10px;

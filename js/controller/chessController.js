@@ -169,3 +169,12 @@ function log (msg) {
 
 chess.board.findAllLegalMoves();
 chess.boardView.render();
+
+/*
+var moveHistory = ['Pe2 e4', 'Pf7 f5'];
+for (var i in moveHistory) {
+    var notation = moveHistory[i];
+    var coords = chess.notationConverter.convertNotationToCoords(chess.board, notation, i)[0];
+    chess.controller.updateGameWithLatestMove(notation);
+}
+*/

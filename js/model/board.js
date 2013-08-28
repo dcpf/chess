@@ -23,7 +23,7 @@ chess.Board = Backbone.Model.extend({
             ['WP','WP','WP','WP','WP','WP','WP','WP'],
             ['WR','WN','WB','WQ','WK','WB','WN','WR']
         ];
-        // Map of all legal moves
+        // map of all legal moves
         this.legalMovesMap = {};
         // temporary holding place for a captured piece, while we await the user's response to the 'are you sure' dialog
         this.limbo = null;
@@ -34,6 +34,7 @@ chess.Board = Backbone.Model.extend({
         // allows us to examine the board in a hypothetical situation
         this._hypothetical = false;
 
+        /*
         if (this.currentPlayer === 'B') {
             this.letters.reverse();
             this.boardArray = this.boardArray.reverse();
@@ -41,6 +42,8 @@ chess.Board = Backbone.Model.extend({
                 this.boardArray[i].reverse();
             }
         }
+        */
+
     },
 
     getPieceByCoords: function (row, col) {
