@@ -54,6 +54,11 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         }
     },
 
+    /*
+    * Auto-moves the piece on the board for the move in the moveHistory collection specified by the passed-in index.
+    * It gets the move notation from the moveHistory collection, computes the direction and distance to move, and 
+    * calls movePiece() to actually move the piece.
+    */
     _autoMove: function (index) {
 
         // get the move notation from the moveHistory collection, and convert it to coords
@@ -64,108 +69,117 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         }
         var move = moveHistoryObj.attributes.notation;
         var capturedPiece = moveHistoryObj.attributes.capturedPiece;
-        var coords = this._convertNotationToCoords(move);
+        var coordsArray = this._convertNotationToCoords(move, index);
+ 
+        for (var i in coordsArray) {
 
-        // get the piece and its orig offset
-        var fromSquare = '#sq' + coords.fromRow + coords.fromCol;
-        var $img = this.$('#chessBoardSnapshotContainer ' + fromSquare).children('img');
-        var origOffset = $img.offset();
+            var coords = coordsArray[i];
 
-        // blank out the square where it lives
-        this.$(fromSquare).html('');
+            // get the piece and its orig offset
+            var fromSquare = '#sq' + coords.fromRow + coords.fromCol;
+            var $img = this.$('#chessBoardSnapshotContainer ' + fromSquare).children('img');
+            var origOffset = $img.offset();
 
-        // Get a handle on the target square. If there is a piece there, get its offset. Else, put the piece we already have there, and get its new offset.
-        var targetOffset;
-        var toSquare = '#sq' + coords.toRow + coords.toCol;
-        var $target = this.$('#chessBoardSnapshotContainer ' + toSquare);
-        var $img2 = $target.children('img');
-        if ($img2[0]) {
-            targetOffset = $img2.offset();
-        } else {
-            $target.html($img);
-            targetOffset = $img.offset();
-            // blank out the target square
-            $target.html('');
+            // blank out the square where it lives
+            this.$(fromSquare).html('');
+
+            // Get a handle on the target square. If there is a piece there, get its offset. Else, put the piece we already have there, and get its new offset.
+            var targetOffset;
+            var toSquare = '#sq' + coords.toRow + coords.toCol;
+            var $target = this.$('#chessBoardSnapshotContainer ' + toSquare);
+            var $img2 = $target.children('img');
+            if ($img2[0]) {
+                targetOffset = $img2.offset();
+            } else {
+                $target.html($img);
+                targetOffset = $img.offset();
+                // blank out the target square
+                $target.html('');
+            }
+
+            // attach the img to the body and set its offset to the original offset
+            this.$('#chessBoardSnapshotContainer').append($img);
+            $img.offset(origOffset);
+
+            // Calculate which direction to go and how far
+            var goUp = (origOffset.top > targetOffset.top);
+            var goDown = (origOffset.top < targetOffset.top);
+            var goLeft = (origOffset.left > targetOffset.left);
+            var goRight = (origOffset.left < targetOffset.left);
+
+            var moveUp = 0, moveDown = 0, moveLeft = 0, moveRight = 0;
+            if (goUp && goRight) {
+                var distanceUp = origOffset.top - targetOffset.top;
+                var distanceRight = targetOffset.left - origOffset.left;
+                if (distanceUp > distanceRight) {
+                    moveUp = 1;
+                    moveRight = 1/(distanceUp/distanceRight);
+                } else if (distanceUp < distanceRight) {
+                    moveUp = 1/(distanceRight/distanceUp);
+                    moveRight = 1;
+                } else {
+                    moveUp = 1;
+                    moveRight = 1;
+                }
+            } else if (goUp && goLeft) {
+                var distanceUp = origOffset.top - targetOffset.top;
+                var distanceLeft = origOffset.left - targetOffset.left;
+                if (distanceUp > distanceLeft) {
+                    moveUp = 1;
+                    moveLeft = 1/(distanceUp/distanceLeft);
+                } else if (distanceUp < distanceLeft) {
+                    moveUp = 1/(distanceLeft/distanceUp);
+                    moveLeft = 1;
+                } else {
+                    moveUp = 1;
+                    moveLeft = 1;
+                }
+            } else if (goDown && goRight) {
+                var distanceDown = targetOffset.top - origOffset.top;
+                var distanceRight = targetOffset.left - origOffset.left;
+                if (distanceDown > distanceRight) {
+                    moveDown = 1;
+                    moveRight = 1/(distanceDown/distanceRight);
+                } else if (distanceDown < distanceRight) {
+                    moveDown = 1/(distanceRight/distanceDown);
+                    moveRight = 1;
+                } else {
+                    moveDown = 1;
+                    moveRight = 1;
+                }
+            } else if (goDown && goLeft) {
+                var distanceDown = targetOffset.top - origOffset.top;
+                var distanceLeft = origOffset.left - targetOffset.left;
+                if (distanceDown > distanceLeft) {
+                    moveDown = 1;
+                    moveLeft = 1/(distanceDown/distanceLeft);
+                } else if (distanceDown < distanceLeft) {
+                    moveDown = 1/(distanceLeft/distanceDown);
+                    moveLeft = 1;
+                } else {
+                    moveDown = 1;
+                    moveLeft = 1;
+                }
+            } else if (goUp) {
+                moveUp = 1;
+            } else if (goDown) {
+                moveDown = 1;
+            } else if (goRight) {
+                moveRight = 1;
+            } else if (goLeft) {
+                moveLeft = 1;
+            }
+
+            // Update the display move, and move the piece
+            this._updateDisplayMove(index, move);
+            this._movePiece($img, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece);
+
         }
-
-        // attach the img to the body and set its offset to the original offset
-        this.$('#chessBoardSnapshotContainer').append($img);
-        $img.offset(origOffset);
-
-        // Calculate which direction to go and how far
-        var goUp = (origOffset.top > targetOffset.top);
-        var goDown = (origOffset.top < targetOffset.top);
-        var goLeft = (origOffset.left > targetOffset.left);
-        var goRight = (origOffset.left < targetOffset.left);
-
-        var moveUp = 0, moveDown = 0, moveLeft = 0, moveRight = 0;
-        if (goUp && goRight) {
-            var distanceUp = origOffset.top - targetOffset.top;
-            var distanceRight = targetOffset.left - origOffset.left;
-            if (distanceUp > distanceRight) {
-                moveUp = 1;
-                moveRight = 1/(distanceUp/distanceRight);
-            } else if (distanceUp < distanceRight) {
-                moveUp = 1/(distanceRight/distanceUp);
-                moveRight = 1;
-            } else {
-                moveUp = 1;
-                moveRight = 1;
-            }
-        } else if (goUp && goLeft) {
-            var distanceUp = origOffset.top - targetOffset.top;
-            var distanceLeft = origOffset.left - targetOffset.left;
-            if (distanceUp > distanceLeft) {
-                moveUp = 1;
-                moveLeft = 1/(distanceUp/distanceLeft);
-            } else if (distanceUp < distanceLeft) {
-                moveUp = 1/(distanceLeft/distanceUp);
-                moveLeft = 1;
-            } else {
-                moveUp = 1;
-                moveLeft = 1;
-            }
-        } else if (goDown && goRight) {
-            var distanceDown = targetOffset.top - origOffset.top;
-            var distanceRight = targetOffset.left - origOffset.left;
-            if (distanceDown > distanceRight) {
-                moveDown = 1;
-                moveRight = 1/(distanceDown/distanceRight);
-            } else if (distanceDown < distanceRight) {
-                moveDown = 1/(distanceRight/distanceDown);
-                moveRight = 1;
-            } else {
-                moveDown = 1;
-                moveRight = 1;
-            }
-        } else if (goDown && goLeft) {
-            var distanceDown = targetOffset.top - origOffset.top;
-            var distanceLeft = origOffset.left - targetOffset.left;
-            if (distanceDown > distanceLeft) {
-                moveDown = 1;
-                moveLeft = 1/(distanceDown/distanceLeft);
-            } else if (distanceDown < distanceLeft) {
-                moveDown = 1/(distanceLeft/distanceDown);
-                moveLeft = 1;
-            } else {
-                moveDown = 1;
-                moveLeft = 1;
-            }
-        } else if (goUp) {
-            moveUp = 1;
-        } else if (goDown) {
-            moveDown = 1;
-        } else if (goRight) {
-            moveRight = 1;
-        } else if (goLeft) {
-            moveLeft = 1;
-        }
-
-        // Update the display move and move the piece
-        this._updateDisplayMove(index, move);
-        this._movePiece($img, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece)
     },
 
+    /*
+    * Called repeatedly using setTimeout() to move a piece from one square to another.
+    */
     _movePiece: function ($obj, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece) {
         var keepMoving = false;
         if (moveUp && $obj.offset().top > targetOffset.top) {
@@ -201,10 +215,42 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     },
 
     /*
-    * Converts the move notation string to coords
+    * Converts the move notation string to coords. Note that the return type is an array to handle a castle move, where both the rook and king need to move.
+    * Normally, the array will contain one set of coords, but for a castle move, it needs to contain two sets of coords: one for the rook, and one for the king.
     */
-    _convertNotationToCoords: function (move) {
+    _convertNotationToCoords: function (move, index) {
 
+        // If this is castle move, figure out the coords for king-side or queen-side castle for either white or black.
+        if (move.indexOf('O-O') == 0) {
+
+            // get the color
+            var color = (index == 0 || index % 2 == 0) ? 'W' : 'B';
+
+            // get the move
+            var rookCoords, kingCoords;
+            if (move === 'O-O') {
+                // king-side castle
+                if (color === 'W') {
+                    rookCoords = {fromRow: 7, fromCol: 7, toRow: 7, toCol: 5};
+                    kingCoords = {fromRow: 7, fromCol: 4, toRow: 7, toCol: 6};
+                } else {
+                    rookCoords = {fromRow: 0, fromCol: 7, toRow: 0, toCol: 5};
+                    kingCoords = {fromRow: 0, fromCol: 4, toRow: 0, toCol: 6};
+                }
+            } else if (move === 'O-O-O') {
+                // queen-side castle
+                if (color === 'W') {
+                    rookCoords = {fromRow: 7, fromCol: 0, toRow: 7, toCol: 3};
+                    kingCoords = {fromRow: 7, fromCol: 4, toRow: 7, toCol: 2};
+                } else {
+                    rookCoords = {fromRow: 0, fromCol: 0, toRow: 0, toCol: 3};
+                    kingCoords = {fromRow: 0, fromCol: 4, toRow: 0, toCol: 2};
+                }
+            }
+            return [rookCoords, kingCoords];
+        }
+
+        // If it's not a castle move, figure out the coords by parsing the move notation string.
         var fromCol = move.substr(1, 1);
         var fromRow = move.substr(2, 1);
         var toCol = move.substr(4, 1);
@@ -238,7 +284,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             }
         }
         var coords = {fromRow: fromRow, fromCol: fromCol, toRow: toRow, toCol: toCol};
-        return coords;
+        return [coords];
 
     },
 
