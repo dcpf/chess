@@ -35,24 +35,24 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         this.$('#chessBoardSnapshotContainer').html(gameBoard);
         this.updateBoard();
         this.$el.modal();
-        var move;
+        var notation;
         if (index) {
 
-            // go through each move and update the board
+            // go through each move notation and update the board
             for (var i = 0; i <= index; i++) {
-                move = chess.moveHistory.models[i].attributes.notation;
-                var coordsArray = chess.notationConverter.convertNotationToCoords(this.board, move, i);
-                for (var j in coordsArray) {
-                    var coords = coordsArray[j];
-                    var piece = this.board.boardArray[coords.fromRow][coords.fromCol];
-                    this.board.boardArray[coords.fromRow][coords.fromCol] = ''; // Blank out the previous location
-                    this.board.boardArray[coords.toRow][coords.toCol] = piece; // Populate the new location
+                notation = chess.moveHistory.models[i].attributes.notation;
+                var moveArray = chess.notationConverter.convertNotation(this.board, notation, i);
+                for (var j in moveArray) {
+                    var move = moveArray[j];
+                    var piece = move.piece;
+                    this.board.boardArray[piece.row][piece.column] = ''; // Blank out the previous location
+                    this.board.boardArray[move.toRow][move.toCol] = piece.qualifiedName; // Populate the new location
                     this.updateBoard();
                 }
             }
 
-            // update the display move
-            this._updateDisplayMove(index, move);
+            // update the display with the final notation
+            this._updateDisplayMove(index, notation);
 
         }
     },
@@ -64,22 +64,23 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     */
     _autoMove: function (index) {
 
-        // get the move notation from the moveHistory collection, and convert it to coords
+        // get the move notation from the moveHistory collection, and convert it
         var moveHistoryObj = chess.moveHistory.models[index];
         if (!moveHistoryObj) {
             // If we've reached the end of the move history, return.
             return;
         }
-        var move = moveHistoryObj.attributes.notation;
+        var notation = moveHistoryObj.attributes.notation;
         var capturedPiece = moveHistoryObj.attributes.capturedPiece;
-        var coordsArray = chess.notationConverter.convertNotationToCoords(this.board, move, index);
+        var moveArray = chess.notationConverter.convertNotation(this.board, notation, index);
  
-        for (var i in coordsArray) {
+        for (var i in moveArray) {
 
-            var coords = coordsArray[i];
+            var move = moveArray[i];
+            var piece = move.piece;
 
             // get the piece and its orig offset
-            var fromSquare = '#sq' + coords.fromRow + coords.fromCol;
+            var fromSquare = '#sq' + piece.row + piece.column;
             var $img = this.$('#chessBoardSnapshotContainer ' + fromSquare).children('img');
             var origOffset = $img.offset();
 
@@ -88,7 +89,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
 
             // Get a handle on the target square. If there is a piece there, get its offset. Else, put the piece we already have there, and get its new offset.
             var targetOffset;
-            var toSquare = '#sq' + coords.toRow + coords.toCol;
+            var toSquare = '#sq' + move.toRow + move.toCol;
             var $target = this.$('#chessBoardSnapshotContainer ' + toSquare);
             var $img2 = $target.children('img');
             if ($img2[0]) {
@@ -173,8 +174,8 @@ chess.BoardSnapshotView = chess.BoardView.extend({
                 moveLeft = 1;
             }
 
-            // Update the display move, and move the piece
-            this._updateDisplayMove(index, move);
+            // Update the display notation, and move the piece
+            this._updateDisplayMove(index, notation);
             this._movePiece($img, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece);
 
         }
@@ -220,7 +221,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     /*
     * Given an index from the moveHistory collection, figure out the move# to display in the UI. Then display the move# and the move notation.
     */
-    _updateDisplayMove: function (index, move) {
+    _updateDisplayMove: function (index, notation) {
         var moveNum = parseInt(index) + 1;
         var dots = '... ';
         if (moveNum % 2 != 0) {
@@ -228,7 +229,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             dots = '. ';
         }
         moveNum = moveNum/2;
-        this.$('.modal-body .move').text(moveNum + dots + move);
+        this.$('.modal-body .move').text(moveNum + dots + notation);
     }
 
 });
