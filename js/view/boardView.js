@@ -60,7 +60,7 @@ chess.BoardView = Backbone.View.extend({
             var pieceId = e.dataTransfer.getData("chessPiece");
             var toRow = e.target.id.substr(2, 1);
             var toCol = e.target.id.substr(3, 1);
-            chess.controller.doMove(pieceId, toRow, toCol);
+            chess.controller.doMove(pieceId, toRow, toCol, true);
         }
     },
 
