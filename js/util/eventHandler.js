@@ -6,15 +6,9 @@ var chess = chess || {};
 
 chess.EventHandler = function () {
 
-	// static messages object
-	var messageNames = {
-		updatedLegalMoves: 'updatedLegalMoves',
-		moveHistoryLinkClicked: 'moveHistoryLinkClicked',
-		replayGameLinkClicked: 'replayGameLinkClicked'
-	};
-
 	// this is the object we'll return
 	var obj = {
+		// defined below using prototype
 		messageNames: this.messageNames
 	};
 
@@ -24,6 +18,15 @@ chess.EventHandler = function () {
 	// return the object
 	return obj;
 
+};
+
+/*
+* Static message names defined here so only one copy exists.
+*/
+chess.EventHandler.prototype.messageNames = {
+	updatedLegalMoves: 'updatedLegalMoves',
+	moveHistoryLinkClicked: 'moveHistoryLinkClicked',
+	replayGameLinkClicked: 'replayGameLinkClicked'
 };
 
 chess.eventHandler = new chess.EventHandler();
