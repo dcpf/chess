@@ -4,7 +4,7 @@
 
 var chess = chess || {};
 
-chess.notationConverter = {
+chess.NotationConverter = function () {
 
 	/*
     * Converts the move notation string to a piece, and toRow and toCol. Note that the return type is an array to handle a castle move, where both the rook and king need to move.
@@ -15,7 +15,7 @@ chess.notationConverter = {
     * @param 0-based index of the move in the moveHistory collection
     * @returns an object with the piece, toRow, and toCol
     */
-    convertNotation: function (board, notation, index) {
+    this.convertNotation = function (board, notation, index) {
 
         // get the color
         var color = (index == 0 || index % 2 == 0) ? 'W' : 'B';
@@ -93,6 +93,7 @@ chess.notationConverter = {
         var move = {piece: piece, toRow: toRow, toCol: toCol};
         return [move];
 
-    }
-
+    };
 };
+
+chess.notationConverter = new chess.NotationConverter();
