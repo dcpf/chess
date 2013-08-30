@@ -102,7 +102,7 @@ chess.controller = {
     },
 
     /**
-    * Called when the user has confirmed their move via the confirm dialog.  Does the following:
+    * Called when the user has confirmed their move via the confirm dialog. Does the following:
     *
     * Updates the board
     * Updates the boardArray
