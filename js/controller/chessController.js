@@ -8,7 +8,7 @@ var chess = chess || {};
 * Main controller for the chess game. Plays the middle man between the model and views.
 * Plain JS object as opposed to a Backbone object.
 */
-chess.controller = {
+chess.Controller = function () {
 
     /*
     * This can be called under 1 of 2 conditions:
@@ -24,7 +24,7 @@ chess.controller = {
     * @param toCol
     * @param ui - true = confirm dialog, false = no dialog
     */
-    doMove: function (pieceId, toRow, toCol, ui) {
+    this.doMove = function (pieceId, toRow, toCol, ui) {
 
         var piece = new chess.Piece({id: pieceId});
         var pieceType = piece.type;
@@ -89,17 +89,17 @@ chess.controller = {
             chess.confirmMoveDialogView.render(possibleMoves);
         }
 
-    },
+    };
 
     /**
     * Called when the user has cancelled their move via the confirm dialog.
     */
-    cancelMove: function () {
+    this.cancelMove = function () {
          // Revert the board to the position that's still in the boardArray
         chess.boardView.updateBoard();
         // Remove the piece from limbo
         chess.board.limbo = null;
-    },
+    };
 
     /**
     * Called when the user has confirmed their move via the confirm dialog. Does the following:
@@ -111,7 +111,7 @@ chess.controller = {
     * Finds all legal moves
     *
     */
-    updateGameWithLatestMove: function (notation, pieceId, toRow, toCol) {
+    this.updateGameWithLatestMove = function (notation, pieceId, toRow, toCol) {
 
         // Update the boardArray with the new piece location
         var piece = new chess.Piece({id: pieceId});
@@ -181,9 +181,11 @@ chess.controller = {
         // Add the move to the 'moveHistory' collection
         chess.moveHistory.add({notation: notation, capturedPiece: capturedPiece});
 
-    }
+    };
 
 };
+
+chess.controller = new chess.Controller();
 
 function log (msg) {
     console.log(msg);
