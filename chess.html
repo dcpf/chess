@@ -71,4 +71,29 @@ TODO:
 <script src="js/view/messagesView.js"></script>
 <script src="js/controller/chessController.js"></script>
 
+<script>
+
+// instantiate all of the objects
+chess.eventHandler = new chess.EventHandler();
+chess.notationConverter = new chess.NotationConverter();
+chess.capturedPieces = new chess.CapturedPieces();
+chess.board = new chess.Board();
+chess.moveHistory = new chess.MoveHistory();
+chess.boardView = new chess.BoardView();
+chess.boardSnapshotView = new chess.BoardSnapshotView();
+chess.confirmMoveDialogView = new chess.ConfirmMoveDialogView();
+// This is just a listener, so no need to assign to a variable
+new chess.CapturedPiecesView();
+// This is just a listener, so no need to assign to a variable
+new chess.MoveHistoryView();
+// This is just a listener, so no need to assign to a variable
+new chess.MessagesView();
+chess.controller = new chess.Controller();
+
+// kick things off
+chess.board.findAllLegalMoves();
+chess.boardView.render();
+
+</script>
+
 </html>

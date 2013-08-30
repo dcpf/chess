@@ -170,5 +170,3 @@ chess.BoardView = Backbone.View.extend({
     }
 
 });
-
-chess.boardView = new chess.BoardView();

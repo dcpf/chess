@@ -233,5 +233,3 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     }
 
 });
-
-chess.boardSnapshotView = new chess.BoardSnapshotView();

@@ -95,5 +95,3 @@ chess.NotationConverter = function () {
 
     };
 };
-
-chess.notationConverter = new chess.NotationConverter();

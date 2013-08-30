@@ -414,5 +414,3 @@ chess.Board = Backbone.Model.extend({
     }
 
 });
-
-chess.board = new chess.Board();

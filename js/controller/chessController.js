@@ -185,14 +185,9 @@ chess.Controller = function () {
 
 };
 
-chess.controller = new chess.Controller();
-
 function log (msg) {
     console.log(msg);
 }
-
-chess.board.findAllLegalMoves();
-chess.boardView.render();
 
 /*
 var moveHistory = ['Pe2 e4', 'Pf7 f5', 'Pe4xf5', 'Pg7 g5', 'Pf5xg6 e.p.', 'Ph7xg6'];

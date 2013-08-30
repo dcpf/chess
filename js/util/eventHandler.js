@@ -28,5 +28,3 @@ chess.EventHandler.prototype.messageNames = {
 	moveHistoryLinkClicked: 'moveHistoryLinkClicked',
 	replayGameLinkClicked: 'replayGameLinkClicked'
 };
-
-chess.eventHandler = new chess.EventHandler();

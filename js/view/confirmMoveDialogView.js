@@ -51,5 +51,3 @@ chess.ConfirmMoveDialogView = Backbone.View.extend({
     }
 
 });
-
-chess.confirmMoveDialogView = new chess.ConfirmMoveDialogView();

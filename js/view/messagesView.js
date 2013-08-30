@@ -31,6 +31,3 @@ chess.MessagesView = Backbone.View.extend({
     }
 
 });
-
-// This is just a listener, so no need to assign to a variable
-new chess.MessagesView();
