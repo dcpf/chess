@@ -16,6 +16,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         // set the passed-in options
         this.eventHandler = this.options.eventHandler;
         this.moveHistory = this.options.moveHistory;
+        this.notationConverter = this.options.notationConverter;
 
         // set mode to view only
         this.mode = 'view';
@@ -50,7 +51,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             // go through each move notation and update the board
             for (var i = 0; i <= index; i++) {
                 notation = this.moveHistory.models[i].attributes.notation;
-                var moveArray = chess.notationConverter.convertNotation(this.board, notation, i);
+                var moveArray = this.notationConverter.convertNotation(this.board, notation, i);
                 for (var j in moveArray) {
                     var move = moveArray[j];
                     var piece = move.piece;
@@ -81,7 +82,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         }
         var notation = moveHistoryObj.attributes.notation;
         var capturedPiece = moveHistoryObj.attributes.capturedPiece;
-        var moveArray = chess.notationConverter.convertNotation(this.board, notation, index);
+        var moveArray = this.notationConverter.convertNotation(this.board, notation, index);
  
         for (var i in moveArray) {
 

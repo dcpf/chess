@@ -79,7 +79,7 @@ chess.capturedPieces = new chess.CapturedPieces();
 chess.board = new chess.Board({eventHandler: chess.eventHandler});
 chess.moveHistory = new chess.MoveHistory();
 chess.boardView = new chess.BoardView({board: chess.board, eventHandler: chess.eventHandler, capturedPieces: chess.capturedPieces, moveHistory: chess.moveHistory});
-chess.boardSnapshotView = new chess.BoardSnapshotView({eventHandler: chess.eventHandler, moveHistory: chess.moveHistory});
+chess.boardSnapshotView = new chess.BoardSnapshotView({eventHandler: chess.eventHandler, moveHistory: chess.moveHistory, notationConverter: chess.notationConverter});
 chess.confirmMoveDialogView = new chess.ConfirmMoveDialogView({eventHandler: chess.eventHandler});
 // This is just a listener, so no need to assign to a variable
 new chess.CapturedPiecesView({capturedPieces: chess.capturedPieces});
