@@ -9,14 +9,21 @@ chess.MessagesView = Backbone.View.extend({
     el: '#messageContainer',
 
     initialize: function () {
-        this.listenTo(chess.eventHandler, chess.eventHandler.messageNames.updatedLegalMoves, this._handleLegalMovesUpdate);
+
+        // set the passed-in options
+        this.eventHandler = this.options.eventHandler;
+        this.board = this.options.board;
+
+        // set up the listener
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.updatedLegalMoves, this._handleLegalMovesUpdate);
+
     },
 
     _handleLegalMovesUpdate: function () {
-        if (chess.board.isStalemate()) {
+        if (this.board.isStalemate()) {
             this._renderStalemateMessage();
         }
-        if (chess.board.isCheckmate()) {
+        if (this.board.isCheckmate()) {
             this._renderCheckmateMessage();
         }
     },
@@ -26,7 +33,7 @@ chess.MessagesView = Backbone.View.extend({
     },
 
     _renderCheckmateMessage: function () {
-        var winner = (chess.board.currentPlayer === 'W') ? 'Black' : 'White';
+        var winner = (this.board.currentPlayer === 'W') ? 'Black' : 'White';
         this.$el.html('Checkmate! ' + winner + ' wins!!');
     }
 

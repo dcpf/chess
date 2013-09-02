@@ -14,17 +14,24 @@ chess.MoveHistoryView = Backbone.View.extend({
     },
 
     initialize: function () {
-        this.listenTo(chess.moveHistory, 'add', this._updateMoveHistory);
+
+        // set the passed-in options
+        this.moveHistory = this.options.moveHistory;
+        this.eventHandler = this.options.eventHandler;
+
+        // set up the listener
+        this.listenTo(this.moveHistory, 'add', this._updateMoveHistory);
+
     },
 
     _updateMoveHistory: function () {
     	var html = '';
     	var count = 1;
-        if (chess.moveHistory.models.length > 1) {
+        if (this.moveHistory.models.length > 1) {
             this.$('#replayGameLink').css('visibility', 'visible');
         }
-    	for (var i in chess.moveHistory.models) {
-    		var notation = chess.moveHistory.models[i].attributes.notation;
+    	for (var i in this.moveHistory.models) {
+    		var notation = this.moveHistory.models[i].attributes.notation;
             var cell = '<td class="moveHistoryLink ' + i + '">' + notation + '</td>';
     		if (i == 0 || i % 2 == 0) {
     			html += '<tr><td style="text-align: right">' + count + '</td>' + cell;
@@ -46,11 +53,11 @@ chess.MoveHistoryView = Backbone.View.extend({
         // The css class should be in the form 'moveHistoryLink #', where # is the move number.
         // We'll grab that, and pass it as an arg with the message.
         var index = cssClass.split(' ')[1];
-        chess.eventHandler.trigger(chess.eventHandler.messageNames.moveHistoryLinkClicked, index);
+        this.eventHandler.trigger(this.eventHandler.messageNames.moveHistoryLinkClicked, index);
     },
 
     _handleReplayGameLinkClick: function () {
-        chess.eventHandler.trigger(chess.eventHandler.messageNames.replayGameLinkClicked);
+        this.eventHandler.trigger(this.eventHandler.messageNames.replayGameLinkClicked);
     }
 
 });

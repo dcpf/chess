@@ -9,7 +9,12 @@ var chess = chess || {};
 */
 chess.Board = Backbone.Model.extend({
 
-    initialize: function () {
+    initialize: function (attrs) {
+
+        if (attrs) {
+            this.eventHandler = attrs.eventHandler;
+        }
+
         this.currentPlayer = 'W';
         this.letters = ['a','b','c','d','e','f','g','h'];
         this.rowNums = [8,7,6,5,4,3,2,1];
@@ -83,7 +88,7 @@ chess.Board = Backbone.Model.extend({
         }
         if (!this._hypothetical) {
             // only publish if not in hypothetical mode
-            chess.eventHandler.trigger(chess.eventHandler.messageNames.updatedLegalMoves);
+            this.eventHandler.trigger(this.eventHandler.messageNames.updatedLegalMoves);
         }
     },
 

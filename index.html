@@ -69,7 +69,6 @@ TODO:
 <script src="js/view/capturedPiecesView.js"></script>
 <script src="js/view/moveHistoryView.js"></script>
 <script src="js/view/messagesView.js"></script>
-<script src="js/controller/chessController.js"></script>
 
 <script>
 
@@ -77,18 +76,17 @@ TODO:
 chess.eventHandler = new chess.EventHandler();
 chess.notationConverter = new chess.NotationConverter();
 chess.capturedPieces = new chess.CapturedPieces();
-chess.board = new chess.Board();
+chess.board = new chess.Board({eventHandler: chess.eventHandler});
 chess.moveHistory = new chess.MoveHistory();
-chess.boardView = new chess.BoardView();
-chess.boardSnapshotView = new chess.BoardSnapshotView();
-chess.confirmMoveDialogView = new chess.ConfirmMoveDialogView();
+chess.boardView = new chess.BoardView({board: chess.board, eventHandler: chess.eventHandler, capturedPieces: chess.capturedPieces, moveHistory: chess.moveHistory});
+chess.boardSnapshotView = new chess.BoardSnapshotView({eventHandler: chess.eventHandler, moveHistory: chess.moveHistory});
+chess.confirmMoveDialogView = new chess.ConfirmMoveDialogView({eventHandler: chess.eventHandler});
 // This is just a listener, so no need to assign to a variable
-new chess.CapturedPiecesView();
+new chess.CapturedPiecesView({capturedPieces: chess.capturedPieces});
 // This is just a listener, so no need to assign to a variable
-new chess.MoveHistoryView();
+new chess.MoveHistoryView({moveHistory: chess.moveHistory, eventHandler: chess.eventHandler});
 // This is just a listener, so no need to assign to a variable
-new chess.MessagesView();
-chess.controller = new chess.Controller();
+new chess.MessagesView({eventHandler: chess.eventHandler, board: chess.board});
 
 // kick things off
 chess.board.findAllLegalMoves();

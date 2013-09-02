@@ -8,7 +8,12 @@ chess.ConfirmMoveDialogView = Backbone.View.extend({
 
     el: '#confirmMoveDialog',
 
-    render: function (moves) {
+    initialize: function () {
+        this.eventHandler = this.options.eventHandler;
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.renderConfirmMoveDialog, this._render);
+    },
+
+    _render: function (moves) {
 
         var possibleMoves = [];
         for (var i in moves) {
@@ -39,7 +44,7 @@ chess.ConfirmMoveDialogView = Backbone.View.extend({
         var pieceId = args['pieceId'];
         var toRow = args['toRow'] * 1;
         var toCol = args['toCol'] * 1;
-        chess.controller.updateGameWithLatestMove(notation, pieceId, toRow, toCol);
+        this.eventHandler.trigger(this.eventHandler.messageNames.updateGameWithLatestMove, notation, pieceId, toRow, toCol);
     },
 
     /*
@@ -47,7 +52,7 @@ chess.ConfirmMoveDialogView = Backbone.View.extend({
     */
     cancelMove: function () {
         this.$el.modal('hide');
-        chess.controller.cancelMove();
+        this.eventHandler.trigger(this.eventHandler.messageNames.cancelMove);
     }
 
 });

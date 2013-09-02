@@ -12,9 +12,18 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     el: '#chessBoardSnapshotDialog',
 
     initialize: function () {
+
+        // set the passed-in options
+        this.eventHandler = this.options.eventHandler;
+        this.moveHistory = this.options.moveHistory;
+
+        // set mode to view only
         this.mode = 'view';
-        this.listenTo(chess.eventHandler, chess.eventHandler.messageNames.moveHistoryLinkClicked, this._render);
-        this.listenTo(chess.eventHandler, chess.eventHandler.messageNames.replayGameLinkClicked, function(){this._render();this._autoMove(0);});
+
+        // set up the listeners
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveHistoryLinkClicked, this._render);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.replayGameLinkClicked, function(){this._render();this._autoMove(0);});
+
     },
 
     /*
@@ -40,7 +49,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
 
             // go through each move notation and update the board
             for (var i = 0; i <= index; i++) {
-                notation = chess.moveHistory.models[i].attributes.notation;
+                notation = this.moveHistory.models[i].attributes.notation;
                 var moveArray = chess.notationConverter.convertNotation(this.board, notation, i);
                 for (var j in moveArray) {
                     var move = moveArray[j];
@@ -65,7 +74,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     _autoMove: function (index) {
 
         // get the move notation from the moveHistory collection, and convert it
-        var moveHistoryObj = chess.moveHistory.models[index];
+        var moveHistoryObj = this.moveHistory.models[index];
         if (!moveHistoryObj) {
             // If we've reached the end of the move history, return.
             return;
