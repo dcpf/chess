@@ -46,7 +46,7 @@ TODO:
 
 <div id="chessBoardSnapshotDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-body">
-        <div style="text-align: right"><a href="#" onclick="chess.boardSnapshotView.closeDialog();return false;">Close</a></div>
+        <div style="text-align: right"><a href="#" onclick="chessGame.boardSnapshotView.closeDialog();return false;">Close</a></div>
         <div class="move"></div>
         <div id="chessBoardSnapshotContainer"></div>
     </div>
@@ -73,24 +73,25 @@ TODO:
 <script>
 
 // instantiate all of the objects
-chess.eventHandler = new chess.EventHandler();
-chess.notationConverter = new chess.NotationConverter();
-chess.capturedPieces = new chess.CapturedPieces();
-chess.board = new chess.Board({eventHandler: chess.eventHandler});
-chess.moveHistory = new chess.MoveHistory();
-chess.boardView = new chess.BoardView({board: chess.board, eventHandler: chess.eventHandler, capturedPieces: chess.capturedPieces, moveHistory: chess.moveHistory});
-chess.boardSnapshotView = new chess.BoardSnapshotView({eventHandler: chess.eventHandler, moveHistory: chess.moveHistory, notationConverter: chess.notationConverter});
-chess.confirmMoveDialogView = new chess.ConfirmMoveDialogView({eventHandler: chess.eventHandler});
+var chessGame = {};
+chessGame.eventHandler = new chess.EventHandler();
+chessGame.notationConverter = new chess.NotationConverter();
+chessGame.capturedPieces = new chess.CapturedPieces();
+chessGame.board = new chess.Board({eventHandler: chessGame.eventHandler});
+chessGame.moveHistory = new chess.MoveHistory();
+chessGame.boardView = new chess.BoardView({board: chessGame.board, eventHandler: chessGame.eventHandler, capturedPieces: chessGame.capturedPieces, moveHistory: chessGame.moveHistory});
+chessGame.boardSnapshotView = new chess.BoardSnapshotView({eventHandler: chessGame.eventHandler, moveHistory: chessGame.moveHistory, notationConverter: chessGame.notationConverter});
+chessGame.confirmMoveDialogView = new chess.ConfirmMoveDialogView({eventHandler: chessGame.eventHandler});
 // This is just a listener, so no need to assign to a variable
-new chess.CapturedPiecesView({capturedPieces: chess.capturedPieces});
+new chess.CapturedPiecesView({capturedPieces: chessGame.capturedPieces});
 // This is just a listener, so no need to assign to a variable
-new chess.MoveHistoryView({moveHistory: chess.moveHistory, eventHandler: chess.eventHandler});
+new chess.MoveHistoryView({moveHistory: chessGame.moveHistory, eventHandler: chessGame.eventHandler});
 // This is just a listener, so no need to assign to a variable
-new chess.MessagesView({eventHandler: chess.eventHandler, board: chess.board});
+new chess.MessagesView({eventHandler: chessGame.eventHandler, board: chessGame.board});
 
 // kick things off
-chess.board.findAllLegalMoves();
-chess.boardView.render();
+chessGame.board.findAllLegalMoves();
+chessGame.boardView.render();
 
 </script>
 

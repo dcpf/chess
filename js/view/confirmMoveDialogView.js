@@ -18,11 +18,11 @@ chess.ConfirmMoveDialogView = Backbone.View.extend({
         var possibleMoves = [];
         for (var i in moves) {
             var move = moves[i];
-            var moveLink = $('<a>').attr({href: '#'}).append(move.notation).click(function(){chess.confirmMoveDialogView.confirmMove({notation: move.notation, pieceId: move.pieceId, toRow: move.toRow, toCol: move.toCol}); return false;});
+            var moveLink = $('<a>').attr({href: '#'}).append(move.notation).click(function(){chessGame.confirmMoveDialogView.confirmMove({notation: move.notation, pieceId: move.pieceId, toRow: move.toRow, toCol: move.toCol}); return false;});
             possibleMoves.push(moveLink);
         }
 
-        var cancelLink = $('<a>').attr({href: '#'}).append('Cancel').click(function(){chess.confirmMoveDialogView.cancelMove(); return false;});
+        var cancelLink = $('<a>').attr({href: '#'}).append('Cancel').click(function(){chessGame.confirmMoveDialogView.cancelMove(); return false;});
         possibleMoves.push(cancelLink);
         var ul = $('<ul>')
         for (var i in possibleMoves) {

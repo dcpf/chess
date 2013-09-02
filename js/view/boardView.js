@@ -30,7 +30,7 @@ chess.BoardView = Backbone.View.extend({
         var draggable = (this.mode !== 'view' && legalMoves && legalMoves.length > 0) ? true : false;
         var imgTag = '<img id="' + piece.id + '" src="images/' + piece.qualifiedName + '.gif" draggable="' + draggable + '"';
         if (draggable) {
-            imgTag += ' ondragstart="chess.boardView.drag(event)" ondragend="chess.boardView.dragEnd(this)" onmouseover="chess.boardView.showLegalMoves(event)" onmouseout="chess.boardView.hideLegalMoves()"';
+            imgTag += ' ondragstart="chessGame.boardView.drag(event)" ondragend="chessGame.boardView.dragEnd(this)" onmouseover="chessGame.boardView.showLegalMoves(event)" onmouseout="chessGame.boardView.hideLegalMoves()"';
         }
         imgTag += '/>';
         return imgTag;
@@ -117,7 +117,7 @@ chess.BoardView = Backbone.View.extend({
                 bgcolor = (bgcolor === 'ccc') ? 'fff' : 'ccc';
                 gameBoard += '<td id="sq' + row + col + '" bgcolor="#' + bgcolor + '"';
                 if (this.mode !== 'view') {
-                    gameBoard += ' ondrop="chess.boardView.drop(event)" ondragover="chess.boardView.allowDrop(event)"';
+                    gameBoard += ' ondrop="chessGame.boardView.drop(event)" ondragover="chessGame.boardView.allowDrop(event)"';
                 }
                 gameBoard += '></td>';
             }
