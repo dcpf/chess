@@ -52,6 +52,12 @@ TODO:
     </div>
 </div>
 
+<script>
+function log (msg) {
+    console.log(msg);
+}
+</script>
+
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
@@ -92,6 +98,20 @@ new chess.MessagesView({eventHandler: chessGame.eventHandler, board: chessGame.b
 // kick things off
 chessGame.board.findAllLegalMoves();
 chessGame.boardView.render();
+
+// If there is an existing move history, use it to get the game into the current state
+//var moveHistory = ['Pe2 e4', 'Pf7 f5', 'Pe4xf5', 'Pg7 g5', 'Pf5xg6 e.p.', 'Ph7xg6'];
+if (window.moveHistory) {
+    for (var i in moveHistory) {
+        var notation = moveHistory[i];
+        var moveArray = chessGame.notationConverter.convertNotation(chessGame.board, notation, i);
+        for (var j in moveArray) {
+            var move = moveArray[j];
+            chessGame.boardView.doMove(move.piece.id, move.toRow, move.toCol, false);
+            chessGame.boardView.updateGameWithLatestMove(notation, move.piece.id, move.toRow, move.toCol);
+        }
+    }
+}
 
 </script>
 

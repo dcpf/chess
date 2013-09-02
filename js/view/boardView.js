@@ -20,7 +20,7 @@ chess.BoardView = Backbone.View.extend({
         // this.mode = 'view';
 
         // set up the listeners
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.updateGameWithLatestMove, this._updateGameWithLatestMove);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.updateGameWithLatestMove, this.updateGameWithLatestMove);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.cancelMove, this._cancelMove);
 
     },
@@ -71,7 +71,7 @@ chess.BoardView = Backbone.View.extend({
             var pieceId = e.dataTransfer.getData("chessPiece");
             var toRow = e.target.id.substr(2, 1);
             var toCol = e.target.id.substr(3, 1);
-            this._doMove(pieceId, toRow, toCol, true);
+            this.doMove(pieceId, toRow, toCol, true);
         }
     },
 
@@ -205,7 +205,7 @@ chess.BoardView = Backbone.View.extend({
     * TODO: make ui a constructor arg
     * @param ui - true = confirm dialog, false = no dialog
     */
-    _doMove: function (pieceId, toRow, toCol, ui) {
+    doMove: function (pieceId, toRow, toCol, ui) {
 
         var piece = new chess.Piece({id: pieceId});
         var pieceType = piece.type;
@@ -282,7 +282,7 @@ chess.BoardView = Backbone.View.extend({
     * Finds all legal moves
     *
     */
-    _updateGameWithLatestMove: function (notation, pieceId, toRow, toCol) {
+    updateGameWithLatestMove: function (notation, pieceId, toRow, toCol) {
 
         // Update the boardArray with the new piece location
         var piece = new chess.Piece({id: pieceId});

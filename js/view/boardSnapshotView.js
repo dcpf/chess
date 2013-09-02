@@ -213,6 +213,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             keepMoving = true;
         }
         if (keepMoving) {
+            // TODO: find a way to call movePiece() without having to specify the chessGame namespace. I.e., we should be able to do it using just 'this'.
             setTimeout(function(){chessGame.boardSnapshotView._movePiece($obj, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece)}, 5);
         } else {
             // We've reached the destination. Remove the captured piece (if any), reset the img positioning, put the piece on the square, and call autoMove() with the next index.
@@ -224,6 +225,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             $obj.css('left', 'default');
             $target.html($obj);
             // Call autoMove() after a 1 second pause
+            // TODO: find a way to call autoMove() without having to specify the chessGame namespace. I.e., we should be able to do it using just 'this'.
             setTimeout(function(){chessGame.boardSnapshotView._autoMove(++index)}, 1000);
         }
     },
