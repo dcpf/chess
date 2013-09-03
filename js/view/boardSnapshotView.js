@@ -50,7 +50,13 @@ chess.BoardSnapshotView = chess.BoardView.extend({
 
             // go through each move notation and update the board
             for (var i = 0; i <= index; i++) {
-                notation = this.moveHistory.models[i].attributes.notation;
+                var moveHistoryObj = this.moveHistory.models[i];
+                notation = moveHistoryObj.attributes.notation;
+                var capturedPiece = moveHistoryObj.attributes.capturedPiece;
+                if (capturedPiece) {
+                    // blank out the location of the captured piece
+                    this.board.boardArray[capturedPiece.row][capturedPiece.column] = '';
+                }
                 var moveArray = this.notationConverter.convertNotation(this.board, notation, i);
                 for (var j in moveArray) {
                     var move = moveArray[j];

@@ -194,7 +194,7 @@ chess.BoardView = Backbone.View.extend({
     * This can be called under 1 of 2 conditions:
     * 
     * 1. When a player has moved a piece via the UI
-    * 2. During game initization, snapshot view, or auto-replay
+    * 2. During game initization
     *
     * In the case of #1, it performs some computations and board mgmt functions, then renders the "confirm move" dialog to the player.
     * In the case of #2, it performs the same computations and board mgmt functions without the UI interaction.
@@ -202,7 +202,7 @@ chess.BoardView = Backbone.View.extend({
     * @param pieceId
     * @param toRow
     * @param toCol
-    * TODO: make ui a constructor arg
+    * TODO: make ui a constructor arg?
     * @param ui - true = confirm dialog, false = no dialog
     */
     doMove: function (pieceId, toRow, toCol, ui) {
@@ -232,7 +232,7 @@ chess.BoardView = Backbone.View.extend({
             }
         }
 
-        // The stuff in here only needs to be dome in UI mode
+        // The stuff in here only needs to be done in UI mode
         if (ui) {
 
             // Build the notation string
@@ -273,7 +273,12 @@ chess.BoardView = Backbone.View.extend({
     },
 
     /**
-    * Called when the user has confirmed their move via the confirm dialog. Does the following:
+    * This can be called under 1 of 2 conditions:
+    * 
+    * 1. When a player has confirmed their move via the confirm dialog
+    * 2. During game initization
+    *
+    * In both cases, it does the following:
     *
     * Updates the board
     * Updates the boardArray
