@@ -75,46 +75,13 @@ function log (msg) {
 <script src="js/view/capturedPiecesView.js"></script>
 <script src="js/view/moveHistoryView.js"></script>
 <script src="js/view/messagesView.js"></script>
+<script src="js/util/initializer.js"></script>
 
 <script>
 
-// instantiate all of the objects
+// instantiate the chessGame object
 var chessGame = {};
-chessGame.eventHandler = new chess.EventHandler();
-chessGame.notationConverter = new chess.NotationConverter();
-chessGame.capturedPieces = new chess.CapturedPieces();
-chessGame.moveHistory = new chess.MoveHistory();
-chessGame.board = new chess.Board({
-    eventHandler: chessGame.eventHandler
-});
-chessGame.boardView = new chess.BoardView({
-    board: chessGame.board,
-    eventHandler: chessGame.eventHandler,
-    capturedPieces: chessGame.capturedPieces,
-    moveHistory: chessGame.moveHistory
-});
-chessGame.boardSnapshotView = new chess.BoardSnapshotView({
-    eventHandler: chessGame.eventHandler,
-    moveHistory: chessGame.moveHistory,
-    notationConverter: chessGame.notationConverter
-});
-chessGame.confirmMoveDialogView = new chess.ConfirmMoveDialogView({
-    eventHandler: chessGame.eventHandler
-});
-// This is just a listener, so no need to assign to a variable
-new chess.CapturedPiecesView({
-    capturedPieces: chessGame.capturedPieces
-});
-// This is just a listener, so no need to assign to a variable
-new chess.MoveHistoryView({
-    moveHistory: chessGame.moveHistory,
-    eventHandler: chessGame.eventHandler
-});
-// This is just a listener, so no need to assign to a variable
-new chess.MessagesView({
-    eventHandler: chessGame.eventHandler,
-    board: chessGame.board
-});
+chess.initializer.initialize(chessGame);
 
 // kick things off
 chessGame.board.findAllLegalMoves();
