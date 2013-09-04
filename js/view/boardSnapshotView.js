@@ -55,15 +55,20 @@ chess.BoardSnapshotView = chess.BoardView.extend({
                 var capturedPiece = moveHistoryObj.attributes.capturedPiece;
                 if (capturedPiece) {
                     // blank out the location of the captured piece
-                    this.board.boardArray[capturedPiece.row][capturedPiece.column] = '';
+                    // this.board.boardArray[capturedPiece.row][capturedPiece.column] = '';
+                    this.$('#sq' + capturedPiece.row + capturedPiece.column).html('');
                 }
                 var moveArray = this.notationConverter.convertNotation(this.board, notation, i);
                 for (var j in moveArray) {
                     var move = moveArray[j];
                     var piece = move.piece;
-                    this.board.boardArray[piece.row][piece.column] = ''; // Blank out the previous location
-                    this.board.boardArray[move.toRow][move.toCol] = piece.qualifiedName; // Populate the new location
-                    this.updateBoard();
+                    // this.board.boardArray[piece.row][piece.column] = ''; // Blank out the previous location
+                    // this.board.boardArray[move.toRow][move.toCol] = piece.qualifiedName; // Populate the new location
+                    // this.updateBoard();
+                    var fromSquare = '#sq' + piece.row + piece.column;
+                    var $img = this.$('#chessBoardSnapshotContainer ' + fromSquare).children('img');
+                    this.$(fromSquare).html(''); // Blank out the previous location
+                    this.$('#sq' + move.toRow + move.toCol).html($img); // Populate the new location
                 }
             }
 
