@@ -25,12 +25,19 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveHistoryLinkClicked, this._render);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.replayGameLinkClicked, function(){this._render();this._autoMove(0);});
 
+        // set the click handler on the dialog's close icon
+        var self = this;
+        this.$('a.closeIcon').click(function(){
+            self._closeDialog();
+            return false;
+        });
+
     },
 
     /*
     * Called from the dialog
     */
-    closeDialog: function () {
+    _closeDialog: function () {
         this.$('#chessBoardSnapshotContainer').html('');
         this.$('.modal-body .move').text('');
         this.$el.modal('hide');
