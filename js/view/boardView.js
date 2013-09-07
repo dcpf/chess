@@ -23,8 +23,16 @@ chess.BoardView = Backbone.View.extend({
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.updateGameWithLatestMove, this.updateGameWithLatestMove);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.cancelMove, this._cancelMove);
 
-        // set up the event handlers for any piece added to the board with draggable=true attr
+        // set up the drag/drop event handlers for all squares on the board where the id starts with 'sq'
         var self = this;
+        this.$el.on('drop', 'td[id^="sq"]', function (e) {
+            self.drop(e);
+        });
+        this.$el.on('dragover', 'td[id^="sq"]', function (e) {
+            self.allowDrop(e);
+        });
+
+        // set up the drag/drop event handlers for any piece added to the board with draggable=true attr
         this.$el.on('dragstart', 'img[draggable="true"]', function (e) {
             self.drag(e);
         });
@@ -132,9 +140,6 @@ chess.BoardView = Backbone.View.extend({
             for (var col in cols) {
                 bgcolor = (bgcolor === 'ccc') ? 'fff' : 'ccc';
                 gameBoard += '<td id="sq' + row + col + '" bgcolor="#' + bgcolor + '"';
-                if (this.mode !== 'view') {
-                    gameBoard += ' ondrop="chessGame.boardView.drop(event)" ondragover="chessGame.boardView.allowDrop(event)"';
-                }
                 gameBoard += '></td>';
             }
             gameBoard += '<td>' + this.board.rowNums[row] + '</td></tr>';
