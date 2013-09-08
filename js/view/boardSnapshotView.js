@@ -104,6 +104,8 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             return;
         }
         var notation = moveHistoryObj.attributes.notation;
+        // update the display notation
+        self._updateDisplayMove(index, notation);
         var capturedPiece = moveHistoryObj.attributes.capturedPiece;
         var moveArray = self.notationConverter.convertNotation(self.board, notation, index);
  
@@ -134,8 +136,8 @@ chess.BoardSnapshotView = chess.BoardView.extend({
                 $target.html('');
             }
 
-            // attach the img to the body and set its offset to the original offset
-            self.$('#chessBoardSnapshotContainer').append($img);
+            // attach the img to the tempPiecePlaceHolder and set its offset to the original offset
+            self.$('#tempPiecePlaceHolder').append($img);
             $img.offset(origOffset);
 
             // Calculate which direction to go and how far
@@ -207,8 +209,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
                 moveLeft = 1;
             }
 
-            // Update the display notation, and move the piece
-            self._updateDisplayMove(index, notation);
+            // move the piece
             self._movePiece(self, $img, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece);
 
         }
