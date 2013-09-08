@@ -15,14 +15,15 @@ chess.ConfirmMoveDialogView = Backbone.View.extend({
 
     _render: function (moves) {
 
+        var self = this;
         var possibleMoves = [];
         for (var i in moves) {
             var move = moves[i];
-            var moveLink = $('<a>').attr({href: '#'}).append(move.notation).click(function(){chessGame.confirmMoveDialogView.confirmMove({notation: move.notation, pieceId: move.pieceId, toRow: move.toRow, toCol: move.toCol}); return false;});
+            var moveLink = $('<a>').attr({href: '#'}).append(move.notation).click(function(){self._confirmMove({notation: move.notation, pieceId: move.pieceId, toRow: move.toRow, toCol: move.toCol}); return false;});
             possibleMoves.push(moveLink);
         }
 
-        var cancelLink = $('<a>').attr({href: '#'}).append('Cancel').click(function(){chessGame.confirmMoveDialogView.cancelMove(); return false;});
+        var cancelLink = $('<a>').attr({href: '#'}).append('Cancel').click(function(){self._cancelMove(); return false;});
         possibleMoves.push(cancelLink);
         var ul = $('<ul>')
         for (var i in possibleMoves) {
@@ -38,7 +39,7 @@ chess.ConfirmMoveDialogView = Backbone.View.extend({
     /*
     * Called from the confirm dialog
     */
-    confirmMove: function (args) {
+    _confirmMove: function (args) {
         this.$el.modal('hide');
         var notation = args['notation'];
         var pieceId = args['pieceId'];
@@ -50,7 +51,7 @@ chess.ConfirmMoveDialogView = Backbone.View.extend({
     /*
     * Called from the confirm dialog
     */
-    cancelMove: function () {
+    _cancelMove: function () {
         this.$el.modal('hide');
         this.eventHandler.trigger(this.eventHandler.messageNames.cancelMove);
     }
