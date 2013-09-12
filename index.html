@@ -14,7 +14,7 @@ TODO:
 </head>
 <body style="padding: 20px">
 
-    <div id="moveHistoryContainer">
+    <div id="moveHistoryContainer" style="visibility: hidden">
         <div id="replayGameLink"><a href="#">Auto-Replay</a></div>
         <table id="moveHistoryTable">
             <tr>
@@ -28,7 +28,7 @@ TODO:
     <div style="display: inline-block">
         <div id="chessBoardContainer"></div>
         <div id="messageContainer"></div>
-        <fieldset id="capturedPiecesContainer">
+        <fieldset id="capturedPiecesContainer" style="visibility: hidden">
             <legend>Captured Pieces</legend>
             <div id="capturedBlackPieces"></div>
             <div id="capturedWhitePieces"></div>
@@ -55,7 +55,9 @@ TODO:
 
 <script>
 function log (msg) {
-    console.log(msg);
+    if (window.console) {
+        console.log(msg);
+    }
 }
 </script>
 
@@ -101,6 +103,11 @@ if (window.moveHistory) {
         }
     }
 }
+
+// Show hidden widgets
+$('#moveHistoryContainer').css('visibility', 'visible');
+$('#capturedPiecesContainer').css('visibility', 'visible');
+
 
 </script>
 

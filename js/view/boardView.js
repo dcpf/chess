@@ -223,7 +223,6 @@ chess.BoardView = Backbone.View.extend({
     * @param pieceId
     * @param toRow
     * @param toCol
-    * TODO: make ui a constructor arg?
     * @param ui - true = confirm dialog, false = no dialog
     */
     doMove: function (pieceId, toRow, toCol, ui) {
