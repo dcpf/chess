@@ -8,6 +8,9 @@ chess.BoardView = Backbone.View.extend({
 
     el: '#chessBoardContainer',
 
+    // Variable to track the piece being moved. Normally, we would use the dataTransfer object, but that does not appear to work.
+    pieceInMotion: '',
+
     initialize: function () {
 
         // set the passed-in options
@@ -61,12 +64,10 @@ chess.BoardView = Backbone.View.extend({
     */
     drag: function (e) {
         e.target.style.opacity = '.5';
-        var dataTransfer = this._getDataTransferObject(e);
-        dataTransfer.setData("chessPiece", e.target.id);
+        this.pieceInMotion = e.target.id;
     },
 
     // On drag-end, set the opacity of the object back to 1
-    // TODO: this does not appear to be necessary. Test in all browsers and remove if possible.
     dragEnd: function (e) {
         var pieceId = e.target.id;
         this.$('#' + pieceId).css('opacity', '1');
@@ -76,8 +77,7 @@ chess.BoardView = Backbone.View.extend({
     * Called from the UI when a piece is either dragged over or dropped
     */
     allowDrop: function (e) {
-        var dataTransfer = this._getDataTransferObject(e);
-        var pieceId = dataTransfer.getData("chessPiece");
+        var pieceId = this.pieceInMotion;
         var coords = e.target.id.substr(2);
         if (this.board.isLegalMove(pieceId, coords)) {
             e.preventDefault();
@@ -91,8 +91,7 @@ chess.BoardView = Backbone.View.extend({
     */
     drop: function (e) {
         if (this.allowDrop(e)) {
-            var dataTransfer = this._getDataTransferObject(e);
-            var pieceId = dataTransfer.getData("chessPiece");
+            var pieceId = this.pieceInMotion;
             var toRow = e.target.id.substr(2, 1);
             var toCol = e.target.id.substr(3, 1);
             this.doMove(pieceId, toRow, toCol, true);
@@ -377,14 +376,6 @@ chess.BoardView = Backbone.View.extend({
         // Add the move to the 'moveHistory' collection
         this.moveHistory.add({notation: notation, capturedPiece: capturedPiece});
 
-    },
-
-    /*
-    * Depending on the state of the drag, the dataTransfer object may be on the event itself or in the originalEvent object.
-    * So check in both places.
-    */
-    _getDataTransferObject: function (e) {
-        return e.dataTransfer || e.originalEvent.dataTransfer;
     }
 
 });
