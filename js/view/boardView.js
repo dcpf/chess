@@ -11,6 +11,9 @@ chess.BoardView = Backbone.View.extend({
     // Variable to track the piece being moved. Normally, we would use the dataTransfer object, but that does not appear to work.
     pieceInMotion: '',
 
+    // flag for enabling/disabling showLegalMoves()
+    showLegalMovesEnabled: true,
+
     initialize: function () {
 
         // set the passed-in options
@@ -102,6 +105,9 @@ chess.BoardView = Backbone.View.extend({
     * Called from the UI when a piece is hovered over
     */
     showLegalMoves: function (e) {
+        if (!this.showLegalMovesEnabled) {
+            return;
+        }
         var legalMoves = this.board.legalMovesMap[e.target.id];
         if (legalMoves) {
             for (var i in legalMoves) {
