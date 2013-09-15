@@ -38,9 +38,25 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     * Called from the dialog
     */
     _closeDialog: function () {
+
+        // stop the timers
+        if (this.movePieceTimeoutId) {
+            log('stopping movePieceTimeoutId');
+            clearTimeout(this.movePieceTimeoutId);
+        }
+        if (this.autoMoveTimeoutId) {
+            log('stopping autoMoveTimeoutId');
+            clearTimeout(this.autoMoveTimeoutId);
+        }
+
+        // clear the tempPiecePlaceHolder
+        self.$('#tempPiecePlaceHolder').html('');
+
+        // hide the dialog
         this.$('#chessBoardSnapshotContainer').html('');
         this.$('.modal-body .move').text('');
         this.$el.modal('hide');
+
     },
 
     /*
@@ -249,7 +265,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             keepMoving = true;
         }
         if (keepMoving) {
-            setTimeout(function(){self._movePiece(self, $obj, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece)}, 5);
+            this.movePieceTimeoutId = setTimeout(function(){self._movePiece(self, $obj, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece)}, 5);
         } else {
             // We've reached the destination. Remove the captured piece (if any), reset the img positioning, put the piece on the square, and call autoMove() with the next index.
             if (capturedPiece) {
@@ -260,7 +276,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             $obj.css('left', 'default');
             $target.html($obj);
             // Call autoMove() after a 1 second pause
-            setTimeout(function(){self._autoMove(self, ++index)}, 1000);
+            this.autoMoveTimeoutId = setTimeout(function(){self._autoMove(self, ++index)}, 1000);
         }
     },
 
