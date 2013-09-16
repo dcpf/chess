@@ -19,8 +19,6 @@ http.createServer(function (req, res) {
 
 	try {
 
-		var extension = '';
-
 		// first, parse the URL
 		var urlObj = urlUtil.parse(req.url, true);
 
@@ -42,7 +40,7 @@ http.createServer(function (req, res) {
 	    		log('Action: ' + action);
 	    		path = eval('chessController.' + action + '(postData)');
 	    		log('Got path from controller: ' + path);
-	    		doOutput(path, extension, res);
+	    		doOutput(path, res);
 			});
 
 		} else {
@@ -53,8 +51,7 @@ http.createServer(function (req, res) {
 			}
 			var filename = pathParts[pathParts.length - 1];
 			var dotIndex = filename.indexOf('.');
-	    	extension = filename.substr(dotIndex + 1);
-	    	doOutput(path, extension, res);
+	    	doOutput(path, res);
 
 	    }
 
@@ -66,9 +63,11 @@ http.createServer(function (req, res) {
 log('Server running at http://127.0.0.1:1337/');
 
 
-function doOutput (path, extension, res) {
+function doOutput (path, res) {
 	var fileContents = fs.readFileSync(path);
 	var buf = new Buffer(fileContents);
+	var dotIndex = path.indexOf('.');
+	var extension = path.substr(dotIndex + 1);
 	var contentType = contentTypeMap[extension];
 	res.writeHead(200, {'Content-Type': contentType});
 	res.end(buf);
