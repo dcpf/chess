@@ -30,5 +30,7 @@ exports.sendCreationEmail = function (player1Email, player2Email, gameID, key) {
     	subject: 'New Chess Game',
     	html: html
 	});
+
+	console.log('Sent creation email to ' + player1Email);
 	
 }

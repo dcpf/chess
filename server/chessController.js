@@ -13,7 +13,7 @@ exports.enterGame = function (req, postData) {
 		var player2Email = postData['player2Email'];
 		createGame(player1Email, player2Email);
 	} else {
-		var existingGameID = postData['existingGameName'];
+		var existingGameID = postData['existingGameID'];
 		var key = postData['key'];
 		enterExistingGame(existingGameID, key);
 	}

@@ -33,7 +33,7 @@ TODO:
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script>
     function selectRadioButton (num) {
-        if ((num == 0 && !$('#existingGameName').val().trim() && !$('#key').val().trim()) ||
+        if ((num == 0 && !$('#existingGameID').val().trim() && !$('#key').val().trim()) ||
             (num == 1 && !$('#player1Email').val().trim() && !$('#player2Email').val().trim())) {
             $('input[name="newOrExisting"]')[num].click();
         }      
@@ -63,7 +63,7 @@ TODO:
             </tr>
             <tr>
                 <td>Existing Game Name</td>
-                <td><input  type="text" name='existingGameName' id="existingGameName" onFocus='selectRadioButton(1)'></td>
+                <td><input  type="text" name='existingGameID' id="existingGameID" onFocus='selectRadioButton(1)'></td>
             </tr>
             <tr>
                 <td>Pass Code</td>
