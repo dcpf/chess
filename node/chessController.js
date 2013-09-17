@@ -16,7 +16,7 @@ exports.enterGame = function (req, postData) {
 		enterExistingGame(existingGameName, key);
 	}
 
-	return 'chess.html';
+	return 'html/chess.html';
 
 };
 

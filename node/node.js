@@ -47,7 +47,7 @@ http.createServer(function (req, res) {
 
 			// if path does not exist, set it to index.html by default
 			if (!path) {
-				path = 'index.html';
+				path = 'html/index.html';
 			}
 			var filename = pathParts[pathParts.length - 1];
 			var dotIndex = filename.indexOf('.');
