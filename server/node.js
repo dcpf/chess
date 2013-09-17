@@ -62,11 +62,15 @@ http.createServer(function (req, res) {
 log('Server running at http://127.0.0.1:1337/');
 
 function doOutput (path, res) {
-	var fileContents = fs.readFileSync(path);
-	var buf = new Buffer(fileContents);
+
+	// get the file extension and set the contentType header
 	var dotIndex = path.indexOf('.');
 	var extension = path.substr(dotIndex + 1);
 	var contentType = contentTypeMap[extension];
 	res.writeHead(200, {'Content-Type': contentType});
+
+	var fileContents = fs.readFileSync(path);
+	var buf = new Buffer(fileContents);
 	res.end(buf);
+	
 }
