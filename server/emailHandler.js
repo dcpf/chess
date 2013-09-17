@@ -14,7 +14,7 @@ var mailTransport = nodemailer.createTransport('SMTP', {
 
 exports.sendCreationEmail = function (player1Email, player2Email, gameID, key) {
 
-	var template = fs.readFileSync('html/player1Email.html', {encoding: 'utf-8'});
+	var template = fs.readFileSync('html/player1Email.html', {encoding: 'utf8'});
 	var compiled = underscore.template(template);
 	var html = compiled({
 		player1Email: player1Email,
