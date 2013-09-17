@@ -1,0 +1,16 @@
+<p>You've created a new chess game.  Details are as follows:</p>
+
+<ul>
+	<li>Your email address: <%= player1Email %></li>
+	<li>Opponent's email address: <%= player2Email %></li>
+	<li>Game ID: <%= gameID %></li>
+	<li>Your Pass Code: <%= key %></li>
+</ul>
+
+<p>You will be notified via email each time your opponent makes a move.
+You can then make your move by going to:</p>
+
+<!-- TODO: change the domain -->
+<p>http://world.std.com/dpf/cgi-bin/chess.pl?gameid=<%= gameID %>&key=<%= key %></p>
+
+<p>Please keep this email for future reference. Enjoy your game!</p>

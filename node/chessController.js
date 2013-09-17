@@ -1,7 +1,9 @@
 var fs = require('fs');
+var emailHandler = require("./emailHandler");
 
 var DATA_DIR = '.data/';
-var GAME_NAME_CHARS = "ABCDEFGHIJKLMNPQRSTUVWXYZ23456789";
+var GAME_ID_CHARS = "ABCDEFGHIJKLMNPQRSTUVWXYZ23456789";
+var KEY_CHARS = "123456789";
 
 exports.enterGame = function (req, postData) {
 
@@ -11,9 +13,9 @@ exports.enterGame = function (req, postData) {
 		var player2Email = postData['player2Email'];
 		createGame(player1Email, player2Email);
 	} else {
-		var existingGameName = postData['existingGameName'];
+		var existingGameID = postData['existingGameName'];
 		var key = postData['key'];
-		enterExistingGame(existingGameName, key);
+		enterExistingGame(existingGameID, key);
 	}
 
 	return 'html/chess.html';
@@ -21,10 +23,12 @@ exports.enterGame = function (req, postData) {
 };
 
 function createGame (player1Email, player2Email) {
-	createGameFile(player1Email, player2Email);
+	var gameID = createGameFile(player1Email, player2Email);
+	var key = generateKey();
+	emailHandler.sendCreationEmail(player1Email, player2Email, gameID, key);
 }
 
-function enterExistingGame (existingGameName, key) {
+function enterExistingGame (existingGameID, key) {
 
 }
 
@@ -33,26 +37,34 @@ function createGameFile (player1Email, player2Email) {
 		W: player1Email,
 		B: player2Email
 	};
-	var gameName;
+	var gameID;
 	if (!fs.existsSync(DATA_DIR)) {
 		fs.mkdirSync(DATA_DIR);
 	}
 	while (true) {
-		var gameName = generateRandomGameName();
-		if (!fs.existsSync(DATA_DIR + gameName)) {
-			fs.writeFileSync(DATA_DIR + gameName, JSON.stringify(obj));
-			console.log('created file ' + DATA_DIR + gameName);
+		gameID = generateRandomGameID();
+		if (!fs.existsSync(DATA_DIR + gameID)) {
+			fs.writeFileSync(DATA_DIR + gameID, JSON.stringify(obj));
+			console.log('created file ' + DATA_DIR + gameID);
 			break;
 		}
 	}
-	return gameName;
+	return gameID;
 }
 
 
-function generateRandomGameName () {
+function generateRandomGameID () {
 	var s = "";
     for (var i = 0; i < 12; i++) {
-        s += GAME_NAME_CHARS.charAt(Math.floor(Math.random() * GAME_NAME_CHARS.length));
+        s += GAME_ID_CHARS.charAt(Math.floor(Math.random() * GAME_ID_CHARS.length));
+    }
+    return s;
+}
+
+function generateKey () {
+	var s = "";
+    for (var i = 0; i < 5; i++) {
+        s += KEY_CHARS.charAt(Math.floor(Math.random() * KEY_CHARS.length));
     }
     return s;
 }
