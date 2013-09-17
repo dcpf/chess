@@ -38,7 +38,7 @@ http.createServer(function (req, res) {
 				var postData = qs.parse(body);
 				var action = path;
 	    		log('Action: ' + action);
-	    		path = eval('chessController.' + action + '(postData)');
+	    		path = eval('chessController.' + action + '(req, postData)');
 	    		log('Got path from controller: ' + path);
 	    		doOutput(path, res);
 			});
