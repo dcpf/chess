@@ -30,6 +30,15 @@ TODO:
         margin: 0 7px 3px 0;
     }
     </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script>
+    function selectRadioButton (num) {
+        if ((num == 0 && !$('#existingGameName').val().trim() && !$('#key').val().trim()) ||
+            (num == 1 && !$('#player1Email').val().trim() && !$('#player2Email').val().trim())) {
+            $('input[name="newOrExisting"]')[num].click();
+        }      
+    }
+    </script>
 </head>
 <body>
     <h3>Welcome to Dave's Chess-By-Email</h3>
@@ -38,31 +47,27 @@ TODO:
         <input type='hidden' name='hidden' value='1'>
         <table>
             <tr>
-                <td colspan='2'><input type='radio' name='new_or_existing' value='N' checked>New Game</td>
+                <td colspan='2'><input type='radio' name='newOrExisting' value='N'>New Game</td>
             </tr>
             <tr>
                 <td>Your Email Address</td>
-                <td><input type="text" name='Player1 Email' maxlength='50' onFocus='document.forms[0].new_or_existing[0].click()'></td>
+                <td><input type="text" name='player1Email' id="player1Email" maxlength='50' onFocus='selectRadioButton(0)'></td>
             </tr>
             <tr>
                 <td>Opponent's Email Address</td>
-                <td><input type="text" name='Player2 Email' maxlength='50' onFocus='document.forms[0].new_or_existing[0].click()'></td>
-            </tr>
-            <tr>
-                <td>New Game Name</td>
-                <td><input type="text" name='New Game Name' maxlength='50' onFocus='document.forms[0].new_or_existing[0].click()'></td>
+                <td><input type="text" name='player2Email' id="player2Email" maxlength='50' onFocus='selectRadioButton(0)'></td>
             </tr>
             <tr><td colspan='2'><hr></td></tr>
             <tr>
-                <td colspan='2'><input type='radio' name='new_or_existing' value='E'>Continue Existing Game</td>
+                <td colspan='2'><input type='radio' name='newOrExisting' value='E'>Continue Existing Game</td>
             </tr>
             <tr>
                 <td>Existing Game Name</td>
-                <td><input  type="text"name='Existing Game Name' onFocus='document.forms[0].new_or_existing[1].click()'></td>
+                <td><input  type="text" name='existingGameName' id="existingGameName" onFocus='selectRadioButton(1)'></td>
             </tr>
             <tr>
                 <td>Pass Code</td>
-                <td><input type='password' name='key' onFocus='document.forms[0].new_or_existing[1].click()'></td>
+                <td><input type='password' name='key' id="key" onFocus='selectRadioButton(1)'></td>
             </tr>
             <!--tr>
                 <td colspan='2'><a href='forgot_passcode.pl'>Forgot Your Pass Code?</a></td>
