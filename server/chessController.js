@@ -1,9 +1,9 @@
 var fs = require('fs');
-var emailHandler = require("./emailHandler");
+var emailHandler = require('./emailHandler');
 
 var DATA_DIR = '.data/';
-var GAME_ID_CHARS = "ABCDEFGHIJKLMNPQRSTUVWXYZ23456789";
-var KEY_CHARS = "123456789";
+var GAME_ID_CHARS = 'ABCDEFGHIJKLMNPQRSTUVWXYZ23456789';
+var KEY_CHARS = '123456789';
 
 exports.enterGame = function (req, postData) {
 
@@ -54,7 +54,7 @@ function createGameFile (player1Email, player2Email) {
 
 
 function generateRandomGameID () {
-	var s = "";
+	var s = '';
     for (var i = 0; i < 12; i++) {
         s += GAME_ID_CHARS.charAt(Math.floor(Math.random() * GAME_ID_CHARS.length));
     }
@@ -62,7 +62,7 @@ function generateRandomGameID () {
 }
 
 function generateKey () {
-	var s = "";
+	var s = '';
     for (var i = 0; i < 5; i++) {
         s += KEY_CHARS.charAt(Math.floor(Math.random() * KEY_CHARS.length));
     }

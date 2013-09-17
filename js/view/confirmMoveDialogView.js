@@ -45,7 +45,7 @@ chess.ConfirmMoveDialogView = Backbone.View.extend({
         var pieceId = args['pieceId'];
         var toRow = args['toRow'] * 1;
         var toCol = args['toCol'] * 1;
-        this.eventHandler.trigger(this.eventHandler.messageNames.updateGameWithLatestMove, notation, pieceId, toRow, toCol);
+        this.eventHandler.trigger(this.eventHandler.messageNames.moveConfirmed, notation, pieceId, toRow, toCol);
     },
 
     /*

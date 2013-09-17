@@ -8,7 +8,7 @@ chess.BoardView = Backbone.View.extend({
 
     el: '#chessBoardContainer',
 
-    // Variable to track the piece being moved. Normally, we would use the dataTransfer object, but that does not appear to work.
+    // Variable to track the piece being moved. Normally, we would use the dataTransfer object, but that does not appear to work properly.
     pieceInMotion: '',
 
     // flag for enabling/disabling showLegalMoves()
@@ -26,7 +26,7 @@ chess.BoardView = Backbone.View.extend({
         // this.mode = 'view';
 
         // set up the listeners
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.updateGameWithLatestMove, this.updateGameWithLatestMove);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveConfirmed, this.updateGameWithLatestMove);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.cancelMove, this._cancelMove);
 
         // set up the drag/drop event handlers for all squares on the board where the id starts with 'sq'
