@@ -1,26 +1,55 @@
+var fs = require('fs');
+
+var DATA_DIR = '.data/';
+var GAME_NAME_CHARS = "ABCDEFGHIJKLMNPQRSTUVWXYZ23456789";
+
 exports.enterGame = function (postData) {
 
-	var newOrExisting = postData['new_or_existing'];
+	var newOrExisting = postData['newOrExisting'];
 	if (newOrExisting === 'N') {
-		var player1Email = postData['Player1 Email'];
-		var player2Email = postData['Player2 Email'];
-		var newGameName = postData['New Game Name'];
-		createGame(player1Email, player2Email, newGameName);
+		var player1Email = postData['player1Email'];
+		var player2Email = postData['player2Email'];
+		createGame(player1Email, player2Email);
 	} else {
-		var existingGameName = postData['Existing Game Name'];
+		var existingGameName = postData['existingGameName'];
 		var key = postData['key'];
 		enterExistingGame(existingGameName, key);
 	}
 
-	console.log(postData);
 	return 'chess.html';
 
 };
 
-function createGame (player1Email, player2Email, newGameName) {
-
+function createGame (player1Email, player2Email) {
+	createGameFile(player1Email, player2Email);
 }
 
 function enterExistingGame (existingGameName, key) {
 
+}
+
+function createGameFile (player1Email, player2Email) {
+	var s = '{W:' + player1Email + ',B:' + player2Email + '}'
+	var gameName;
+	if (!fs.existsSync(DATA_DIR)) {
+		fs.mkdirSync(DATA_DIR);
+	}
+	while (true) {
+		var gameName = generateRandomGameName();
+		if (!fs.existsSync(DATA_DIR + gameName)) {
+			fs.writeFileSync(DATA_DIR + gameName, s);
+			console.log('created file ' + DATA_DIR + gameName);
+			break;
+		}
+	}
+	return gameName;
+}
+
+
+function generateRandomGameName () {
+	var s = "";
+    for (var i = 0; i < 12; i++) {
+        s += GAME_NAME_CHARS.charAt(Math.floor(Math.random() * GAME_NAME_CHARS.length));
+    }
+    return s;
 }
