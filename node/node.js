@@ -49,8 +49,6 @@ http.createServer(function (req, res) {
 			if (!path) {
 				path = 'html/index.html';
 			}
-			var filename = pathParts[pathParts.length - 1];
-			var dotIndex = filename.indexOf('.');
 	    	doOutput(path, res);
 
 	    }
@@ -59,9 +57,9 @@ http.createServer(function (req, res) {
 		log(e);
 	}
 
-    }).listen(1337, '127.0.0.1');
-log('Server running at http://127.0.0.1:1337/');
+}).listen(1337, '127.0.0.1');
 
+log('Server running at http://127.0.0.1:1337/');
 
 function doOutput (path, res) {
 	var fileContents = fs.readFileSync(path);
