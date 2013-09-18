@@ -92,6 +92,7 @@ chessGame.boardView.render();
 
 // If there is an existing move history, use it to get the game into the current state
 //var moveHistory = ['Pe2 e4', 'Pf7 f5', 'Pe4xf5', 'Pg7 g5', 'Pf5xg6 e.p.', 'Ph7xg6'];
+var gameID = '<%= gameID %>';
 if (window.moveHistory) {
     for (var i in moveHistory) {
         var notation = moveHistory[i];

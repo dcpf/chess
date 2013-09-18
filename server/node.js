@@ -2,6 +2,7 @@ var http = require('http');
 var fs = require('fs');
 var urlUtil = require('url');
 var qs = require('querystring');
+var underscore = require('underscore/underscore');
 var chessController = require('./chessController');
 
 var log = function (msg) {
@@ -38,9 +39,8 @@ http.createServer(function (req, res) {
 				var postData = qs.parse(body);
 				var action = path;
 	    		log('Action: ' + action);
-	    		path = eval('chessController.' + action + '(req, postData)');
-	    		log('Got path from controller: ' + path);
-	    		doOutput(path, res);
+	    		var view = eval('chessController.' + action + '(req, postData)');
+	    		doOutput(res, view.getName(), view.getAttributes());
 			});
 
 		} else {
@@ -49,7 +49,7 @@ http.createServer(function (req, res) {
 			if (!path) {
 				path = 'html/index.html';
 			}
-	    	doOutput(path, res);
+	    	doOutput(res, path);
 
 	    }
 
@@ -61,7 +61,7 @@ http.createServer(function (req, res) {
 
 log('Server running at http://127.0.0.1:1337/');
 
-function doOutput (path, res) {
+function doOutput (res, path, attrs) {
 
 	// get the file extension and set the contentType header
 	var dotIndex = path.indexOf('.');
@@ -69,8 +69,15 @@ function doOutput (path, res) {
 	var contentType = contentTypeMap[extension];
 	res.writeHead(200, {'Content-Type': contentType});
 
-	var fileContents = fs.readFileSync(path);
-	var buf = new Buffer(fileContents);
-	res.end(buf);
-	
+	var fileContents;
+	if (attrs) {
+		fileContents = fs.readFileSync(path, 'utf8');
+		var compiled = underscore.template(fileContents);
+		fileContents = compiled(attrs);
+	} else {
+		fileContents = fs.readFileSync(path);
+	}
+	res.write(fileContents);
+	res.end();
+
 }

@@ -1,5 +1,6 @@
 var fs = require('fs');
 var emailHandler = require('./emailHandler');
+var View = require('./model/View');
 
 var DATA_DIR = '.data/';
 var GAME_ID_CHARS = 'ABCDEFGHIJKLMNPQRSTUVWXYZ23456789';
@@ -7,18 +8,21 @@ var KEY_CHARS = '123456789';
 
 exports.enterGame = function (req, postData) {
 
+	var attrs = {};
 	var newOrExisting = postData['newOrExisting'];
 	if (newOrExisting === 'N') {
 		var player1Email = postData['player1Email'];
 		var player2Email = postData['player2Email'];
-		createGame(player1Email, player2Email);
+		var gameID = createGame(player1Email, player2Email);
+		attrs.gameID = gameID;
 	} else {
 		var existingGameID = postData['existingGameID'];
 		var key = postData['key'];
 		enterExistingGame(existingGameID, key);
 	}
 
-	return 'html/chess.html';
+	var view = new View('html/chess.html', attrs);
+	return view;
 
 };
 
@@ -26,6 +30,7 @@ function createGame (player1Email, player2Email) {
 	var gameID = createGameFile(player1Email, player2Email);
 	var key = generateKey();
 	emailHandler.sendCreationEmail(player1Email, player2Email, gameID, key);
+	return gameID;
 }
 
 function enterExistingGame (existingGameID, key) {
