@@ -1,6 +1,5 @@
-var fs = require('fs');
+var templateHandler = require('./templateHandler');
 var nodemailer = require('nodemailer/lib/nodemailer');
-var underscore = require('underscore/underscore');
 
 // TODO: encrypt the gmail user/password, or maybe set up a special mail acct for the chess game.
 // Or, see what the hosting svc provides.
@@ -14,14 +13,11 @@ var mailTransport = nodemailer.createTransport('SMTP', {
 
 exports.sendCreationEmail = function (player1Email, player2Email, gameID, key) {
 
-	var template = fs.readFileSync('html/player1Email.html', {encoding: 'utf8'});
-	var compiled = underscore.template(template);
-	var html = compiled({
+	var html = templateHandler.processTemplate('html/player1Email.html', {
 		player1Email: player1Email,
 		player2Email: player2Email,
 		gameID: gameID,
-		key: key}
-	);
+		key: key});
 
 	// TODO: fix from address
 	mailTransport.sendMail({

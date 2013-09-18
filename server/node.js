@@ -2,7 +2,7 @@ var http = require('http');
 var fs = require('fs');
 var urlUtil = require('url');
 var qs = require('querystring');
-var underscore = require('underscore/underscore');
+var templateHandler = require('./templateHandler');
 var chessController = require('./chessController');
 
 var log = function (msg) {
@@ -71,9 +71,7 @@ function doOutput (res, path, attrs) {
 
 	var fileContents;
 	if (attrs) {
-		fileContents = fs.readFileSync(path, 'utf8');
-		var compiled = underscore.template(fileContents);
-		fileContents = compiled(attrs);
+		fileContents = templateHandler.processTemplate(path, attrs);
 	} else {
 		fileContents = fs.readFileSync(path);
 	}
