@@ -66,9 +66,17 @@ img[draggable=true] {
     margin: 0 0 10px 30px;
     visibility: hidden;
 }
-#moveHistoryTable td {
+
+#moveHistoryTable th {
+    border-bottom: solid 1px #000;
+    text-align: center;
+    width: 80px;
+}
+
+#moveHistoryTable th, #moveHistoryTable td {
     padding: 0 10px;
 }
+
 .moveHistoryLink {
     color: #0088cc;
     cursor: pointer;
