@@ -24,24 +24,37 @@ chess.MoveHistoryView = Backbone.View.extend({
 
     },
 
+    /*
+    * Called whenever a move is added to the moveHistory collection
+    */
     _updateMoveHistory: function () {
-    	var html = '';
-    	var count = 1;
-        if (this.moveHistory.models.length > 1) {
+
+        // first, see how many moves are in the history
+        var numMoves = this.moveHistory.models.length;
+
+        // if two or more moves, show the auto-replay link
+        if (numMoves > 1) {
             this.$('#replayGameLink').css('visibility', 'visible');
         }
-    	for (var i in this.moveHistory.models) {
-    		var notation = this.moveHistory.models[i].attributes.notation;
-            var cell = '<td class="moveHistoryLink ' + i + '">' + notation + '</td>';
-    		if (i == 0 || i % 2 == 0) {
-    			html += '<tr><td style="text-align: right">' + count + '</td>' + cell;
-    			count++;
-    		} else {
-    			html += cell + '</tr>';
-    		}
-    	}
-    	this.$('#moveHistoryTable tr:first').siblings().remove();
-    	this.$('#moveHistoryTable tr:first').after(html);
+
+        // get the latest move from the history, and update the table
+        var index = numMoves - 1;
+        var notation = this.moveHistory.models[index].attributes.notation;
+        var cell = '<td class="moveHistoryLink ' + index + '">' + notation + '</td>';
+        if (index == 0 || index % 2 == 0) {
+            // white's move
+            var count = (parseInt(index) + 2)/2;
+            var html = '<tr><td style="text-align: right">' + count + '</td>' + cell + '</tr>';
+            this.$('#moveHistoryTable tr:last').after(html);
+            this.$('#moveHistoryTable th:eq(1)').removeClass('currentPlayer');
+            this.$('#moveHistoryTable th:eq(2)').addClass('currentPlayer');
+        } else {
+            // black's move
+            this.$('#moveHistoryTable td:last').after(cell);
+            this.$('#moveHistoryTable th:eq(1)').addClass('currentPlayer');
+            this.$('#moveHistoryTable th:eq(2)').removeClass('currentPlayer');
+        }
+
     },
 
     /*
