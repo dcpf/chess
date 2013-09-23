@@ -75,6 +75,7 @@ img[draggable=true] {
 }
 
 #moveHistoryTable th.currentPlayer {
+    color: #66cc00;
     font-weight: bold;
 }
 
