@@ -382,6 +382,9 @@ chess.BoardView = Backbone.View.extend({
         // Add the move to the 'moveHistory' collection
         this.moveHistory.add({notation: notation, capturedPiece: capturedPiece});
 
+        // Save the move to the server
+        new chess.Move({gameID: chess.vars.gameID, move: notation}).save();
+
     }
 
 });

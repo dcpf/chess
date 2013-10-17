@@ -1,85 +1,187 @@
 <!DOCTYPE html>
 <!-- Copyright (c) 1998 - 2013 dpf, dpf@theworld.com -->
 <html lang="en">
-<!-- 
-TODO:
-* create game
-* email move
--->
 <head>
     <meta charset="utf-8" />
     <meta name="description" content="Dave's Chess-By-Email - Internet Correspondence Chess">
     <meta name="keywords" content="chess-by-email, chess by email, play chess, correspondence chess">
     <meta name="author" content="David Piersol-Freedman 1998">
-    <title>Dave's Chess page</title>
+    <title>Dave's Chess</title>
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
     <link rel="stylesheet" href="css/chess.css" />
-    <!-- override some basic styles for this page -->
-    <style>
-    h3 {
-        text-align: center;
-    }
-    table {
-        margin-left: auto;
-        margin-right: auto;
-    }
-    table td {
-        padding-right: 10px;
-    }
-    input[type="radio"], input[type="checkbox"] {
-        margin: 0 7px 3px 0;
-    }
-    </style>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <script>
-    window.oncontextmenu = function () {return false;};
-    function selectRadioButton (num) {
-        if ((num == 0 && !$('#existingGameID').val().trim() && !$('#key').val().trim()) ||
-            (num == 1 && !$('#player1Email').val().trim() && !$('#player2Email').val().trim())) {
-            $('input[name="newOrExisting"]')[num].click();
-        }      
-    }
-    </script>
 </head>
-<body>
-    <h3>Welcome to Dave's Chess-By-Email</h3>
-    <hr/>
-    <form method=post action="/enterGame">
-        <input type='hidden' name='hidden' value='1'>
-        <table>
+<body style="padding: 20px">
+
+    <!-- Create/enter view -->
+    <div id="enterGameView">
+        <form>
+            <h3>Welcome to Dave's Chess-By-Email</h3>
+            <hr/>
+            <table id="enterGameTable">
+                <tr>
+                    <td colspan="2"><input type="radio" name="newOrExisting" value="N">New Game</td>
+                </tr>
+                <tr>
+                    <td>Your Email Address</td>
+                    <td><input type="text" id="player1Email" maxlength="50"></td>
+                </tr>
+                <tr>
+                    <td>Opponent's Email Address</td>
+                    <td><input type="text" id="player2Email" maxlength="50"></td>
+                </tr>
+                <tr><td colspan="2"><hr></td></tr>
+                <tr>
+                    <td colspan="2"><input type="radio" name="newOrExisting" value="E">Continue Existing Game</td>
+                </tr>
+                <tr>
+                    <td>Existing Game Name</td>
+                    <td><input type="text" id="gameID"></td>
+                </tr>
+                <tr>
+                    <td>Pass Code</td>
+                    <td><input type="password" id="key"></td>
+                </tr>
+                <!--tr>
+                    <td colspan="2"><a href="forgot_passcode.pl">Forgot Your Pass Code?</a></td>
+                </tr-->
+                <tr>
+                    <td colspan="2" align="center" style="padding-top: 40px">
+                        <input type="button" value="Submit" id="enterGameSubmitButton">&nbsp;
+                        <input type="reset" value="Clear">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <!-- move history container -->
+    <div id="moveHistoryContainer" style="visibility: hidden">
+        <div id="replayGameLink"><a href="#">Auto-Replay</a></div>
+        <table id="moveHistoryTable">
             <tr>
-                <td colspan='2'><input type='radio' name='newOrExisting' value='N'>New Game</td>
-            </tr>
-            <tr>
-                <td>Your Email Address</td>
-                <td><input type="text" name='player1Email' id="player1Email" maxlength='50' onFocus='selectRadioButton(0)'></td>
-            </tr>
-            <tr>
-                <td>Opponent's Email Address</td>
-                <td><input type="text" name='player2Email' id="player2Email" maxlength='50' onFocus='selectRadioButton(0)'></td>
-            </tr>
-            <tr><td colspan='2'><hr></td></tr>
-            <tr>
-                <td colspan='2'><input type='radio' name='newOrExisting' value='E'>Continue Existing Game</td>
-            </tr>
-            <tr>
-                <td>Existing Game Name</td>
-                <td><input  type="text" name='existingGameID' id="existingGameID" onFocus='selectRadioButton(1)'></td>
-            </tr>
-            <tr>
-                <td>Pass Code</td>
-                <td><input type='password' name='key' id="key" onFocus='selectRadioButton(1)'></td>
-            </tr>
-            <!--tr>
-                <td colspan='2'><a href='forgot_passcode.pl'>Forgot Your Pass Code?</a></td>
-            </tr-->
-            <tr>
-                <td colspan='2' align='center' style="padding-top: 40px">
-                    <input type='submit' value='Submit' name='submit'>&nbsp;
-                    <input type='reset' value='Clear'>
-                </td>
+                <th style="border-bottom: none; width: 20px;"></th>
+                <th style="border-right: solid 1px #000" class="currentPlayer">White</th>
+                <th>Black</th>
             </tr>
         </table>
-    </form>
+    </div>
+
+    <!-- chess board -->
+    <div style="display: inline-block">
+        <div id="chessBoardContainer"></div>
+        <div id="messageContainer"></div>
+        <fieldset id="capturedPiecesContainer" style="visibility: hidden">
+            <legend>Captured Pieces</legend>
+            <div id="capturedBlackPieces"></div>
+            <div id="capturedWhitePieces"></div>
+        </fieldset>
+    </div>
+
 </body>
+
+<!-- dialogs -->
+
+<div id="confirmMoveDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-body">
+        <p>Please verify your move</p>
+        <div id="possibleMoves"></div>
+    </div>
+</div>
+
+<div id="chessBoardSnapshotDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-body">
+        <div style="text-align: right"><a href="#" class="closeIcon">Close</a></div>
+        <div class="move"></div>
+        <div id="chessBoardSnapshotContainer"></div>
+    </div>
+    <div id="tempPiecePlaceHolder"></div>
+</div>
+
+<script>
+//window.oncontextmenu = function () {return false;};
+function log (msg) {
+    if (window.console) {
+        console.log(msg);
+    }
+}
+</script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+
+<!-- load utils -->
+<script src="js/util/eventHandler.js"></script>
+<script src="js/util/notationConverter.js"></script>
+
+<!-- load models -->
+<script src="js/model/piece.js"></script>
+<script src="js/model/move.js"></script>
+<script src="js/model/board.js"></script>
+
+<!-- load collections -->
+<script src="js/collection/capturedPieces.js"></script>
+<script src="js/collection/moveHistory.js"></script>
+
+<!-- load views -->
+<script src="js/view/enterGameView.js"></script>
+<script src="js/view/boardView.js"></script>
+<script src="js/view/boardSnapshotView.js"></script>
+<script src="js/view/confirmMoveDialogView.js"></script>
+<script src="js/view/capturedPiecesView.js"></script>
+<script src="js/view/moveHistoryView.js"></script>
+<script src="js/view/messagesView.js"></script>
+
+<!-- load the initializer -->
+<script src="js/util/initializer.js"></script>
+
+<script>
+
+// Instantiate and initialize the chessGame object
+var chessGame = {};
+chess.initializer.initialize(chessGame);
+
+// Instantiate some common variables
+chess.vars = {};
+chess.vars.gameID = '<%= gameID %>';
+//chess.vars.moveHistory = ['Pe2 e4', 'Pf7 f5', 'Pe4xf5', 'Pg7 g5', 'Pf5xg6 e.p.', 'Ph7xg6'];
+
+function startGame (gameID) {
+
+    if (gameID) {
+        chess.vars.gameID = gameID;
+    }
+
+    // kick things off
+    chessGame.board.findAllLegalMoves();
+    chessGame.boardView.render();
+
+    // If there is an existing move history, use it to get the game into the current state
+    if (window.chess.vars.moveHistory) {
+        for (var i in chess.vars.moveHistory) {
+            var notation = chess.vars.moveHistory[i];
+            var moveArray = chessGame.notationConverter.convertNotation(chessGame.board, notation, i);
+            for (var j in moveArray) {
+                var move = moveArray[j];
+                chessGame.boardView.doMove(move.piece.id, move.toRow, move.toCol, false);
+                chessGame.boardView.updateGameWithLatestMove(notation, move.piece.id, move.toRow, move.toCol);
+            }
+        }
+    }
+
+    // Show hidden widgets
+    $('#moveHistoryContainer').css('visibility', 'visible');
+    $('#capturedPiecesContainer').css('visibility', 'visible');
+}
+
+// If the page has loaded with a gameID set, start the game. This will occur when the following URL params are passed in: ?gameID=yl9pqqgamdgd&key=123456
+if (chess.vars.gameID) {
+    chessGame.enterGameView.hide();
+    startGame();
+}
+
+</script>
+
+
 </html>

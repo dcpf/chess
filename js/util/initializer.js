@@ -15,6 +15,7 @@ chess.initializer = {
         obj.board = new chess.Board({
             eventHandler: obj.eventHandler
         });
+        obj.enterGameView = new chess.EnterGameView();
         obj.boardView = new chess.BoardView({
             board: obj.board,
             eventHandler: obj.eventHandler,
@@ -29,20 +30,20 @@ chess.initializer = {
         obj.confirmMoveDialogView = new chess.ConfirmMoveDialogView({
             eventHandler: obj.eventHandler
         });
-        // This is just a listener, so no need to assign to a variable
+
+        // These views just need to be instantiated - no need to assign to a variable
         new chess.CapturedPiecesView({
             capturedPieces: obj.capturedPieces
         });
-        // This is just a listener, so no need to assign to a variable
         new chess.MoveHistoryView({
             moveHistory: obj.moveHistory,
             eventHandler: obj.eventHandler
         });
-        // This is just a listener, so no need to assign to a variable
         new chess.MessagesView({
             eventHandler: obj.eventHandler,
             board: obj.board
         });
+        
     }
 
 };

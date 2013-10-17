@@ -1,56 +1,71 @@
 var fs = require('fs');
 var emailHandler = require('./emailHandler');
-var View = require('./model/View');
 
 var DATA_DIR = '.data/';
-var GAME_ID_CHARS = 'ABCDEFGHIJKLMNPQRSTUVWXYZ23456789';
+var GAME_ID_CHARS = 'abcdefghijkmnopqrstuvwxyz234567890';
 var KEY_CHARS = '123456789';
 
 exports.enterGame = function (req, postData) {
 
 	var attrs = {};
-	var newOrExisting = postData['newOrExisting'];
-	if (newOrExisting === 'N') {
-		var player1Email = postData['player1Email'];
-		var player2Email = postData['player2Email'];
+	var action = postData.action;
+	if (action === 'N') {
+		// new game
+		var player1Email = postData.player1Email;
+		var player2Email = postData.player2Email;
 		var gameID = createGame(player1Email, player2Email);
 		attrs.gameID = gameID;
 	} else {
-		var existingGameID = postData['existingGameID'];
-		var key = postData['key'];
-		enterExistingGame(existingGameID, key);
+		// existing game
+		var gameID = postData.gameID;
+		var key = postData.key;
+		var obj = enterExistingGame(gameID, key);
+		attrs.gameID = gameID;
 	}
 
-	var view = new View('html/chess.html', attrs);
-	return view;
+	return attrs;
 
 };
 
 function createGame (player1Email, player2Email) {
-	var gameID = createGameFile(player1Email, player2Email);
-	var key = generateKey();
-	emailHandler.sendCreationEmail(player1Email, player2Email, gameID, key);
+	var whiteKey = generateKey();
+	var blackKey = generateKey();
+	var obj = {
+		W: {
+			email: player1Email,
+			key: whiteKey
+		},
+		B: {
+			email: player2Email,
+			key: blackKey
+		}
+	};
+	var gameID = createGameFile(obj);
+	emailHandler.sendCreationEmail(player1Email, player2Email, gameID, whiteKey);
 	return gameID;
 }
 
-function enterExistingGame (existingGameID, key) {
-
+function enterExistingGame (gameID, key) {
+	var file = DATA_DIR + gameID;
+	var obj = null;
+	if (fs.existsSync(file)) {
+		var jsonStr = fs.readFileSync(file, {encoding: 'utf8'});
+		obj = JSON.parse(jsonStr);
+	}
+	return obj;
 }
 
-function createGameFile (player1Email, player2Email) {
-	var obj = {
-		W: player1Email,
-		B: player2Email
-	};
+function createGameFile (obj) {
 	var gameID;
 	if (!fs.existsSync(DATA_DIR)) {
 		fs.mkdirSync(DATA_DIR);
 	}
 	while (true) {
 		gameID = generateRandomGameID();
-		if (!fs.existsSync(DATA_DIR + gameID)) {
-			fs.writeFileSync(DATA_DIR + gameID, JSON.stringify(obj));
-			console.log('created file ' + DATA_DIR + gameID);
+		var file = DATA_DIR + gameID;
+		if (!fs.existsSync(file)) {
+			fs.writeFileSync(file, JSON.stringify(obj));
+			console.log('created file ' + file);
 			break;
 		}
 	}

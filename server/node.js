@@ -12,6 +12,7 @@ var log = function (msg) {
 var contentTypeMap = {
 	html: 'text/html',
 	js: 'application/javascript',
+	json: 'application/json',
 	css: 'text/css',
 	gif: 'image/gif'
 };
@@ -23,12 +24,14 @@ http.createServer(function (req, res) {
 		// first, parse the URL
 		var urlObj = urlUtil.parse(req.url, true);
 
-		// get the path and path parts
+		// get the path, path parts, and query string
 		var path = urlObj.path.replace("/", "");
 		var pathParts = path.split('/');
+		var queryObj = urlObj.query;
+		var attrs;
 
-		// if this is a POST request, get the POST data and call the controller
-		if (req.method === 'POST') {
+		// For enterGame requests, get the POST data and call the controller
+		if (path === 'enterGame') {
 
 			var body = '';
 			req.on('data', function (data) {
@@ -37,19 +40,22 @@ http.createServer(function (req, res) {
 
 			req.on('end', function () {
 				var postData = qs.parse(body);
-				var action = path;
-	    		log('Action: ' + action);
-	    		var view = eval('chessController.' + action + '(req, postData)');
-	    		doOutput(res, view.getName(), view.getAttributes());
+	    		log('Action: ' + path);
+				attrs = eval('chessController.' + path + '(req, postData)');
+				doJsonOutput(res, attrs);
 			});
 
+		} else if (queryObj.gameID && queryObj.key) {
+			attrs = chessController.enterGame(req, queryObj);
+			doOutput(res, 'html/index.html', attrs);
 		} else {
 
 			// if path does not exist, set it to index.html by default
 			if (!path) {
 				path = 'html/index.html';
+				attrs = {gameID: ''};
 			}
-	    	doOutput(res, path);
+	    	doOutput(res, path, attrs);
 
 	    }
 
@@ -75,7 +81,14 @@ function doOutput (res, path, attrs) {
 	} else {
 		fileContents = fs.readFileSync(path);
 	}
+
 	res.write(fileContents);
 	res.end();
 
+}
+
+function doJsonOutput (res, obj) {
+	res.writeHead(200, {'Content-Type': contentTypeMap.json});
+   	res.write(JSON.stringify(obj));
+   	res.end();
 }
