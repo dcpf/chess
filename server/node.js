@@ -34,8 +34,10 @@ http.createServer(function (req, res) {
 		var queryObj = urlObj.query;
 		var attrs;
 
-		// For enterGame requests, get the POST data and call the controller
-		if (path === 'enterGame') {
+		// Handle POST requests:
+		// enterGame
+		// saveMove
+		if (req.method === 'POST') {
 
 			var body = '';
 			req.on('data', function (data) {
@@ -44,20 +46,22 @@ http.createServer(function (req, res) {
 
 			req.on('end', function () {
 				var postData = qs.parse(body);
-	    		log('Action: ' + path);
 				attrs = eval('chessController.' + path + '(req, postData)');
 				doJsonOutput(res, attrs);
 			});
 
 		} else if (queryObj.gameID && queryObj.key) {
+
+			// GET enterGame request where gameID and key are passed as URL params
 			attrs = chessController.enterGame(req, queryObj);
 			doOutput(res, 'html/index.html', attrs);
+
 		} else {
 
 			// if path does not exist, set it to index.html by default
 			if (!path) {
 				path = 'html/index.html';
-				attrs = chessController.buildAttrMap('', '', [], false);
+				attrs = chessController.buildEnterGameAttrMap('', '', [], false);
 			}
 	    	doOutput(res, path, attrs);
 

@@ -53,6 +53,10 @@ chess.EnterGameView = Backbone.View.extend({
         this.$el.hide();
     },
 
+    show: function () {
+        this.$el.show();
+    },
+
     selectRadioButton: function (num) {
     	if ((num == 0 && !this.$('#gameID').val().trim() && !this.$('#key').val().trim()) ||
         	(num == 1 && !this.$('#player1Email').val().trim() && !this.$('#player2Email').val().trim())) {

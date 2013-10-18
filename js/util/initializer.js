@@ -7,7 +7,7 @@ var chess = chess || {};
 chess.initializer = {
 
     // Instantiates all of the objects and their dependencies needed for the chess game
-    initialize: function (obj) {
+    initialize: function (obj, canMove) {
         obj.eventHandler = new chess.EventHandler();
         obj.notationConverter = new chess.NotationConverter();
         obj.capturedPieces = new chess.CapturedPieces();
@@ -15,8 +15,8 @@ chess.initializer = {
         obj.board = new chess.Board({
             eventHandler: obj.eventHandler
         });
-        obj.enterGameView = new chess.EnterGameView();
         obj.boardView = new chess.BoardView({
+            mode: (canMove) ? '' : 'view', 
             board: obj.board,
             eventHandler: obj.eventHandler,
             capturedPieces: obj.capturedPieces,

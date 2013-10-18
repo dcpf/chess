@@ -13,7 +13,7 @@
 <body style="padding: 20px">
 
     <!-- Create/enter view -->
-    <div id="enterGameView">
+    <div id="enterGameView" style="display: none">
         <form>
             <h3>Welcome to Dave's Chess-By-Email</h3>
             <hr/>
@@ -117,7 +117,6 @@ function log (msg) {
 
 <!-- load models -->
 <script src="js/model/piece.js"></script>
-<script src="js/model/move.js"></script>
 <script src="js/model/board.js"></script>
 
 <!-- load collections -->
@@ -138,39 +137,40 @@ function log (msg) {
 
 <script>
 
-// Instantiate and initialize the chessGame object
-var chessGame = {};
-chess.initializer.initialize(chessGame);
-
-// Instantiate some common variables
+// Set some required variables
 chess.vars = {
     gameID: '<%= gameID %>',
     key: '<%= key %>',
-    moveHistory: [<%= moveHistory %>],
+    initialMoveHistory: <%= initialMoveHistory %>,
     canMove: <%= canMove %>
 };
+
+// Instantiate the chessGame object, and initialize the enterGameView
+var chessGame = {};
+chessGame.enterGameView = new chess.EnterGameView();
 
 function startGame (attrs) {
 
     // if attrs were passed in, update chess.vars
     if (attrs) {
+        // initialMoveHistory is a string, so we need to get it back into json format before assigning to chess.vars
+        attrs.initialMoveHistory = JSON.parse(attrs.initialMoveHistory);
         chess.vars = attrs;
     }
 
     // kick things off
+    chess.initializer.initialize(chessGame, chess.vars.canMove);
     chessGame.board.findAllLegalMoves();
     chessGame.boardView.render();
 
     // If there is an existing move history, use it to get the game into the current state
-    if (chess.vars.moveHistory) {
-        for (var i in chess.vars.moveHistory) {
-            var notation = chess.vars.moveHistory[i];
-            var moveArray = chessGame.notationConverter.convertNotation(chessGame.board, notation, i);
-            for (var j in moveArray) {
-                var move = moveArray[j];
-                chessGame.boardView.doMove(move.piece.id, move.toRow, move.toCol, false);
-                chessGame.boardView.updateGameWithLatestMove(notation, move.piece.id, move.toRow, move.toCol);
-            }
+    for (var i in chess.vars.initialMoveHistory) {
+        var notation = chess.vars.initialMoveHistory[i];
+        var moveArray = chessGame.notationConverter.convertNotation(chessGame.board, notation, i);
+        for (var j in moveArray) {
+            var move = moveArray[j];
+            chessGame.boardView.doMove(move.piece.id, move.toRow, move.toCol, false);
+            chessGame.boardView.updateGameWithLatestMove(notation, move.piece.id, move.toRow, move.toCol);
         }
     }
 
@@ -183,6 +183,8 @@ function startGame (attrs) {
 if (chess.vars.gameID && chess.vars.key) {
     chessGame.enterGameView.hide();
     startGame();
+} else {
+    chessGame.enterGameView.show();
 }
 
 </script>

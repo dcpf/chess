@@ -23,10 +23,13 @@ chess.BoardView = Backbone.View.extend({
         this.moveHistory = this.options.moveHistory;
 
         // set mode to view for 'view-only' rendering
-        // this.mode = 'view';
+        this.mode = this.options.mode;
 
         // set up the listeners
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveConfirmed, this.updateGameWithLatestMove);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveConfirmed, function (notation, pieceId, toRow, toCol) {
+            this.updateGameWithLatestMove(notation, pieceId, toRow, toCol, true);
+        });
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveConfirmed, this._saveMove);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.cancelMove, this._cancelMove);
 
         // set up the drag/drop event handlers for all squares on the board where the id starts with 'sq'
@@ -300,8 +303,8 @@ chess.BoardView = Backbone.View.extend({
     /**
     * This can be called under 1 of 2 conditions:
     * 
-    * 1. When a player has confirmed their move via the confirm dialog
-    * 2. During game initization
+    * 1. When a player has confirmed their move via the confirm dialog (confirmedByPlayer = true)
+    * 2. During game initization (confirmedByPlayer = undefined)
     *
     * In both cases, it does the following:
     *
@@ -312,7 +315,7 @@ chess.BoardView = Backbone.View.extend({
     * Finds all legal moves
     *
     */
-    updateGameWithLatestMove: function (notation, pieceId, toRow, toCol) {
+    updateGameWithLatestMove: function (notation, pieceId, toRow, toCol, confirmedByPlayer) {
 
         // Update the boardArray with the new piece location
         var piece = new chess.Piece({id: pieceId});
@@ -373,6 +376,13 @@ chess.BoardView = Backbone.View.extend({
         // Switch player
         this.board.currentPlayer = (this.board.currentPlayer === 'W') ? 'B' : 'W';
 
+        // If this move was confirmed by the player, put the board into view mode, and set canMove to false;
+        // It's no longer their turn, so they shouldn't be able to move.
+        if (confirmedByPlayer) {
+            this.mode = 'view';
+            chess.vars.canMove = false;
+        }
+
         // Update the legal moves
         this.board.findAllLegalMoves();
 
@@ -382,9 +392,17 @@ chess.BoardView = Backbone.View.extend({
         // Add the move to the 'moveHistory' collection
         this.moveHistory.add({notation: notation, capturedPiece: capturedPiece});
 
-        // Save the move to the server
-        new chess.Move({gameID: chess.vars.gameID, move: notation}).save();
+    },
 
+    // Save the move to the server
+    _saveMove: function (notation) {
+        var deferred = $.post('/saveMove', {
+            gameID: chess.vars.gameID,
+            key: chess.vars.key,
+            move: notation
+        });
+        deferred.done(function(res) {
+        });
     }
 
 });

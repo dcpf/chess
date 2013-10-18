@@ -1,8 +1,7 @@
 var templateHandler = require('./templateHandler');
 var nodemailer = require('nodemailer/lib/nodemailer');
 
-// TODO: encrypt the gmail user/password, or maybe set up a special mail acct for the chess game.
-// Or, see what the hosting svc provides.
+// TODO: encrypt the gmail user/password, or see what the hosting svc provides.
 var mailTransport = nodemailer.createTransport('SMTP', {
     service: 'Gmail',
     auth: {
@@ -27,6 +26,6 @@ exports.sendCreationEmail = function (player1Email, player2Email, gameID, key) {
     	html: html
 	});
 
-	console.log('Sent creation email to ' + player1Email);
+	console.log('Sent game creation email to ' + player1Email);
 	
 }

@@ -29,26 +29,56 @@ function enterGame (req, postData) {
 
 };
 
-function buildAttrMap (gameID, key, moveHistory, canMove) {
+function buildEnterGameAttrMap (gameID, key, moveHistory, canMove) {
+	moveHistory = moveHistory || [];
 	return {
 		gameID: gameID,
 		key: key,
-		moveHistory: moveHistory || [],
+		initialMoveHistory: JSON.stringify(moveHistory),
 		canMove: canMove
 	};
 }
 
+function saveMove (req, postData) {
+	var gameID = postData.gameID;
+	var gameObj = getGameObject(gameID);
+	var key = postData.key;
+	if (playerCanMove(gameObj, key)) {
+		var move = postData.move;
+		gameObj.moveHistory.push(move);
+		saveGameObject(gameID, gameObj);
+		console.log('updated game ' + gameID + ' with move ' + move);
+	}
+	return {status: 'ok'};
+}
+
 exports.enterGame = enterGame;
-exports.buildAttrMap = buildAttrMap;
+exports.buildEnterGameAttrMap = buildEnterGameAttrMap;
+exports.saveMove = saveMove;
 
 //
 // private functions
 //
 
+function getGameObject (gameID) {
+	var gameObj = {};
+	var file = DATA_DIR + gameID;
+	if (fs.existsSync(file)) {
+		var jsonStr = fs.readFileSync(file, {encoding: 'utf8'});
+		gameObj = JSON.parse(jsonStr);
+	}
+	return gameObj;
+}
+
+function saveGameObject (gameID, gameObj) {
+	var file = DATA_DIR + gameID;
+	fs.writeFileSync(file, JSON.stringify(gameObj));
+}
+
 function createGame (player1Email, player2Email) {
 	var whiteKey = generateKey();
 	var blackKey = generateKey();
-	var obj = {
+	var gameObj = {
 		W: {
 			email: player1Email,
 			key: whiteKey
@@ -58,30 +88,18 @@ function createGame (player1Email, player2Email) {
 			key: blackKey
 		}
 	};
-	var gameID = createGameFile(obj);
+	var gameID = createGameFile(gameObj);
 	emailHandler.sendCreationEmail(player1Email, player2Email, gameID, whiteKey);
-	return buildAttrMap(gameID, whiteKey, [], true);
+	return buildEnterGameAttrMap(gameID, whiteKey, [], true);
 }
 
 function enterExistingGame (gameID, key) {
-	var file = DATA_DIR + gameID;
-	var obj = {};
-	if (fs.existsSync(file)) {
-		var jsonStr = fs.readFileSync(file, {encoding: 'utf8'});
-		obj = JSON.parse(jsonStr);
-	}
-	obj.moveHistory = obj.moveHistory || [];
-	var whiteKey = obj.W.key;
-	var blackKey = obj.B.key;
-	var canMove = false;
-	if ((key == whiteKey && obj.moveHistory.length % 2 === 0) ||
-		(key == blackKey && obj.moveHistory.length % 2 !== 0)) {
-		canMove = true;
-	}
-	return buildAttrMap(gameID, key, obj.moveHistory, canMove);
+	var gameObj = getGameObject(gameID);
+	var canMove = playerCanMove(gameObj, key);
+	return buildEnterGameAttrMap(gameID, key, gameObj.moveHistory, canMove);
 }
 
-function createGameFile (obj) {
+function createGameFile (gameObj) {
 	var gameID;
 	if (!fs.existsSync(DATA_DIR)) {
 		fs.mkdirSync(DATA_DIR);
@@ -90,7 +108,7 @@ function createGameFile (obj) {
 		gameID = generateRandomGameID();
 		var file = DATA_DIR + gameID;
 		if (!fs.existsSync(file)) {
-			fs.writeFileSync(file, JSON.stringify(obj));
+			saveGameObject(gameID, gameObj);
 			console.log('created file ' + file);
 			break;
 		}
@@ -113,4 +131,16 @@ function generateKey () {
         s += KEY_CHARS.charAt(Math.floor(Math.random() * KEY_CHARS.length));
     }
     return s;
+}
+
+function playerCanMove (gameObj, key) {
+	gameObj.moveHistory = gameObj.moveHistory || [];
+	var whiteKey = gameObj.W.key;
+	var blackKey = gameObj.B.key;
+	var canMove = false;
+	if ((key == whiteKey && gameObj.moveHistory.length % 2 === 0) ||
+		(key == blackKey && gameObj.moveHistory.length % 2 !== 0)) {
+		canMove = true;
+	}
+	return canMove;
 }
