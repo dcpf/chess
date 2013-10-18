@@ -143,14 +143,18 @@ var chessGame = {};
 chess.initializer.initialize(chessGame);
 
 // Instantiate some common variables
-chess.vars = {};
-chess.vars.gameID = '<%= gameID %>';
-//chess.vars.moveHistory = ['Pe2 e4', 'Pf7 f5', 'Pe4xf5', 'Pg7 g5', 'Pf5xg6 e.p.', 'Ph7xg6'];
+chess.vars = {
+    gameID: '<%= gameID %>',
+    key: '<%= key %>',
+    moveHistory: [<%= moveHistory %>],
+    canMove: <%= canMove %>
+};
 
-function startGame (gameID) {
+function startGame (attrs) {
 
-    if (gameID) {
-        chess.vars.gameID = gameID;
+    // if attrs were passed in, update chess.vars
+    if (attrs) {
+        chess.vars = attrs;
     }
 
     // kick things off
@@ -158,7 +162,7 @@ function startGame (gameID) {
     chessGame.boardView.render();
 
     // If there is an existing move history, use it to get the game into the current state
-    if (window.chess.vars.moveHistory) {
+    if (chess.vars.moveHistory) {
         for (var i in chess.vars.moveHistory) {
             var notation = chess.vars.moveHistory[i];
             var moveArray = chessGame.notationConverter.convertNotation(chessGame.board, notation, i);
@@ -175,8 +179,8 @@ function startGame (gameID) {
     $('#capturedPiecesContainer').css('visibility', 'visible');
 }
 
-// If the page has loaded with a gameID set, start the game. This will occur when the following URL params are passed in: ?gameID=yl9pqqgamdgd&key=123456
-if (chess.vars.gameID) {
+// If the page has loaded with a gameID and key, start the game. This will occur when the following URL params are passed in: ?gameID=yl9pqqgamdgd&key=123456
+if (chess.vars.gameID && chess.vars.key) {
     chessGame.enterGameView.hide();
     startGame();
 }

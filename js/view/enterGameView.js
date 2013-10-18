@@ -43,7 +43,7 @@ chess.EnterGameView = Backbone.View.extend({
     		deferred.done(function(res) {
 				self.hide();
                 // TODO, this should be handled by publishing an event
-                startGame(res.gameID);
+                startGame(res);
             });
 		});
 

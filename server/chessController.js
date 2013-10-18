@@ -5,7 +5,11 @@ var DATA_DIR = '.data/';
 var GAME_ID_CHARS = 'abcdefghijkmnopqrstuvwxyz234567890';
 var KEY_CHARS = '123456789';
 
-exports.enterGame = function (req, postData) {
+//
+// public functions
+//
+
+function enterGame (req, postData) {
 
 	var attrs = {};
 	var action = postData.action;
@@ -13,19 +17,33 @@ exports.enterGame = function (req, postData) {
 		// new game
 		var player1Email = postData.player1Email;
 		var player2Email = postData.player2Email;
-		var gameID = createGame(player1Email, player2Email);
-		attrs.gameID = gameID;
+		attrs = createGame(player1Email, player2Email);
 	} else {
 		// existing game
 		var gameID = postData.gameID;
 		var key = postData.key;
-		var obj = enterExistingGame(gameID, key);
-		attrs.gameID = gameID;
+		attrs = enterExistingGame(gameID, key);
 	}
 
 	return attrs;
 
 };
+
+function buildAttrMap (gameID, key, moveHistory, canMove) {
+	return {
+		gameID: gameID,
+		key: key,
+		moveHistory: moveHistory || [],
+		canMove: canMove
+	};
+}
+
+exports.enterGame = enterGame;
+exports.buildAttrMap = buildAttrMap;
+
+//
+// private functions
+//
 
 function createGame (player1Email, player2Email) {
 	var whiteKey = generateKey();
@@ -42,17 +60,25 @@ function createGame (player1Email, player2Email) {
 	};
 	var gameID = createGameFile(obj);
 	emailHandler.sendCreationEmail(player1Email, player2Email, gameID, whiteKey);
-	return gameID;
+	return buildAttrMap(gameID, whiteKey, [], true);
 }
 
 function enterExistingGame (gameID, key) {
 	var file = DATA_DIR + gameID;
-	var obj = null;
+	var obj = {};
 	if (fs.existsSync(file)) {
 		var jsonStr = fs.readFileSync(file, {encoding: 'utf8'});
 		obj = JSON.parse(jsonStr);
 	}
-	return obj;
+	obj.moveHistory = obj.moveHistory || [];
+	var whiteKey = obj.W.key;
+	var blackKey = obj.B.key;
+	var canMove = false;
+	if ((key == whiteKey && obj.moveHistory.length % 2 === 0) ||
+		(key == blackKey && obj.moveHistory.length % 2 !== 0)) {
+		canMove = true;
+	}
+	return buildAttrMap(gameID, key, obj.moveHistory, canMove);
 }
 
 function createGameFile (obj) {

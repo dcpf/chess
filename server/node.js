@@ -53,7 +53,7 @@ http.createServer(function (req, res) {
 			// if path does not exist, set it to index.html by default
 			if (!path) {
 				path = 'html/index.html';
-				attrs = {gameID: ''};
+				attrs = chessController.buildAttrMap('', '', [], false);
 			}
 	    	doOutput(res, path, attrs);
 
