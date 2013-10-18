@@ -4,10 +4,14 @@ var urlUtil = require('url');
 var qs = require('querystring');
 var templateHandler = require('./templateHandler');
 var chessController = require('./chessController');
+var chessUrl = require('./model/chessUrl');
 
 var log = function (msg) {
 	console.log(msg);
 }
+
+// Set the chess url based on passed-in params. If nothing is passed in, use http://127.0.0.1:1337 by default.
+GLOBAL.CHESS_URL = chessUrl.constructUrl(process.argv[2] || '127.0.0.1', process.argv[3] || 1337);
 
 var contentTypeMap = {
 	html: 'text/html',
@@ -63,9 +67,9 @@ http.createServer(function (req, res) {
 		log(e);
 	}
 
-}).listen(1337, '127.0.0.1');
+}).listen(CHESS_URL.port, CHESS_URL.domain);
 
-log('Server running at http://127.0.0.1:1337/');
+log('Server running at ' + CHESS_URL.url);
 
 function doOutput (res, path, attrs) {
 

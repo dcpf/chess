@@ -16,12 +16,12 @@ exports.sendCreationEmail = function (player1Email, player2Email, gameID, key) {
 	var html = templateHandler.processTemplate('html/player1Email.html', {
 		player1Email: player1Email,
 		player2Email: player2Email,
+		chessUrl: CHESS_URL.url,
 		gameID: gameID,
 		key: key});
 
-	// TODO: fix from address
 	mailTransport.sendMail({
-    	from: 'test@example.com',
+    	from: 'dpfchess@gmail.com',
     	to: player1Email,
     	subject: 'New Chess Game',
     	html: html
