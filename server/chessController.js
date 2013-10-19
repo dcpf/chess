@@ -48,6 +48,12 @@ function saveMove (req, postData) {
 		gameObj.moveHistory.push(move);
 		saveGameObject(gameID, gameObj);
 		console.log('updated game ' + gameID + ' with move ' + move);
+		if (gameObj.moveHistory.length == 1) {
+			emailHandler.sendInviteEmail(gameObj.W.email, gameObj.B.email, gameID, gameObj.B.key, move);
+		} else {
+			var obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
+			emailHandler.sendMoveNotificationEmail(obj.email, gameID, obj.key, move);
+		}
 	}
 	return {status: 'ok'};
 }
@@ -89,7 +95,7 @@ function createGame (player1Email, player2Email) {
 		}
 	};
 	var gameID = createGameFile(gameObj);
-	emailHandler.sendCreationEmail(player1Email, player2Email, gameID, whiteKey);
+	emailHandler.sendGameCreationEmail(player1Email, player2Email, gameID, whiteKey);
 	return buildEnterGameAttrMap(gameID, whiteKey, [], true);
 }
 
