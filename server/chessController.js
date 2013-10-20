@@ -43,19 +43,22 @@ function saveMove (req, postData) {
 	var gameID = postData.gameID;
 	var gameObj = getGameObject(gameID);
 	var key = postData.key;
+	var opponentEmail = '';
 	if (playerCanMove(gameObj, key)) {
 		var move = postData.move;
 		gameObj.moveHistory.push(move);
 		saveGameObject(gameID, gameObj);
 		console.log('updated game ' + gameID + ' with move ' + move);
 		if (gameObj.moveHistory.length == 1) {
+			opponentEmail = gameObj.B.email;
 			emailHandler.sendInviteEmail(gameObj.W.email, gameObj.B.email, gameID, gameObj.B.key, move);
 		} else {
 			var obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
+			opponentEmail = obj.email;
 			emailHandler.sendMoveNotificationEmail(obj.email, gameID, obj.key, move);
 		}
 	}
-	return {status: 'ok'};
+	return {status: 'ok', opponentEmail: opponentEmail};
 }
 
 exports.enterGame = enterGame;

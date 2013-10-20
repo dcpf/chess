@@ -28,6 +28,7 @@ chess.EventHandler.prototype.messageNames = {
 	updatedLegalMoves: 'updatedLegalMoves',
 	renderConfirmMoveDialog: 'renderConfirmMoveDialog',
 	moveConfirmed: 'moveConfirmed',
+	moveSaved: 'moveSaved',
 	cancelMove: 'cancelMove',
 	moveHistoryLinkClicked: 'moveHistoryLinkClicked',
 	replayGameLinkClicked: 'replayGameLinkClicked'

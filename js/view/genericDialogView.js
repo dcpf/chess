@@ -14,12 +14,17 @@ chess.GenericDialogView = Backbone.View.extend({
     initialize: function () {
         this.eventHandler = this.options.eventHandler;
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.gameCreated, this._renderGameCreatedDialog);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveSaved, this._renderMoveSavedDialog);
     },
 
-    _renderGameCreatedDialog: function (obj) {
+    _renderGameCreatedDialog: function () {
         this.$('.genericDialogText').html('Your game has begun - make your first move!');
         this.$el.modal();
+    },
 
+    _renderMoveSavedDialog: function (obj) {
+        this.$('.genericDialogText').html('Your move has been saved, and an email has been sent to your opponent at: ' + obj.opponentEmail);
+        this.$el.modal();
     }
 
 });

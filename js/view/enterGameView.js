@@ -46,7 +46,7 @@ chess.EnterGameView = Backbone.View.extend({
                 // TODO, this should be handled by publishing an event
                 startGame(res);
                 if (action === 'N') {
-                    self.eventHandler.trigger(self.eventHandler.messageNames.gameCreated, res);
+                    self.eventHandler.trigger(self.eventHandler.messageNames.gameCreated);
                 }
             });
 		});
