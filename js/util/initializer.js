@@ -8,7 +8,6 @@ chess.initializer = {
 
     // Instantiates all of the objects and their dependencies needed for the chess game
     initialize: function (obj, canMove) {
-        obj.eventHandler = new chess.EventHandler();
         obj.notationConverter = new chess.NotationConverter();
         obj.capturedPieces = new chess.CapturedPieces();
         obj.moveHistory = new chess.MoveHistory();
@@ -26,6 +25,9 @@ chess.initializer = {
             eventHandler: obj.eventHandler,
             moveHistory: obj.moveHistory,
             notationConverter: obj.notationConverter
+        });
+        obj.genericDialogView = new chess.GenericDialogView({
+            eventHandler: obj.eventHandler
         });
         obj.confirmMoveDialogView = new chess.ConfirmMoveDialogView({
             eventHandler: obj.eventHandler

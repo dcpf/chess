@@ -10,7 +10,8 @@ chess.EnterGameView = Backbone.View.extend({
 
     initialize: function () {
 
-    	var self = this;
+        this.eventHandler = this.options.eventHandler;
+        var self = this;
 
     	// assign focus handlers to the text input fields
     	self.$('#player1Email').focus(function() {
@@ -44,6 +45,9 @@ chess.EnterGameView = Backbone.View.extend({
 				self.hide();
                 // TODO, this should be handled by publishing an event
                 startGame(res);
+                if (action === 'N') {
+                    self.eventHandler.trigger(self.eventHandler.messageNames.gameCreated, res);
+                }
             });
 		});
 

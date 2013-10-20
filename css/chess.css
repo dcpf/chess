@@ -10,8 +10,12 @@ legend {
     width: auto;
 }
 .modal {
+    left: 60%;
     min-width: 400px;
     width: auto;
+}
+.modal-header {
+    border-bottom: none;
 }
 .modal-backdrop {
     opacity: 0.5;

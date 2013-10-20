@@ -97,6 +97,16 @@
     <div id="tempPiecePlaceHolder"></div>
 </div>
 
+<div id="genericDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>&nbsp;</h3>
+  </div>
+    <div class="modal-body" style="padding: 0 0 15px 0">
+        <p class="genericDialogText"></p>
+    </div>
+</div>
+
 <script>
 //window.oncontextmenu = function () {return false;};
 function log (msg) {
@@ -127,6 +137,7 @@ function log (msg) {
 <script src="js/view/enterGameView.js"></script>
 <script src="js/view/boardView.js"></script>
 <script src="js/view/boardSnapshotView.js"></script>
+<script src="js/view/genericDialogView.js"></script>
 <script src="js/view/confirmMoveDialogView.js"></script>
 <script src="js/view/capturedPiecesView.js"></script>
 <script src="js/view/moveHistoryView.js"></script>
@@ -145,9 +156,12 @@ chess.vars = {
     canMove: <%= canMove %>
 };
 
-// Instantiate the chessGame object, and initialize the enterGameView
+// Instantiate the chessGame object, eventHandler, and enterGameView. This is all we need for the initial UI.
 var chessGame = {};
-chessGame.enterGameView = new chess.EnterGameView();
+chessGame.eventHandler = new chess.EventHandler();
+chessGame.enterGameView = new chess.EnterGameView({
+    eventHandler: chessGame.eventHandler
+});
 
 function startGame (attrs) {
 
