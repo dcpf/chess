@@ -112,7 +112,14 @@ function doOutput (res, path, attrs) {
 	var dotIndex = path.indexOf('.');
 	var extension = path.substr(dotIndex + 1);
 	var contentType = contentTypeMap[extension];
-	res.writeHead(200, {'Content-Type': contentType});
+	var headers = {'Content-Type': contentType};
+
+	// set cache headers for images
+	if (contentType === contentTypeMap.gif) {
+		headers['Cache-Control'] = '31556926';
+	}
+
+	res.writeHead(200, headers);
 
 	var fileContents;
 	if (attrs) {
