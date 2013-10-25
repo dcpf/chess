@@ -10,9 +10,6 @@ var log = function (msg) {
 	console.log(msg);
 }
 
-// Set the chess url based on passed-in params. If nothing is passed in, use http://127.0.0.1:1337 by default.
-GLOBAL.CHESS_URL = chessUrl.constructUrl(process.argv[2] || '127.0.0.1', process.argv[3] || 1337);
-
 var contentTypeMap = {
 	html: 'text/html',
 	js: 'application/javascript',
@@ -20,6 +17,40 @@ var contentTypeMap = {
 	css: 'text/css',
 	gif: 'image/gif'
 };
+
+/*
+* Self-executing init function
+*/
+(function () {
+
+	// Get the IP in the following order:
+	// 1) From the 1st command-line arg
+	// 2) From the IP env var
+	// 3) Use '127.0.0.1' by default
+	var ip = process.argv[2];
+	if (!ip) {
+		ip = process.env.IP;
+	}
+	if (!ip) {
+		ip = '127.0.0.1';
+	}
+
+	// Get the port in the following order:
+	// 1) From the 2nd command-line arg
+	// 2) From the PORT env var
+	// 3) Use '1337' by default
+	var port = process.argv[3];
+	if (!port) {
+		port = process.env.PORT;
+	}
+	if (!port) {
+		port = '1337';
+	}
+
+	// Set the chess url object based on the ip and port
+	GLOBAL.CHESS_URL = chessUrl.constructUrl(ip, port);
+
+})();
 
 http.createServer(function (req, res) {
 
