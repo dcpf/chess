@@ -116,7 +116,7 @@ function doOutput (res, path, attrs) {
 
 	// set cache headers for images
 	if (contentType === contentTypeMap.gif) {
-		headers['Cache-Control'] = '31556926';
+		headers['Cache-Control'] = 'max-age=31556926';
 	}
 
 	res.writeHead(200, headers);
