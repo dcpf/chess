@@ -22,6 +22,9 @@ var contentTypeMap = {
 var daysArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu' ,'Fri' ,'Sat'];
 var monthsArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+// Timestamp of when the app was started. We'll use this for caching javascript and css files in the browser.
+var runtimestamp = new Date().getTime();
+
 /*
 * Self-executing init function
 */
@@ -64,7 +67,7 @@ http.createServer(function (req, res) {
 		var urlObj = urlUtil.parse(req.url, true);
 
 		// get the path, path parts, and query string
-		var path = urlObj.path.replace("/", "");
+		var path = urlObj.pathname.replace("/", "");
 		var pathParts = path.split('/');
 		var queryObj = urlObj.query;
 		var attrs;
@@ -118,14 +121,16 @@ function doOutput (res, path, attrs) {
 	var contentType = contentTypeMap[extension];
 	var headers = {'Content-Type': contentType};
 
-	// set cache headers for images
-	if (contentType === contentTypeMap.gif) {
+	// set cache headers for images, javascript, and css
+	if (contentType === contentTypeMap.gif || contentType === contentTypeMap.js || contentType === contentTypeMap.css) {
 		setCacheHeaders(headers);
 	}
 	res.writeHead(200, headers);
 
 	var fileContents;
 	if (attrs) {
+		// add the runtimestamp for caching css and javascript
+		attrs.runtimestamp = runtimestamp;
 		fileContents = templateHandler.processTemplate(path, attrs);
 	} else {
 		fileContents = fs.readFileSync(path);

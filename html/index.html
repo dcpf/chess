@@ -6,9 +6,9 @@
     <meta name="description" content="Dave's Chess-By-Email - Internet Correspondence Chess">
     <meta name="keywords" content="chess-by-email, chess by email, play chess, correspondence chess">
     <meta name="author" content="David Piersol-Freedman 1998">
-    <title>Dave's Chess</title>
+    <title>Dave's Chess-By-Email</title>
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
-    <link rel="stylesheet" href="css/chess.css" />
+    <link rel="stylesheet" href="css/chess.css?ver=<%= runtimestamp %>" />
 </head>
 <body style="padding: 20px">
 
@@ -122,29 +122,29 @@ function log (msg) {
 <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
 
 <!-- load utils -->
-<script src="js/util/eventHandler.js"></script>
-<script src="js/util/notationConverter.js"></script>
+<script src="js/util/eventHandler.js?ver=<%= runtimestamp %>"></script>
+<script src="js/util/notationConverter.js?ver=<%= runtimestamp %>"></script>
 
 <!-- load models -->
-<script src="js/model/piece.js"></script>
-<script src="js/model/board.js"></script>
+<script src="js/model/piece.js?ver=<%= runtimestamp %>"></script>
+<script src="js/model/board.js?ver=<%= runtimestamp %>"></script>
 
 <!-- load collections -->
-<script src="js/collection/capturedPieces.js"></script>
-<script src="js/collection/moveHistory.js"></script>
+<script src="js/collection/capturedPieces.js?ver=<%= runtimestamp %>"></script>
+<script src="js/collection/moveHistory.js?ver=<%= runtimestamp %>"></script>
 
 <!-- load views -->
-<script src="js/view/enterGameView.js"></script>
-<script src="js/view/boardView.js"></script>
-<script src="js/view/boardSnapshotView.js"></script>
-<script src="js/view/genericDialogView.js"></script>
-<script src="js/view/confirmMoveDialogView.js"></script>
-<script src="js/view/capturedPiecesView.js"></script>
-<script src="js/view/moveHistoryView.js"></script>
-<script src="js/view/messagesView.js"></script>
+<script src="js/view/enterGameView.js?ver=<%= runtimestamp %>"></script>
+<script src="js/view/boardView.js?ver=<%= runtimestamp %>"></script>
+<script src="js/view/boardSnapshotView.js?ver=<%= runtimestamp %>"></script>
+<script src="js/view/genericDialogView.js?ver=<%= runtimestamp %>"></script>
+<script src="js/view/confirmMoveDialogView.js?ver=<%= runtimestamp %>"></script>
+<script src="js/view/capturedPiecesView.js?ver=<%= runtimestamp %>"></script>
+<script src="js/view/moveHistoryView.js?ver=<%= runtimestamp %>"></script>
+<script src="js/view/messagesView.js?ver=<%= runtimestamp %>"></script>
 
 <!-- load the initializer -->
-<script src="js/util/initializer.js"></script>
+<script src="js/util/initializer.js?ver=<%= runtimestamp %>"></script>
 
 <script>
 
