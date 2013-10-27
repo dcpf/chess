@@ -18,6 +18,10 @@ var contentTypeMap = {
 	gif: 'image/gif'
 };
 
+// For the Expires header
+var daysArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu' ,'Fri' ,'Sat'];
+var monthsArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 /*
 * Self-executing init function
 */
@@ -116,9 +120,8 @@ function doOutput (res, path, attrs) {
 
 	// set cache headers for images
 	if (contentType === contentTypeMap.gif) {
-		headers['Cache-Control'] = 'max-age=31556926';
+		setCacheHeaders(headers);
 	}
-
 	res.writeHead(200, headers);
 
 	var fileContents;
@@ -137,4 +140,41 @@ function doJsonOutput (res, obj) {
 	res.writeHead(200, {'Content-Type': contentTypeMap.json});
    	res.write(JSON.stringify(obj));
    	res.end();
+}
+
+function setCacheHeaders (headers) {
+	headers['Cache-Control'] = 'max-age=31536000';
+	headers.Expires = getExpiresHeader();
+}
+
+/*
+* Returns a date value in the format: Thu, 01 Dec 1983 20:00:00 GMT
+*/
+function getExpiresHeader () {
+	var date = new Date();
+	var time = date.getTime();
+	time += 31536000000;
+	date.setTime(time);
+	var dayStr = daysArray[date.getDay()];
+	var day = formatDateDigit(date.getDate());
+	var month = monthsArray[date.getMonth()];
+	var year = date.getFullYear();
+	var hour = formatDateDigit(date.getHours());
+	var min = formatDateDigit(date.getMinutes());
+	var sec = formatDateDigit(date.getSeconds());
+	var value =  dayStr + ', ' + day + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec + ' GMT';
+	return value;
+}
+
+/*
+* Formats a single digit (1-9) to a double digit by prepending a 0. Examples:
+* 1 > 01
+* 5 > 05
+*/
+function formatDateDigit (s) {
+	s = s.toString();
+	if (s.length === 1) {
+		s = '0' + s;
+	}
+	return s;
 }
