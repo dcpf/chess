@@ -121,9 +121,12 @@ function doOutput (res, path, attrs) {
 	var contentType = contentTypeMap[extension];
 	var headers = {'Content-Type': contentType};
 
-	// set cache headers for images, javascript, and css
 	if (contentType === contentTypeMap.gif || contentType === contentTypeMap.js || contentType === contentTypeMap.css) {
+		// set cache headers for images, javascript, and css
 		setCacheHeaders(headers);
+	} else {
+		// set no-cache headers for everything else
+		setNoCacheHeaders(headers);
 	}
 	res.writeHead(200, headers);
 
@@ -147,9 +150,15 @@ function doJsonOutput (res, obj) {
    	res.end();
 }
 
+function setNoCacheHeaders (headers) {
+	headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+	headers['Pragma'] = 'no-cache';
+	headers['Expires'] = '0';
+}
+
 function setCacheHeaders (headers) {
 	headers['Cache-Control'] = 'max-age=31536000';
-	headers.Expires = getExpiresHeader();
+	headers['Expires'] = getExpiresHeader();
 }
 
 /*
