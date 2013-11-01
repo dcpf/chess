@@ -3,8 +3,8 @@ var fs = require('fs');
 var urlUtil = require('url');
 var qs = require('querystring');
 var templateHandler = require('./templateHandler');
+var appUrl = require('./model/appUrl');
 var chessController = require('./chessController');
-var chessUrl = require('./model/chessUrl');
 
 var log = function (msg) {
 	console.log(msg);
@@ -54,8 +54,8 @@ var runtimestamp = new Date().getTime();
 		port = '1337';
 	}
 
-	// Set the chess url object based on the ip and port
-	GLOBAL.CHESS_URL = chessUrl.constructUrl(ip, port);
+	// Set the app url object based on the ip and port
+	GLOBAL.APP_URL = appUrl.constructUrl(ip, port);
 
 })();
 
@@ -109,9 +109,9 @@ http.createServer(function (req, res) {
 		log(e);
 	}
 
-}).listen(CHESS_URL.port, CHESS_URL.domain);
+}).listen(APP_URL.port, APP_URL.domain);
 
-log('Server running at ' + CHESS_URL.url);
+log('Server running at ' + APP_URL.url);
 
 function doOutput (res, path, attrs) {
 

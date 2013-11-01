@@ -17,7 +17,7 @@ exports.sendGameCreationEmail = function (player1Email, player2Email, gameID, ke
 	var html = templateHandler.processTemplate('html/player1Email.html', {
 		player1Email: player1Email,
 		player2Email: player2Email,
-		chessUrl: CHESS_URL.url,
+		appUrl: APP_URL.url,
 		gameID: gameID,
 		key: key});
 
@@ -36,7 +36,7 @@ exports.sendInviteEmail = function (player1Email, player2Email, gameID, key, mov
 
 	var html = templateHandler.processTemplate('html/player2InviteEmail.html', {
 		player1Email: player1Email,
-		chessUrl: CHESS_URL.url,
+		appUrl: APP_URL.url,
 		gameID: gameID,
 		key: key,
 		move: move});
@@ -55,7 +55,7 @@ exports.sendInviteEmail = function (player1Email, player2Email, gameID, key, mov
 exports.sendMoveNotificationEmail = function (playerEmail, gameID, key, move) {
 
 	var html = templateHandler.processTemplate('html/moveNotificationEmail.html', {
-		chessUrl: CHESS_URL.url,
+		appUrl: APP_URL.url,
 		gameID: gameID,
 		key: key,
 		move: move});

@@ -1,5 +1,5 @@
 /*
-* Construct the chess URL based on a passed-in domain and port.
+* Construct the app URL based on a passed-in domain and port.
 */
 exports.constructUrl = function (domain, port) {
 
