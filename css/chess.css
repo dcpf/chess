@@ -81,9 +81,7 @@ img[draggable=true] {
 /* Chess styles */
 
 #moveHistoryContainer {
-    display: inline-block;
     margin-right: 50px;
-    vertical-align: top;
 }
 
 #replayGameLink {
@@ -115,7 +113,6 @@ img[draggable=true] {
 }
 
 #chessBoardContainer {
-    display: inline-block;
     margin-bottom: 50px;
 }
 #chessBoard td {
@@ -142,10 +139,9 @@ img[draggable=true] {
 }
 
 #messageContainer {
-    display: inline-block;
     font-size: 30px;
-    margin-left: 50px;
-    vertical-align: top;
+    line-height: normal;
+    margin: 0 0 15px 25px;
 }
 
 #chessBoardSnapshotDialog {

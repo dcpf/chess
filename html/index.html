@@ -54,27 +54,31 @@
         </form>
     </div>
 
-    <!-- move history container -->
-    <div id="moveHistoryContainer" style="visibility: hidden">
-        <div id="replayGameLink"><a href="#">Auto-Replay</a></div>
-        <table id="moveHistoryTable">
-            <tr>
-                <th style="border-bottom: none; width: 20px;"></th>
-                <th style="border-right: solid 1px #000" class="currentPlayer">White</th>
-                <th>Black</th>
-            </tr>
-        </table>
-    </div>
-
-    <!-- chess board -->
-    <div style="display: inline-block">
-        <div id="chessBoardContainer"></div>
-        <div id="messageContainer"></div>
-        <fieldset id="capturedPiecesContainer" style="visibility: hidden">
-            <legend>Captured Pieces</legend>
-            <div id="capturedBlackPieces"></div>
-            <div id="capturedWhitePieces"></div>
-        </fieldset>
+    <!-- white-space=nowrap keeps the inline-block divs from wrapping when the browser is resized smaller! -->
+    <div style="white-space: nowrap;">
+        <div style="display: inline-block; vertical-align: top">
+            <!-- move history container -->
+            <div id="moveHistoryContainer" style="visibility: hidden">
+                <div id="replayGameLink"><a href="#">Auto-Replay</a></div>
+                <table id="moveHistoryTable">
+                    <tr>
+                        <th style="border-bottom: none; width: 20px;"></th>
+                        <th style="border-right: solid 1px #000" class="currentPlayer">White</th>
+                        <th>Black</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div style="display: inline-block; vertical-align: top">
+            <div id="messageContainer"></div>
+            <!-- chess board -->
+            <div id="chessBoardContainer"></div>
+            <fieldset id="capturedPiecesContainer" style="visibility: hidden">
+                <legend>Captured Pieces</legend>
+                <div id="capturedBlackPieces"></div>
+                <div id="capturedWhitePieces"></div>
+            </fieldset>
+        </div>
     </div>
 
 </body>
