@@ -6,16 +6,25 @@ var chess = chess || {};
 
 chess.NotationConverter = function () {
 
+    this.letters = ['a','b','c','d','e','f','g','h'];
+    this.rowNums = [8,7,6,5,4,3,2,1];
+
+    /*
+    * Given col and row coords, return the notation equivalent
+    */
+    this.getNotation = function (col, row) {
+        return this.letters[col] + this.rowNums[row];
+    };
+
 	/*
     * Converts the move notation string to a piece, and toRow and toCol. Note that the return type is an array to handle a castle move, where both the rook and king need to move.
     * Normally, the array will contain one move, but for a castle move, it needs to contain two moves: one for the rook, and one for the king.
     *
-    * @param board object
     * @param move notation
     * @param 0-based index of the move in the moveHistory collection
     * @returns an object with the piece, toRow, and toCol
     */
-    this.convertNotation = function (board, notation, index) {
+    this.convertNotation = function (notation, index) {
 
         // get the color
         var color = (index == 0 || index % 2 == 0) ? 'W' : 'B';
@@ -61,29 +70,29 @@ chess.NotationConverter = function () {
         var fromRow = notation.substr(2, 1);
         var toCol = notation.substr(4, 1);
         var toRow = notation.substr(5, 1);
-        for (var i in board.letters) {
-            var letter = board.letters[i];
+        for (var i in this.letters) {
+            var letter = this.letters[i];
             if (letter == fromCol) {
                 fromCol = i;
                 break;
             }
         }
-        for (var i in board.letters) {
-            var letter = board.letters[i];
+        for (var i in this.letters) {
+            var letter = this.letters[i];
             if (letter == toCol) {
                 toCol = i;
                 break;
             }
         }
-        for (var i in board.rowNums) {
-            var rowNum = board.rowNums[i];
+        for (var i in this.rowNums) {
+            var rowNum = this.rowNums[i];
             if (rowNum == fromRow) {
                 fromRow = i;
                 break;
             }
         }
-        for (var i in board.rowNums) {
-            var rowNum = board.rowNums[i];
+        for (var i in this.rowNums) {
+            var rowNum = this.rowNums[i];
             if (rowNum == toRow) {
                 toRow = i;
                 break;

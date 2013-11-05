@@ -15,9 +15,8 @@ chess.Board = Backbone.Model.extend({
             this.eventHandler = attrs.eventHandler;
         }
 
+        // start with the default player of white and the default game board
         this.currentPlayer = 'W';
-        this.letters = ['a','b','c','d','e','f','g','h'];
-        this.rowNums = [8,7,6,5,4,3,2,1];
         this.boardArray = [
             ['BR','BN','BB','BQ','BK','BB','BN','BR'],
             ['BP','BP','BP','BP','BP','BP','BP','BP'],
@@ -38,16 +37,6 @@ chess.Board = Backbone.Model.extend({
         this.rookAndKingMoves = {};
         // allows us to examine the board in a hypothetical situation
         this._hypothetical = false;
-
-        /*
-        if (this.currentPlayer === 'B') {
-            this.letters.reverse();
-            this.boardArray = this.boardArray.reverse();
-            for (var i in this.boardArray) {
-                this.boardArray[i].reverse();
-            }
-        }
-        */
 
     },
 
@@ -403,10 +392,6 @@ chess.Board = Backbone.Model.extend({
     _clone: function () {
         var clone = new chess.Board();
         clone.currentPlayer = this.currentPlayer;
-        clone.letters = [];
-        for (var i in this.letters) {
-            clone.letters.push(this.letters[i]);
-        }
         clone.boardArray = [];
         for (var i in this.boardArray) {
             clone.boardArray[i] = [];

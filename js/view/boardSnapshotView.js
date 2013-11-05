@@ -81,7 +81,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
                     // this.board.boardArray[capturedPiece.row][capturedPiece.column] = '';
                     this.$('#sq' + capturedPiece.row + capturedPiece.column).html('');
                 }
-                var moveArray = this.notationConverter.convertNotation(this.board, notation, i);
+                var moveArray = this.notationConverter.convertNotation(notation, i);
                 for (var j in moveArray) {
                     var move = moveArray[j];
                     var piece = move.piece;
@@ -123,7 +123,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         // update the display notation
         self._updateDisplayMove(index, notation);
         var capturedPiece = moveHistoryObj.attributes.capturedPiece;
-        var moveArray = self.notationConverter.convertNotation(self.board, notation, index);
+        var moveArray = self.notationConverter.convertNotation(notation, index);
  
         for (var i in moveArray) {
 

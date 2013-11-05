@@ -29,12 +29,13 @@ function enterGame (req, postData) {
 
 };
 
-function buildEnterGameAttrMap (gameID, key, moveHistory, canMove) {
+function buildEnterGameAttrMap (gameID, key, moveHistory, currentPlayer, canMove) {
 	moveHistory = moveHistory || [];
 	return {
 		gameID: gameID,
 		key: key,
 		initialMoveHistory: JSON.stringify(moveHistory),
+		currentPlayer: currentPlayer,
 		canMove: canMove
 	};
 }
@@ -99,13 +100,14 @@ function createGame (player1Email, player2Email) {
 	};
 	var gameID = createGameFile(gameObj);
 	emailHandler.sendGameCreationEmail(player1Email, player2Email, gameID, whiteKey);
-	return buildEnterGameAttrMap(gameID, whiteKey, [], true);
+	return buildEnterGameAttrMap(gameID, whiteKey, [], 'W', true);
 }
 
 function enterExistingGame (gameID, key) {
 	var gameObj = getGameObject(gameID);
+	var currentPlayer = getCurrentPlayer(gameObj);
 	var canMove = playerCanMove(gameObj, key);
-	return buildEnterGameAttrMap(gameID, key, gameObj.moveHistory, canMove);
+	return buildEnterGameAttrMap(gameID, key, gameObj.moveHistory, currentPlayer, canMove);
 }
 
 function createGameFile (gameObj) {
@@ -142,13 +144,19 @@ function generateKey () {
     return s;
 }
 
-function playerCanMove (gameObj, key) {
+function getCurrentPlayer (gameObj) {
 	gameObj.moveHistory = gameObj.moveHistory || [];
+	var currentPlayer = (gameObj.moveHistory.length % 2 === 0) ? 'W' : 'B';
+	return currentPlayer;
+}
+
+function playerCanMove (gameObj, key) {
 	var whiteKey = gameObj.W.key;
 	var blackKey = gameObj.B.key;
 	var canMove = false;
-	if ((key == whiteKey && gameObj.moveHistory.length % 2 === 0) ||
-		(key == blackKey && gameObj.moveHistory.length % 2 !== 0)) {
+	var currentPlayer = getCurrentPlayer(gameObj);
+	if ((key == whiteKey && currentPlayer === 'W') ||
+		(key == blackKey && currentPlayer === 'B')) {
 		canMove = true;
 	}
 	return canMove;

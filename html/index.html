@@ -157,6 +157,7 @@ chess.vars = {
     gameID: '<%= gameID %>',
     key: '<%= key %>',
     initialMoveHistory: <%= initialMoveHistory %>,
+    currentPlayer: '<%= currentPlayer %>',
     canMove: <%= canMove %>
 };
 
@@ -179,12 +180,12 @@ function startGame (attrs) {
     // kick things off
     chess.initializer.initialize(chessGame, chess.vars.canMove);
     chessGame.board.findAllLegalMoves();
-    chessGame.boardView.render();
+    chessGame.boardView.render(chess.vars.currentPlayer);
 
     // If there is an existing move history, use it to get the game into the current state
     for (var i in chess.vars.initialMoveHistory) {
         var notation = chess.vars.initialMoveHistory[i];
-        var moveArray = chessGame.notationConverter.convertNotation(chessGame.board, notation, i);
+        var moveArray = chessGame.notationConverter.convertNotation(notation, i);
         for (var j in moveArray) {
             var move = moveArray[j];
             chessGame.boardView.doMove(move.piece.id, move.toRow, move.toCol, false);

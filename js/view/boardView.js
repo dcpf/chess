@@ -21,6 +21,7 @@ chess.BoardView = Backbone.View.extend({
         this.eventHandler = this.options.eventHandler;
         this.capturedPieces = this.options.capturedPieces;
         this.moveHistory = this.options.moveHistory;
+        this.notationConverter = this.options.notationConverter;
 
         // set mode to view for 'view-only' rendering
         this.mode = this.options.mode;
@@ -128,36 +129,48 @@ chess.BoardView = Backbone.View.extend({
 
     /*
     * Generate the board
+    * @param currentPlayer - Needed to draw the board in the correct orientation for the current player
     */
-    _generateBoard: function () {
+    _generateBoard: function (currentPlayer) {
     
+        // Set the board coords based on the current player. For black, we want to turn the board upside down.
+        var letters = _.clone(this.notationConverter.letters),
+            dimStart = 0,
+            dimEnd = 7,
+            dimIncrement = 1;
+        if (currentPlayer === 'B') {
+            letters = letters.reverse();
+            dimStart = 7;
+            dimEnd = 0;
+            dimIncrement = -1;
+        }
+
         var gameBoard = '<table id="chessBoard" border="1"><tr><td>&nbsp;</td>';
     
         // Draw the top row of column letters
-        for (var i in this.board.letters) {
-            gameBoard += '<td>' + this.board.letters[i] + '</td>';
+        for (var i in letters) {
+            gameBoard += '<td>' + letters[i] + '</td>';
         }
     
         gameBoard += '<td>&nbsp;</td></tr>';
-    
-        var bgcolor = (this.board.currentPlayer === 'W') ? 'fff' : 'ccc';
-        for (var row in this.board.boardArray) {
+
+        var bgcolor = 'fff';
+        for (var row = dimStart; row >= 0 && row <= 7; row += dimIncrement) {
             bgcolor = (bgcolor === 'ccc') ? 'fff' : 'ccc';
-            gameBoard += '<tr><td>' + this.board.rowNums[row] + '</td>';
-            var cols = this.board.boardArray[row];
-            for (var col in cols) {
+            gameBoard += '<tr><td>' + this.notationConverter.rowNums[row] + '</td>';
+            for (var col = dimStart; col >= 0 && col <= 7; col += dimIncrement) {
                 bgcolor = (bgcolor === 'ccc') ? 'fff' : 'ccc';
                 gameBoard += '<td id="sq' + row + col + '" bgcolor="#' + bgcolor + '"';
                 gameBoard += '></td>';
             }
-            gameBoard += '<td>' + this.board.rowNums[row] + '</td></tr>';
+            gameBoard += '<td>' + this.notationConverter.rowNums[row] + '</td></tr>';
         }
     
         gameBoard += '<tr><td>&nbsp;</td>';
     
         // Draw the bottom row of column letters
-        for (var i in this.board.letters) {
-            gameBoard += '<td>' + this.board.letters[i] + '</td>';
+        for (var i in letters) {
+            gameBoard += '<td>' + letters[i] + '</td>';
         }
     
         gameBoard += '<td>&nbsp;</td></tr></table>'
@@ -169,8 +182,8 @@ chess.BoardView = Backbone.View.extend({
     /*
     * Draw the board
     */
-    render: function () {
-        var gameBoard = this._generateBoard();
+    render: function (currentPlayer) {
+        var gameBoard = this._generateBoard(currentPlayer);
         this.$el.html(gameBoard);
         this.updateBoard();
     },
@@ -265,7 +278,7 @@ chess.BoardView = Backbone.View.extend({
 
             // Build the notation string
             var possibleMoves = [];
-            var notation = pieceType + this.board.letters[fromCol] + this.board.rowNums[fromRow] + x + this.board.letters[toCol] + this.board.rowNums[toRow] + ep;
+            var notation = pieceType + this.notationConverter.getNotation(fromCol, fromRow) + x + this.notationConverter.getNotation(toCol, toRow) + ep;
             possibleMoves.push({notation: notation, pieceId: pieceId, toRow: toRow, toCol: toCol});
 
             // See if this is a possible castle move, and add the notation string to the possibleMoves array.

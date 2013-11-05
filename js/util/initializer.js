@@ -19,7 +19,8 @@ chess.initializer = {
             board: obj.board,
             eventHandler: obj.eventHandler,
             capturedPieces: obj.capturedPieces,
-            moveHistory: obj.moveHistory
+            moveHistory: obj.moveHistory,
+            notationConverter: obj.notationConverter
         });
         obj.boardSnapshotView = new chess.BoardSnapshotView({
             eventHandler: obj.eventHandler,
