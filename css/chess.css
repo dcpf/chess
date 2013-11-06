@@ -49,19 +49,6 @@ input[type="radio"], input[type="checkbox"] {
 
 /* enter game form end */
 
-#confirmMoveDialog #possibleMoves {
-    width: 50%;
-    position: relative;
-    left: 40%;
-    text-align: left;
-}
-#confirmMoveDialog #possibleMoves ul {
-    margin-left: 0;
-}
-#confirmMoveDialog #possibleMoves li {
-    list-style-position: inside;
-}
-
 /* prevent selectability of anything on the chess board */
 #chessBoardContainer {
     -moz-user-select: none;
@@ -78,7 +65,19 @@ img[draggable=true] {
     cursor: move;
 }
 
-/* Chess styles */
+/* chess styles start */
+
+#playGameView {
+    display: none;
+    /* this keeps the inline-block divs from wrapping when the browser is resized smaller! */
+    white-space: nowrap;
+}
+
+.playerInfo {
+    font-size: 12px;
+    max-width: 275px;
+    overflow: hidden;
+}
 
 #moveHistoryContainer {
     margin-right: 50px;
@@ -151,3 +150,23 @@ img[draggable=true] {
     margin-bottom: 10px;
     text-align: center;
 }
+
+/* chess styles end */
+
+/* dialog styles start */
+
+#confirmMoveDialog #possibleMoves {
+    width: 50%;
+    position: relative;
+    left: 40%;
+    text-align: left;
+}
+#confirmMoveDialog #possibleMoves ul {
+    margin-left: 0;
+}
+#confirmMoveDialog #possibleMoves li {
+    list-style-position: inside;
+}
+
+/* dialog styles end */
+

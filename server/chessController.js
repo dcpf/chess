@@ -29,14 +29,16 @@ function enterGame (req, postData) {
 
 };
 
-function buildEnterGameAttrMap (gameID, key, moveHistory, currentPlayer, canMove) {
-	moveHistory = moveHistory || [];
+function buildEnterGameAttrMap (gameObj, gameID, key, currentPlayer, canMove) {
+	var moveHistory = gameObj.moveHistory || [];
 	return {
 		gameID: gameID,
 		key: key,
 		initialMoveHistory: JSON.stringify(moveHistory),
 		currentPlayer: currentPlayer,
-		canMove: canMove
+		canMove: canMove,
+		whiteEmail: (gameObj.W) ? gameObj.W.email : '',
+		blackEmail: (gameObj.B) ? gameObj.B.email : ''
 	};
 }
 
@@ -100,14 +102,14 @@ function createGame (player1Email, player2Email) {
 	};
 	var gameID = createGameFile(gameObj);
 	emailHandler.sendGameCreationEmail(player1Email, player2Email, gameID, whiteKey);
-	return buildEnterGameAttrMap(gameID, whiteKey, [], 'W', true);
+	return buildEnterGameAttrMap(gameObj, gameID, whiteKey, 'W', true);
 }
 
 function enterExistingGame (gameID, key) {
 	var gameObj = getGameObject(gameID);
 	var currentPlayer = getCurrentPlayer(gameObj);
 	var canMove = playerCanMove(gameObj, key);
-	return buildEnterGameAttrMap(gameID, key, gameObj.moveHistory, currentPlayer, canMove);
+	return buildEnterGameAttrMap(gameObj, gameID, key, currentPlayer, canMove);
 }
 
 function createGameFile (gameObj) {
