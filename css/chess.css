@@ -69,8 +69,15 @@ img[draggable=true] {
 
 #playGameView {
     display: none;
+    /* center the game on the screen */
+    text-align: center;
     /* this keeps the inline-block divs from wrapping when the browser is resized smaller! */
     white-space: nowrap;
+}
+
+/* reset the text-align to left for all child divs of playGameView */
+#playGameView>div {
+    text-align: left;
 }
 
 .playerInfo {
