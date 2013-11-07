@@ -21,7 +21,7 @@ function enterGame (req, postData) {
 	} else {
 		// existing game
 		var gameID = postData.gameID;
-		var key = postData.key;
+		var key = postData.key || '';
 		attrs = enterExistingGame(gameID, key);
 	}
 

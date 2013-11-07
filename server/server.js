@@ -88,9 +88,9 @@ http.createServer(function (req, res) {
 				doJsonOutput(res, attrs);
 			});
 
-		} else if (queryObj.gameID && queryObj.key) {
+		} else if (queryObj.gameID) {
 
-			// GET enterGame request where gameID and key are passed as URL params
+			// GET enterGame request where gameID is passed as a URL param
 			attrs = chessController.enterGame(req, queryObj);
 			doOutput(res, 'html/index.html', attrs);
 
