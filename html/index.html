@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="css/chess.css?ver=<%= runtimestamp %>" />
 </head>
 <body style="padding: 20px">
-
     <!-- Create/enter view -->
     <div id="enterGameView" style="display: none">
         <form>
@@ -96,6 +95,12 @@
 
 <!-- dialogs -->
 
+<div id="progressDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-body">
+        <div id="spinner"></div>
+    </div>
+</div>
+
 <div id="confirmMoveDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-body">
         <p>Please verify your move</p>
@@ -123,7 +128,6 @@
 </div>
 
 <script>
-//window.oncontextmenu = function () {return false;};
 function log (msg) {
     if (window.console) {
         console.log(msg);
@@ -162,6 +166,13 @@ function log (msg) {
 <script src="js/util/initializer.js?ver=<%= runtimestamp %>"></script>
 
 <script>
+
+// set the progressDialog to show/hide whenever an ajax call is made
+$(document).bind("ajaxSend", function() {
+   $("#progressDialog").modal();
+ }).bind("ajaxComplete", function() {
+   $("#progressDialog").modal('hide');
+ });
 
 // Set some required variables
 chess.vars = {
@@ -223,6 +234,5 @@ if (chess.vars.gameID) {
 }
 
 </script>
-
 
 </html>
