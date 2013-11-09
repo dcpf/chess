@@ -1,10 +1,9 @@
 var http = require('http');
 var fs = require('fs');
 var urlUtil = require('url');
-var qs = require('querystring');
 var templateHandler = require('./templateHandler');
 var appUrl = require('./model/appUrl');
-var chessController = require('./chessController');
+var requestHandler = require('./requestHandler');
 
 var log = function (msg) {
 	console.log(msg);
@@ -70,40 +69,19 @@ http.createServer(function (req, res) {
 		var path = urlObj.pathname.replace("/", "");
 		var pathParts = path.split('/');
 		var queryObj = urlObj.query;
-		var attrs;
 
-		// Handle POST requests:
-		// enterGame
-		// saveMove
-		if (req.method === 'POST') {
-
-			var body = '';
-			req.on('data', function (data) {
-				body += data;
-			});
-
-			req.on('end', function () {
-				var postData = qs.parse(body);
-				attrs = eval('chessController.' + path + '(req, postData)');
-				doJsonOutput(res, attrs);
-			});
-
-		} else if (queryObj.gameID) {
-
-			// GET enterGame request where gameID is passed as a URL param
-			attrs = chessController.enterGame(req, queryObj);
-			doOutput(res, 'html/index.html', attrs);
-
-		} else {
-
-			// if path does not exist, set it to index.html by default
-			if (!path) {
-				path = 'html/index.html';
-				attrs = chessController.buildEnterGameAttrMap({}, '', '', '', false);
+		var promise = requestHandler.handleRequest(req, path, queryObj);
+		promise.then(function(mav){
+			if (mav) {
+				if (mav.view) {
+					doOutput(res, mav.view, mav.model);
+				} else {
+					doJsonOutput(res, mav.model);
+				}
+			} else {
+				doOutput(res, path);
 			}
-	    	doOutput(res, path, attrs);
-
-	    }
+		});
 
 	} catch (e) {
 		log(e);

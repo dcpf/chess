@@ -11,9 +11,9 @@ legend {
 }
 .modal {
     left: 50%;
-    margin: -46px 0 0 -225px;
+    margin: 0 0 0 -225px;
     position: absolute;
-    top: 50%;
+    top: 200px;
     width: 450px;
 }
 .modal-header {
@@ -155,7 +155,7 @@ img[draggable=true] {
 
 #chessBoardSnapshotDialog {
     height: 525px;
-    margin-top: -273px;
+    top: 100px;
 }
 
 #chessBoardSnapshotDialog .modal-body .move {
