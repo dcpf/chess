@@ -16,9 +16,10 @@ exports.sendGameCreationEmail = function (player1Email, player2Email, gameID, ke
 	var html = templateHandler.processTemplate('html/player1Email.html', {
 		player1Email: player1Email,
 		player2Email: player2Email,
-		appUrl: APP_URL.url,
 		gameID: gameID,
-		key: key});
+		key: key,
+		gameUrl: buildGameUrl(gameID, key)
+	});
 
 	mailTransport.sendMail({
     	from: emailServiceConfig.fromAddress,
@@ -35,10 +36,11 @@ exports.sendInviteEmail = function (player1Email, player2Email, gameID, key, mov
 
 	var html = templateHandler.processTemplate('html/player2InviteEmail.html', {
 		player1Email: player1Email,
-		appUrl: APP_URL.url,
 		gameID: gameID,
 		key: key,
-		move: move});
+		move: move,
+		gameUrl: buildGameUrl(gameID, key)
+	});
 
 	mailTransport.sendMail({
     	from: emailServiceConfig.fromAddress,
@@ -54,10 +56,10 @@ exports.sendInviteEmail = function (player1Email, player2Email, gameID, key, mov
 exports.sendMoveNotificationEmail = function (playerEmail, gameID, key, move) {
 
 	var html = templateHandler.processTemplate('html/moveNotificationEmail.html', {
-		appUrl: APP_URL.url,
-		gameID: gameID,
-		key: key,
-		move: move});
+		move: move,
+		gameUrl: buildGameUrl(gameID, key),
+		appUrl: APP_URL.url
+	});
 
 	mailTransport.sendMail({
     	from: emailServiceConfig.fromAddress,
@@ -68,4 +70,8 @@ exports.sendMoveNotificationEmail = function (playerEmail, gameID, key, move) {
 
 	console.log('Sent move notification email to ' + playerEmail);
 	
+}
+
+function buildGameUrl (gameID, key) {
+	return APP_URL.url + '?gameID=' + gameID + '&key=' + key;
 }
