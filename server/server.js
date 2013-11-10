@@ -26,39 +26,14 @@ var monthsArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'
 // Timestamp of when the app was started. We'll use this for caching javascript and css files in the browser.
 var runtimestamp = new Date().getTime();
 
-/*
-* Self-executing init function
-*/
-(function () {
+// read the config file
+var configFile = process.argv[2] || 'server/conf/config.js';
+var config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
 
-	// Get the IP in the following order:
-	// 1) From the 1st command-line arg
-	// 2) From the IP env var
-	// 3) Use '127.0.0.1' by default
-	var ip = process.argv[2];
-	if (!ip) {
-		ip = process.env.IP;
-	}
-	if (!ip) {
-		ip = '127.0.0.1';
-	}
-
-	// Get the port in the following order:
-	// 1) From the 2nd command-line arg
-	// 2) From the PORT env var
-	// 3) Use '1337' by default
-	var port = process.argv[3];
-	if (!port) {
-		port = process.env.PORT;
-	}
-	if (!port) {
-		port = '1337';
-	}
-
-	// Set the app url object based on the ip and port
-	GLOBAL.APP_URL = appUrl.constructUrl(ip, port);
-
-})();
+// set the ip and port from either the env vars or from the config file
+var ip = process.env.IP || config.ip;
+var port = process.env.PORT || config.port;
+GLOBAL.APP_URL = appUrl.constructUrl(ip, port);
 
 http.createServer(function (req, res) {
 

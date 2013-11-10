@@ -28,7 +28,7 @@ exports.sendGameCreationEmail = function (player1Email, player2Email, gameID, ke
     	html: html
 	});
 
-	console.log('Sent game creation email to ' + player1Email);
+	console.log('Sent game creation email to ' + player1Email + ' with gameID: ' + gameID + ' and key: ' + key);
 	
 }
 
@@ -48,7 +48,7 @@ exports.sendInviteEmail = function (player1Email, player2Email, gameID, key, mov
     	html: html
 	});
 
-	console.log('Sent game invitation email to ' + player2Email);
+	console.log('Sent game invitation email to ' + player2Email + ' with gameID: ' + gameID + ' and key: ' + key);
 	
 }
 
