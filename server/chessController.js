@@ -9,7 +9,7 @@ var KEY_CHARS = '123456789';
 // public functions
 //
 
-function enterGame (req, postData) {
+function enterGame (postData) {
 
 	var attrs = {};
 	var action = postData.action;
@@ -27,7 +27,7 @@ function enterGame (req, postData) {
 
 	return attrs;
 
-};
+}
 
 function buildEnterGameAttrMap (gameObj, gameID, key, currentPlayer, canMove) {
 	var moveHistory = gameObj.moveHistory || [];
@@ -42,7 +42,11 @@ function buildEnterGameAttrMap (gameObj, gameID, key, currentPlayer, canMove) {
 	};
 }
 
-function saveMove (req, postData) {
+function buildDefaultEnterGameAttrMap () {
+	return buildEnterGameAttrMap({}, '', '', '', false);
+}
+
+function saveMove (postData) {
 	var gameID = postData.gameID;
 	var gameObj = getGameObject(gameID);
 	var key = postData.key;
@@ -66,6 +70,7 @@ function saveMove (req, postData) {
 
 exports.enterGame = enterGame;
 exports.buildEnterGameAttrMap = buildEnterGameAttrMap;
+exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 exports.saveMove = saveMove;
 
 //

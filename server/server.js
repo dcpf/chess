@@ -1,6 +1,8 @@
 var http = require('http');
 var fs = require('fs');
 var urlUtil = require('url');
+var qs = require('querystring');
+var q = require('q');
 var templateHandler = require('./templateHandler');
 var appUrl = require('./model/appUrl');
 var requestHandler = require('./requestHandler');
@@ -69,9 +71,29 @@ http.createServer(function (req, res) {
 		var path = urlObj.pathname.replace("/", "");
 		var pathParts = path.split('/');
 		var queryObj = urlObj.query;
+		var deferred = q.defer();
 
-		var promise = requestHandler.handleRequest(req, path, queryObj);
-		promise.then(function(mav){
+		// if this is a POST request, extract the post data from the body 
+		if (req.method === 'POST') {
+
+			var body = '';
+			req.on('data', function (data) {
+				body += data;
+			});
+
+			req.on('end', function () {
+				var postData = qs.parse(body);
+				deferred.resolve(postData);
+			});
+
+		} else {
+			deferred.resolve(null);
+		}
+
+		// once the deferred object has been resolved, call requestHandler.handleRequest() and then doOutput()
+		deferred.promise.then(function(postData) {
+			var params = postData || queryObj;
+			var mav = requestHandler.handleRequest(req, path, params);
 			if (mav) {
 				if (mav.view) {
 					doOutput(res, mav.view, mav.model);
