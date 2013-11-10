@@ -1,14 +1,13 @@
 var templateHandler = require('./templateHandler');
 var nodemailer = require('nodemailer/lib/nodemailer');
 
-var FROM_ADDRESS = 'dpfchess@gmail.com';
+var emailServiceConfig = CONFIG.emailService;
 
-// TODO: encrypt the gmail user/password, or see what the hosting svc provides.
 var mailTransport = nodemailer.createTransport('SMTP', {
-    service: 'Gmail',
+    service: emailServiceConfig.serviceName,
     auth: {
-        user: 'dpfchess',
-        pass: 'dpfch355'
+        user: emailServiceConfig.user,
+        pass: emailServiceConfig.pass
     }
 });
 
@@ -22,7 +21,7 @@ exports.sendGameCreationEmail = function (player1Email, player2Email, gameID, ke
 		key: key});
 
 	mailTransport.sendMail({
-    	from: FROM_ADDRESS,
+    	from: emailServiceConfig.fromAddress,
     	to: player1Email,
     	subject: 'New Chess Game',
     	html: html
@@ -42,7 +41,7 @@ exports.sendInviteEmail = function (player1Email, player2Email, gameID, key, mov
 		move: move});
 
 	mailTransport.sendMail({
-    	from: FROM_ADDRESS,
+    	from: emailServiceConfig.fromAddress,
     	to: player2Email,
     	subject: 'You have been invited to play a game of chess',
     	html: html
@@ -61,7 +60,7 @@ exports.sendMoveNotificationEmail = function (playerEmail, gameID, key, move) {
 		move: move});
 
 	mailTransport.sendMail({
-    	from: FROM_ADDRESS,
+    	from: emailServiceConfig.fromAddress,
     	to: playerEmail,
     	subject: 'Your opponent awaits your next move',
     	html: html

@@ -1,10 +1,14 @@
-var http = require('http');
 var fs = require('fs');
+var appUrl = require('./model/appUrl');
+
+// before doing anything else, initialize the configuration
+initConfig();
+
+var http = require('http');
 var urlUtil = require('url');
 var qs = require('querystring');
 var q = require('q');
 var templateHandler = require('./templateHandler');
-var appUrl = require('./model/appUrl');
 var requestHandler = require('./requestHandler');
 
 var log = function (msg) {
@@ -25,15 +29,6 @@ var monthsArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'
 
 // Timestamp of when the app was started. We'll use this for caching javascript and css files in the browser.
 var runtimestamp = new Date().getTime();
-
-// read the config file
-var configFile = process.argv[2] || 'server/conf/config.js';
-var config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
-
-// set the ip and port from either the env vars or from the config file
-var ip = process.env.IP || config.ip;
-var port = process.env.PORT || config.port;
-GLOBAL.APP_URL = appUrl.constructUrl(ip, port);
 
 http.createServer(function (req, res) {
 
@@ -87,6 +82,20 @@ http.createServer(function (req, res) {
 }).listen(APP_URL.port, APP_URL.domain);
 
 log('Server running at ' + APP_URL.url);
+
+function initConfig () {
+
+	// read the config file and make the config object globally available
+	var configFile = process.argv[2] || 'server/conf/config.js';
+	var config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
+	GLOBAL.CONFIG = config;
+
+	// get the ip and port from either the env vars or from the config file, and set the appUrl object
+	var appUrl = require('./model/appUrl');
+	var ip = process.env.IP || config.ip;
+	var port = process.env.PORT || config.port;
+	GLOBAL.APP_URL = appUrl.constructUrl(ip, port);
+}
 
 function doOutput (res, path, attrs) {
 
