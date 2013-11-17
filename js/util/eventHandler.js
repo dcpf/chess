@@ -24,6 +24,7 @@ chess.EventHandler = function () {
 * Static message names defined here so only one copy exists.
 */
 chess.EventHandler.prototype.messageNames = {
+	error: 'error',
 	gameCreated: 'gameCreated',
 	updatedLegalMoves: 'updatedLegalMoves',
 	renderConfirmMoveDialog: 'renderConfirmMoveDialog',

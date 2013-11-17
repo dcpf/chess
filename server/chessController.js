@@ -18,12 +18,15 @@ function createGame (ip, postData) {
 	var dfrd = reCaptchaHandler.validateCaptcha(ip, postData.captchaChallenge, postData.captchaResponse);
 	dfrd.promise.then(function(captchaVerifyResponse) {
 		if (captchaVerifyResponse.success === 'true') {
+			console.log('captcha validation passed');
 			var player1Email = postData.player1Email;
 			var player2Email = postData.player2Email;
 			attrs = _createGame(player1Email, player2Email);
 			deferred.resolve(attrs);
 		} else {
-			console.log('incorrect captcha');
+			console.log('captcha validation failed');
+			attrs.error = {msg: 'Incorrect captcha. Please try again.'};
+			deferred.resolve(attrs);
 		}
 	});
 

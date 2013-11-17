@@ -27,9 +27,6 @@ chess.initializer = {
             moveHistory: obj.moveHistory,
             notationConverter: obj.notationConverter
         });
-        obj.genericDialogView = new chess.GenericDialogView({
-            eventHandler: obj.eventHandler
-        });
         obj.confirmMoveDialogView = new chess.ConfirmMoveDialogView({
             eventHandler: obj.eventHandler
         });

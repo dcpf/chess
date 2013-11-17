@@ -175,8 +175,7 @@ Recaptcha.create(
     "6LfqLOkSAAAAALvKz01zEmrz6QQWRp-i8v3T_Qmr",
     "captcha",
     {
-        theme: "clean",
-        callback: Recaptcha.focus_response_field
+        theme: "clean"
     }
 );
 
@@ -198,9 +197,12 @@ chess.vars = {
     blackEmail: '<%= blackEmail %>'
 };
 
-// Instantiate the chessGame object, eventHandler, and enterGameView. This is all we need for the initial UI.
+// Instantiate the chessGame object, and some basic objects we need for the initial UI.
 var chessGame = {};
 chessGame.eventHandler = new chess.EventHandler();
+chessGame.genericDialogView = new chess.GenericDialogView({
+    eventHandler: chessGame.eventHandler
+});
 chessGame.enterGameView = new chess.EnterGameView({
     eventHandler: chessGame.eventHandler
 });
