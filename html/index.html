@@ -28,6 +28,9 @@
                     <td>Opponent's Email Address</td>
                     <td><input type="text" id="player2Email" maxlength="50"></td>
                 </tr>
+                <tr>
+                    <td colspan="2"><div id="captcha"></div></td>
+                </tr>
                 <tr><td colspan="2"><hr></td></tr>
                 <tr>
                     <td colspan="2"><input type="radio" name="newOrExisting" value="E">Continue Existing Game</td>
@@ -135,6 +138,7 @@ function log (msg) {
 }
 </script>
 
+<script src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
@@ -166,6 +170,15 @@ function log (msg) {
 <script src="js/util/initializer.js?ver=<%= runtimestamp %>"></script>
 
 <script>
+
+Recaptcha.create(
+    "6LfqLOkSAAAAALvKz01zEmrz6QQWRp-i8v3T_Qmr",
+    "captcha",
+    {
+        theme: "clean",
+        callback: Recaptcha.focus_response_field
+    }
+);
 
 // set the progressDialog to show/hide whenever an ajax call is made
 $(document).bind("ajaxSend", function() {

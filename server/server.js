@@ -63,16 +63,18 @@ http.createServer(function (req, res) {
 		// once the deferred object has been resolved, call requestHandler.handleRequest() and then doOutput()
 		deferred.promise.then(function(postData) {
 			var params = postData || queryObj;
-			var mav = requestHandler.handleRequest(req, path, params);
-			if (mav) {
-				if (mav.view) {
-					doOutput(res, mav.view, mav.model);
+			var dfrd = requestHandler.handleRequest(req, path, params);
+			dfrd.promise.then(function(mav) {
+				if (mav) {
+					if (mav.view) {
+						doOutput(res, mav.view, mav.model);
+					} else {
+						doJsonOutput(res, mav.model);
+					}
 				} else {
-					doJsonOutput(res, mav.model);
+					doOutput(res, path);
 				}
-			} else {
-				doOutput(res, path);
-			}
+			});
 		});
 
 	} catch (e) {

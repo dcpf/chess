@@ -31,19 +31,24 @@ chess.EnterGameView = Backbone.View.extend({
     	self.$('#enterGameSubmitButton').click(function() {
     		var action = self.$("input[type='radio'][name='newOrExisting']:checked").val();
     		var params = {action: action};
+            var endPoint = '';
     		if (action === 'N') {
         		// new
         		params.player1Email = self.$('#player1Email').val().trim();
         		params.player2Email = self.$('#player2Email').val().trim();
+                params.captchaResponse = Recaptcha.get_response();
+                params.captchaChallenge = Recaptcha.get_challenge();
+                endPoint = '/createGame';
     		} else if (action === 'E') {
         		// existing
         		params.gameID = self.$('#gameID').val().trim();
         		params.key = self.$('#key').val().trim();
+                endPoint = '/enterGame';
     		}
-    		var deferred = $.post('/enterGame', params);
+            // TODO, this should probably all be handled by publishing an event
+    		var deferred = $.post(endPoint, params);
     		deferred.done(function(res) {
 				self.hide();
-                // TODO, this should be handled by publishing an event
                 startGame(res);
                 if (action === 'N') {
                     self.eventHandler.trigger(self.eventHandler.messageNames.gameCreated);
