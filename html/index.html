@@ -18,7 +18,7 @@
             <hr/>
             <table id="enterGameTable">
                 <tr>
-                    <td colspan="2"><input type="radio" name="newOrExisting" value="N">New Game</td>
+                    <td colspan="2"><input type="radio" name="newOrExisting" value="N" checked>New Game</td>
                 </tr>
                 <tr>
                     <td>Your Email Address</td>
@@ -171,13 +171,25 @@ function log (msg) {
 
 <script>
 
-Recaptcha.create(
-    "6LfqLOkSAAAAALvKz01zEmrz6QQWRp-i8v3T_Qmr",
-    "captcha",
-    {
-        theme: "clean"
-    }
-);
+chess.createCaptcha = function() {
+    Recaptcha.create(
+        "6LfqLOkSAAAAALvKz01zEmrz6QQWRp-i8v3T_Qmr",
+        "captcha",
+        {
+            theme: "clean"
+        }
+    );
+};
+
+chess.destroyCaptcha = function() {
+    Recaptcha.destroy();
+};
+
+chess.reloadCaptcha = function() {
+    Recaptcha.reload();
+};
+
+chess.createCaptcha();
 
 // set the progressDialog to show/hide whenever an ajax call is made
 $(document).bind("ajaxSend", function() {

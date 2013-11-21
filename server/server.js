@@ -60,7 +60,7 @@ http.createServer(function (req, res) {
 			deferred.resolve(null);
 		}
 
-		// once the deferred object has been resolved, call requestHandler.handleRequest() and then doOutput()
+		// once the post data has been parsed, call requestHandler.handleRequest() and then doOutput()
 		deferred.promise.then(function(postData) {
 			var params = postData || queryObj;
 			var dfrd = requestHandler.handleRequest(req, path, params);

@@ -1,5 +1,6 @@
 var fs = require('fs');
 var q = require('q');
+var validator = require('validator');
 var reCaptchaHandler = require('./reCaptchaHandler');
 var emailHandler = require('./emailHandler');
 
@@ -18,11 +19,26 @@ function createGame (ip, postData) {
 	var dfrd = reCaptchaHandler.validateCaptcha(ip, postData.captchaChallenge, postData.captchaResponse);
 	dfrd.promise.then(function(captchaVerifyResponse) {
 		if (captchaVerifyResponse.success === 'true') {
+
 			console.log('captcha validation passed');
+
+			// get emails and validate tham
 			var player1Email = postData.player1Email;
 			var player2Email = postData.player2Email;
+			var err = _validateEmailAddress(player1Email);
+			if (!err) {
+				err = _validateEmailAddress(player2Email);
+			}
+			if (err) {
+				attrs.error = {msg: err};
+				deferred.resolve(attrs);
+				return deferred;
+			}
+
+			// create the game
 			attrs = _createGame(player1Email, player2Email);
 			deferred.resolve(attrs);
+
 		} else {
 			console.log('captcha validation failed');
 			attrs.error = {msg: 'Incorrect captcha. Please try again.'};
@@ -90,6 +106,16 @@ exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 //
 // private functions
 //
+
+function _validateEmailAddress (email) {
+	var err = '';
+	try {
+		validator.check(email, 'Invalid email address: ' + email).len(6, 64).isEmail();
+	} catch (e) {
+    	err = e.message;
+	}
+	return err;
+}
 
 function _getGameObject (gameID) {
 	var gameObj = {};

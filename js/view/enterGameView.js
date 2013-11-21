@@ -45,11 +45,14 @@ chess.EnterGameView = Backbone.View.extend({
         		params.key = self.$('#key').val().trim();
                 endPoint = '/enterGame';
     		}
-            // TODO, this should probably all be handled by publishing an event
+
+            // Post the data
+            // TODO, all of this should probably all be handled by publishing an event
     		var deferred = $.post(endPoint, params);
     		deferred.done(function(res) {
                 if (res.error) {
                     self.eventHandler.trigger(self.eventHandler.messageNames.error, res.error);
+                    chess.reloadCaptcha();
                 } else {
 				    self.hide();
                     startGame(res);
@@ -58,6 +61,7 @@ chess.EnterGameView = Backbone.View.extend({
                     }
                 }
             });
+
 		});
 
     },
