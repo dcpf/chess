@@ -131,8 +131,13 @@ function doOutput (res, path, attrs) {
 }
 
 function doJsonOutput (res, obj) {
-	res.writeHead(200, {'Content-Type': contentTypeMap.json});
-   	res.write(JSON.stringify(obj));
+	if (obj instanceof Error) {
+		res.writeHead(500, {'Content-Type': contentTypeMap.html});
+		res.write(obj.message);
+	} else {
+		res.writeHead(200, {'Content-Type': contentTypeMap.json});
+		res.write(JSON.stringify(obj));
+	}
    	res.end();
 }
 

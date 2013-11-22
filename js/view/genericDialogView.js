@@ -18,8 +18,8 @@ chess.GenericDialogView = Backbone.View.extend({
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveSaved, this._renderMoveSavedDialog);
     },
 
-    _renderErrorDialog: function (error) {
-        this.$('.genericDialogText').html(error.msg);
+    _renderErrorDialog: function (msg) {
+        this.$('.genericDialogText').html(msg);
         this.$el.modal();
     },
 

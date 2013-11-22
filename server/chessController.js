@@ -15,7 +15,7 @@ var KEY_CHARS = '123456789';
 function createGame (ip, postData) {
 
 	var deferred = q.defer();
-	var attrs = {};
+	var obj = {};
 	var dfrd = reCaptchaHandler.validateCaptcha(ip, postData.captchaChallenge, postData.captchaResponse);
 	dfrd.promise.then(function(captchaVerifyResponse) {
 		if (captchaVerifyResponse.success === 'true') {
@@ -25,24 +25,23 @@ function createGame (ip, postData) {
 			// get emails and validate tham
 			var player1Email = postData.player1Email;
 			var player2Email = postData.player2Email;
-			var err = _validateEmailAddress(player1Email);
-			if (!err) {
-				err = _validateEmailAddress(player2Email);
-			}
-			if (err) {
-				attrs.error = {msg: err};
-				deferred.resolve(attrs);
+			try {
+				_validateEmailAddress(player1Email);
+				_validateEmailAddress(player2Email);
+			} catch (e) {
+				obj = e;
+				deferred.resolve(obj);
 				return deferred;
 			}
 
 			// create the game
-			attrs = _createGame(player1Email, player2Email);
-			deferred.resolve(attrs);
+			obj = _createGame(player1Email, player2Email);
+			deferred.resolve(obj);
 
 		} else {
 			console.log('captcha validation failed');
-			attrs.error = {msg: 'Incorrect captcha. Please try again.'};
-			deferred.resolve(attrs);
+			obj = new Error('Incorrect captcha. Please try again.');
+			deferred.resolve(obj);
 		}
 	});
 
@@ -53,8 +52,13 @@ function createGame (ip, postData) {
 function enterGame (postData) {
 	var gameID = postData.gameID;
 	var key = postData.key || '';
-	var attrs = _enterExistingGame(gameID, key);
-	return attrs;
+	var obj;
+	try {
+		obj = _enterExistingGame(gameID, key);
+	} catch (e) {
+		obj = e;
+	}
+	return obj;
 }
 
 function saveMove (postData) {
@@ -102,27 +106,27 @@ exports.saveMove = saveMove;
 exports.buildEnterGameAttrMap = buildEnterGameAttrMap;
 exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 
-
 //
 // private functions
 //
 
 function _validateEmailAddress (email) {
-	var err = '';
 	try {
 		validator.check(email, 'Invalid email address: ' + email).len(6, 64).isEmail();
 	} catch (e) {
-    	err = e.message;
+		throw e;
 	}
-	return err;
 }
 
 function _getGameObject (gameID) {
 	var gameObj = {};
 	var file = DATA_DIR + gameID;
-	if (fs.existsSync(file)) {
+	try {
 		var jsonStr = fs.readFileSync(file, {encoding: 'utf8'});
 		gameObj = JSON.parse(jsonStr);
+	} catch (e) {
+		e.message = 'Invalid Game ID: ' + gameID;
+		throw e;
 	}
 	return gameObj;
 }
@@ -151,7 +155,12 @@ function _createGame (player1Email, player2Email) {
 }
 
 function _enterExistingGame (gameID, key) {
-	var gameObj = _getGameObject(gameID);
+	var gameObj;
+	try {
+		gameObj = _getGameObject(gameID);
+	} catch (e) {
+		throw e;
+	}
 	var currentPlayer = _getCurrentPlayer(gameObj);
 	var canMove = _playerCanMove(gameObj, key);
 	return buildEnterGameAttrMap(gameObj, gameID, key, currentPlayer, canMove);

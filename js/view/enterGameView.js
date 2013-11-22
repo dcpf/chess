@@ -50,16 +50,15 @@ chess.EnterGameView = Backbone.View.extend({
             // TODO, all of this should probably all be handled by publishing an event
     		var deferred = $.post(endPoint, params);
     		deferred.done(function(res) {
-                if (res.error) {
-                    self.eventHandler.trigger(self.eventHandler.messageNames.error, res.error);
-                    chess.reloadCaptcha();
-                } else {
-				    self.hide();
-                    startGame(res);
-                    if (action === 'N') {
-                        self.eventHandler.trigger(self.eventHandler.messageNames.gameCreated);
-                    }
+                self.hide();
+                startGame(res);
+                if (action === 'N') {
+                    self.eventHandler.trigger(self.eventHandler.messageNames.gameCreated);
                 }
+            });
+            deferred.fail(function(jqXHR) {
+                self.eventHandler.trigger(self.eventHandler.messageNames.error, jqXHR.responseText);
+                chess.reloadCaptcha();
             });
 
 		});

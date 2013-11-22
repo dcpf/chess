@@ -12,43 +12,43 @@ exports.handleRequest = function (req, path, params) {
 		// POST createGame request
 		var ip = req.connection.remoteAddress;
 		var dfrd = chessController.createGame(ip, params);
-		dfrd.promise.then(function(attrs){
-			mav = modelAndView.getModelAndView(attrs);
+		dfrd.promise.then(function(obj){
+			mav = modelAndView.getModelAndView(obj);
 			deferred.resolve(mav);
 		});
 
 	} else if (path === 'enterGame') {
 
 		// POST enterGame request
-		var attrs = chessController.enterGame(params);
-		mav = modelAndView.getModelAndView(attrs);
+		var obj = chessController.enterGame(params);
+		mav = modelAndView.getModelAndView(obj);
 		deferred.resolve(mav);
 
 	} else if (path === 'saveMove') {
 
 		// POST saveMove request
-		var attrs = chessController.saveMove(params);
-		mav = modelAndView.getModelAndView(attrs);
+		var obj = chessController.saveMove(params);
+		mav = modelAndView.getModelAndView(obj);
 		deferred.resolve(mav);
 
 	} else if (params.gameID) {
 
 		// GET enterGame request where gameID is passed as a URL param
-		var attrs = chessController.enterGame(params);
-		mav = modelAndView.getModelAndView(attrs, 'html/index.html');
+		var obj = chessController.enterGame(params);
+		mav = modelAndView.getModelAndView(obj, 'html/index.html');
 		deferred.resolve(mav);
 
 	} else if (!path) {
 
 		// if path does not exist, use index.html by default
-		var attrs = chessController.buildDefaultEnterGameAttrMap();
-		mav = modelAndView.getModelAndView(attrs, 'html/index.html');
+		var obj = chessController.buildDefaultEnterGameAttrMap();
+		mav = modelAndView.getModelAndView(obj, 'html/index.html');
 		deferred.resolve(mav);
 
 	} else {
 
 		// path exists, so use that
-		mav = modelAndView.getModelAndView(attrs, path);
+		mav = modelAndView.getModelAndView(obj, path);
 		deferred.resolve(mav);
 
 	}
