@@ -32,6 +32,7 @@ chess.EnterGameView = Backbone.View.extend({
     		var action = self.$("input[type='radio'][name='newOrExisting']:checked").val();
     		var params = {action: action};
             var endPoint = '';
+            var reloadCaptcha = false;
     		if (action === 'N') {
         		// new
         		params.player1Email = self.$('#player1Email').val().trim();
@@ -39,6 +40,7 @@ chess.EnterGameView = Backbone.View.extend({
                 params.captchaResponse = Recaptcha.get_response();
                 params.captchaChallenge = Recaptcha.get_challenge();
                 endPoint = '/createGame';
+                reloadCaptcha = true;
     		} else if (action === 'E') {
         		// existing
         		params.gameID = self.$('#gameID').val().trim();
@@ -58,7 +60,9 @@ chess.EnterGameView = Backbone.View.extend({
             });
             deferred.fail(function(jqXHR) {
                 self.eventHandler.trigger(self.eventHandler.messageNames.error, jqXHR.responseText);
-                chess.reloadCaptcha();
+                if (reloadCaptcha) {
+                    chess.reloadCaptcha();
+                }
             });
 
 		});
