@@ -110,6 +110,9 @@ exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 // private functions
 //
 
+/**
+* Validate an email address. Throws an error if validation fails.
+*/
 function _validateEmailAddress (email) {
 	try {
 		validator.check(email, 'Invalid email address: ' + email).len(6, 64).isEmail();
@@ -118,6 +121,9 @@ function _validateEmailAddress (email) {
 	}
 }
 
+/**
+* Get the game object from disk by gameID. Throws an error if no game exists by the ID.
+*/
 function _getGameObject (gameID) {
 	var gameObj = {};
 	var file = DATA_DIR + gameID;
@@ -154,6 +160,9 @@ function _createGame (player1Email, player2Email) {
 	return buildEnterGameAttrMap(gameObj, gameID, whiteKey, 'W', true);
 }
 
+/*
+* Enter an existig game. Throws an error if no game exists by the passed-in ID.
+*/
 function _enterExistingGame (gameID, key) {
 	var gameObj;
 	try {
