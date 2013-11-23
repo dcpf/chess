@@ -83,13 +83,13 @@ function saveMove (postData) {
 	return {status: 'ok', opponentEmail: opponentEmail};
 }
 
-function buildEnterGameAttrMap (gameObj, gameID, key, currentPlayer, canMove) {
+function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove) {
 	var moveHistory = gameObj.moveHistory || [];
 	return {
 		gameID: gameID,
 		key: key,
 		initialMoveHistory: JSON.stringify(moveHistory),
-		currentPlayer: currentPlayer,
+		perspective: perspective,
 		canMove: canMove,
 		whiteEmail: (gameObj.W) ? gameObj.W.email : '',
 		blackEmail: (gameObj.B) ? gameObj.B.email : ''
@@ -97,13 +97,12 @@ function buildEnterGameAttrMap (gameObj, gameID, key, currentPlayer, canMove) {
 }
 
 function buildDefaultEnterGameAttrMap () {
-	return buildEnterGameAttrMap({}, '', '', '', false);
+	return _buildEnterGameAttrMap({}, '', '', '', false);
 }
 
 exports.createGame = createGame;
 exports.enterGame = enterGame;
 exports.saveMove = saveMove;
-exports.buildEnterGameAttrMap = buildEnterGameAttrMap;
 exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 
 //
@@ -157,7 +156,7 @@ function _createGame (player1Email, player2Email) {
 	};
 	var gameID = _createGameFile(gameObj);
 	emailHandler.sendGameCreationEmail(player1Email, player2Email, gameID, whiteKey);
-	return buildEnterGameAttrMap(gameObj, gameID, whiteKey, 'W', true);
+	return _buildEnterGameAttrMap(gameObj, gameID, whiteKey, 'W', true);
 }
 
 /*
@@ -170,9 +169,9 @@ function _enterExistingGame (gameID, key) {
 	} catch (e) {
 		throw e;
 	}
-	var currentPlayer = _getCurrentPlayer(gameObj);
+	var perspective = _getPerspective(gameObj, key);
 	var canMove = _playerCanMove(gameObj, key);
-	return buildEnterGameAttrMap(gameObj, gameID, key, currentPlayer, canMove);
+	return _buildEnterGameAttrMap(gameObj, gameID, key, perspective, canMove);
 }
 
 function _createGameFile (gameObj) {
@@ -206,6 +205,11 @@ function _generateKey () {
         s += KEY_CHARS.charAt(Math.floor(Math.random() * KEY_CHARS.length));
     }
     return s;
+}
+
+function _getPerspective (gameObj, key) {
+	var perspective = (gameObj.B.key == key) ? 'B' : 'W';
+	return perspective;
 }
 
 function _getCurrentPlayer (gameObj) {

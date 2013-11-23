@@ -203,7 +203,7 @@ chess.vars = {
     gameID: '<%= gameID %>',
     key: '<%= key %>',
     initialMoveHistory: <%= initialMoveHistory %>,
-    currentPlayer: '<%= currentPlayer %>',
+    perspective: '<%= perspective %>',
     canMove: <%= canMove %>,
     whiteEmail: '<%= whiteEmail %>',
     blackEmail: '<%= blackEmail %>'
@@ -231,7 +231,7 @@ function startGame (attrs) {
     // kick things off
     chess.initializer.initialize(chessGame, chess.vars.canMove);
     chessGame.board.findAllLegalMoves();
-    chessGame.boardView.render(chess.vars.currentPlayer);
+    chessGame.boardView.render(chess.vars.perspective);
 
     // If there is an existing move history, use it to get the game into the current state
     for (var i in chess.vars.initialMoveHistory) {

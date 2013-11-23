@@ -129,16 +129,16 @@ chess.BoardView = Backbone.View.extend({
 
     /*
     * Generate the board
-    * @param currentPlayer - Needed to draw the board in the correct orientation for the current player
+    * @param perspective - Needed to draw the board in the correct perspective for the current viewer
     */
-    _generateBoard: function (currentPlayer) {
+    _generateBoard: function (perspective) {
     
         // Set the board coords based on the current player. For black, we want to turn the board upside down.
         var letters = _.clone(this.notationConverter.letters),
             dimStart = 0,
             dimEnd = 7,
             dimIncrement = 1;
-        if (currentPlayer === 'B') {
+        if (perspective === 'B') {
             letters = letters.reverse();
             dimStart = 7;
             dimEnd = 0;
@@ -182,8 +182,8 @@ chess.BoardView = Backbone.View.extend({
     /*
     * Draw the board
     */
-    render: function (currentPlayer) {
-        var gameBoard = this._generateBoard(currentPlayer);
+    render: function (perspective) {
+        var gameBoard = this._generateBoard(perspective);
         this.$el.html(gameBoard);
         this.updateBoard();
     },
