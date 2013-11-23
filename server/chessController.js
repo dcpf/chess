@@ -83,19 +83,6 @@ function saveMove (postData) {
 	return {status: 'ok', opponentEmail: opponentEmail};
 }
 
-function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove) {
-	var moveHistory = gameObj.moveHistory || [];
-	return {
-		gameID: gameID,
-		key: key,
-		initialMoveHistory: JSON.stringify(moveHistory),
-		perspective: perspective,
-		canMove: canMove,
-		whiteEmail: (gameObj.W) ? gameObj.W.email : '',
-		blackEmail: (gameObj.B) ? gameObj.B.email : ''
-	};
-}
-
 function buildDefaultEnterGameAttrMap () {
 	return _buildEnterGameAttrMap({}, '', '', '', false);
 }
@@ -108,6 +95,19 @@ exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 //
 // private functions
 //
+
+function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove) {
+	var moveHistory = gameObj.moveHistory || [];
+	return {
+		gameID: gameID,
+		key: key,
+		initialMoveHistory: JSON.stringify(moveHistory),
+		perspective: perspective,
+		canMove: canMove,
+		whiteEmail: (gameObj.W) ? gameObj.W.email : '',
+		blackEmail: (gameObj.B) ? gameObj.B.email : ''
+	};
+}
 
 /**
 * Validate an email address. Throws an error if validation fails.
