@@ -105,7 +105,14 @@ function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove) {
 		perspective: perspective,
 		canMove: canMove,
 		whiteEmail: (gameObj.W) ? gameObj.W.email : '',
-		blackEmail: (gameObj.B) ? gameObj.B.email : ''
+		blackEmail: (gameObj.B) ? gameObj.B.email : '',
+		// add any config needed by the client
+		config: {
+			recaptcha: {
+				enabled: CONFIG.recaptcha.enabled,
+				publicKey: CONFIG.recaptcha.publicKey
+			}
+		}
 	};
 }
 

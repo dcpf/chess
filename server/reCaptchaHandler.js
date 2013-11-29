@@ -5,23 +5,28 @@ exports.validateCaptcha = function (ip, captchaChallenge, captchaResponse) {
 
 	var deferred = q.defer();
 
-	request(
-		{
-			method: 'post',
-			url: 'http://www.google.com/recaptcha/api/verify',
-			form: {
-				privatekey: '6LfqLOkSAAAAAB-KDievG22mgeA_kkNV8wF_pa1Z',
-				remoteip: ip,
-				challenge: captchaChallenge,
-				response: captchaResponse
+	if (CONFIG.recaptcha.enabled) {
+		request(
+			{
+				method: 'post',
+				url: CONFIG.recaptcha.verifyUrl,
+				form: {
+					privatekey: CONFIG.recaptcha.privateKey,
+					remoteip: ip,
+					challenge: captchaChallenge,
+					response: captchaResponse
+				}
+			},
+			function (err, res, body) {
+				var responseArray = body.split('\n');
+				var response = {success: responseArray[0], message: responseArray[1]};
+				deferred.resolve(response);
 			}
-		},
-		function (err, res, body) {
-			var responseArray = body.split('\n');
-			var response = {success: responseArray[0], message: responseArray[1]};
-			deferred.resolve(response);
-		}
-	);
+		);
+	} else {
+		var response = {success: 'true'};
+		deferred.resolve(response);
+	}
 
 	return deferred;
 

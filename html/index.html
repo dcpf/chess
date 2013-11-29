@@ -131,14 +131,41 @@
 </div>
 
 <script>
+
 function log (msg) {
     if (window.console) {
         console.log(msg);
     }
 }
+
+// create the chess object with config and game variables
+var chess = {
+
+    config: {
+        recaptcha: {
+            enabled: <%= config.recaptcha.enabled %>,
+            publicKey: '<%= config.recaptcha.publicKey %>'
+        }
+    },
+
+    vars: {
+        gameID: '<%= gameID %>',
+        key: '<%= key %>',
+        initialMoveHistory: <%= initialMoveHistory %>,
+        perspective: '<%= perspective %>',
+        canMove: <%= canMove %>,
+        whiteEmail: '<%= whiteEmail %>',
+        blackEmail: '<%= blackEmail %>'
+    }
+
+};
+
+if (chess.config.recaptcha.enabled) {
+    document.write('<script src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"><\/script>');
+}
+
 </script>
 
-<script src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
@@ -171,43 +198,12 @@ function log (msg) {
 
 <script>
 
-chess.createCaptcha = function() {
-    Recaptcha.create(
-        "6LfqLOkSAAAAALvKz01zEmrz6QQWRp-i8v3T_Qmr",
-        "captcha",
-        {
-            theme: "clean"
-        }
-    );
-};
-
-chess.destroyCaptcha = function() {
-    Recaptcha.destroy();
-};
-
-chess.reloadCaptcha = function() {
-    Recaptcha.reload();
-};
-
-chess.createCaptcha();
-
 // set the progressDialog to show/hide whenever an ajax call is made
 $(document).bind("ajaxSend", function() {
    $("#progressDialog").modal();
  }).bind("ajaxComplete", function() {
    $("#progressDialog").modal('hide');
  });
-
-// Set some required variables
-chess.vars = {
-    gameID: '<%= gameID %>',
-    key: '<%= key %>',
-    initialMoveHistory: <%= initialMoveHistory %>,
-    perspective: '<%= perspective %>',
-    canMove: <%= canMove %>,
-    whiteEmail: '<%= whiteEmail %>',
-    blackEmail: '<%= blackEmail %>'
-};
 
 // Instantiate the chessGame object, and some basic objects we need for the initial UI.
 var chessGame = {};

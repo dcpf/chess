@@ -13,18 +13,21 @@ chess.EnterGameView = Backbone.View.extend({
         this.eventHandler = this.options.eventHandler;
         var self = this;
 
+        // initalize the captcha
+        self._createCaptcha();
+
     	// assign focus handlers to the text input fields
     	self.$('#player1Email').focus(function() {
-    		self.selectRadioButton(0);
+            self._selectRadioButton(0);
     	});
     	self.$('#player2Email').focus(function() {
-    		self.selectRadioButton(0);
+            self._selectRadioButton(0);
     	});
     	self.$('#gameID').focus(function() {
-    		self.selectRadioButton(1);
+            self._selectRadioButton(1);
     	});
     	self.$('#key').focus(function() {
-    		self.selectRadioButton(1);
+            self._selectRadioButton(1);
     	});
 
     	// assign the click handler to the submit button
@@ -34,11 +37,13 @@ chess.EnterGameView = Backbone.View.extend({
             var endPoint = '';
             var reloadCaptcha = false;
     		if (action === 'N') {
-        		// new
-        		params.player1Email = self.$('#player1Email').val().trim();
-        		params.player2Email = self.$('#player2Email').val().trim();
-                params.captchaResponse = Recaptcha.get_response();
-                params.captchaChallenge = Recaptcha.get_challenge();
+                // new
+                params.player1Email = self.$('#player1Email').val().trim();
+                params.player2Email = self.$('#player2Email').val().trim();
+                if (window.Recaptcha) {
+                    params.captchaResponse = Recaptcha.get_response();
+                    params.captchaChallenge = Recaptcha.get_challenge();
+                }
                 endPoint = '/createGame';
                 reloadCaptcha = true;
     		} else if (action === 'E') {
@@ -60,8 +65,8 @@ chess.EnterGameView = Backbone.View.extend({
             });
             deferred.fail(function(jqXHR) {
                 self.eventHandler.trigger(self.eventHandler.messageNames.error, jqXHR.responseText);
-                if (reloadCaptcha) {
-                    chess.reloadCaptcha();
+                if (reloadCaptcha && window.Recaptcha) {
+                    Recaptcha.reload();
                 }
             });
 
@@ -77,11 +82,23 @@ chess.EnterGameView = Backbone.View.extend({
         this.$el.show();
     },
 
-    selectRadioButton: function (num) {
+    _selectRadioButton: function (num) {
     	if ((num == 0 && !this.$('#gameID').val().trim() && !this.$('#key').val().trim()) ||
         	(num == 1 && !this.$('#player1Email').val().trim() && !this.$('#player2Email').val().trim())) {
         	this.$('input[name="newOrExisting"]')[num].click();
     	}
+    },
+
+    _createCaptcha: function() {
+        if (window.Recaptcha) {
+            Recaptcha.create(
+                chess.config.recaptcha.publicKey,
+                "captcha",
+                {
+                    theme: "clean"
+                }
+            );
+        }
     }
 
 });
