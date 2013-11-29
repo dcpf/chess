@@ -1,7 +1,11 @@
 var fs = require('fs');
 var appUrl = require('./model/appUrl');
 
-// before doing anything else, initialize the configuration
+var log = function (msg) {
+	console.log(msg);
+}
+
+// before doing anything, initialize the configuration
 initConfig();
 
 var http = require('http');
@@ -10,10 +14,6 @@ var qs = require('querystring');
 var q = require('q');
 var templateHandler = require('./templateHandler');
 var requestHandler = require('./requestHandler');
-
-var log = function (msg) {
-	console.log(msg);
-}
 
 var contentTypeMap = {
 	html: 'text/html',
@@ -88,8 +88,13 @@ log('Server running at ' + APP_URL.url);
 function initConfig () {
 
 	// read the config file and make the config object globally available
-	var configFile = process.argv[2] || 'server/conf/config.js';
-	var config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
+	var configFile = process.argv[2] || 'server/conf/config.json';
+	var config = {};
+	try {
+		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
+	} catch (e) {
+		log('No config file found at: ' + configFile + '. Starting with no configuration.');
+	}
 	GLOBAL.CONFIG = config;
 
 	// get the ip and port from either the env vars or from the config file, and set the appUrl object
