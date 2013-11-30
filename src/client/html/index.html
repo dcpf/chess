@@ -205,13 +205,10 @@ $(document).bind("ajaxSend", function() {
    $("#progressDialog").modal('hide');
  });
 
-// Instantiate the chessGame object, and some basic objects we need for the initial UI.
+// Instantiate the chessGame object, and some basic objects we need for the game.
 var chessGame = {};
 chessGame.eventHandler = new chess.EventHandler();
 chessGame.genericDialogView = new chess.GenericDialogView({
-    eventHandler: chessGame.eventHandler
-});
-chessGame.enterGameView = new chess.EnterGameView({
     eventHandler: chessGame.eventHandler
 });
 
@@ -249,10 +246,13 @@ function startGame (attrs) {
 }
 
 // If the page has loaded with a gameID (and key), start the game. This will occur when the following URL params are passed in: ?gameID=yl9pqqgamdgd&key=123456
+// Else, show the enterGame view.
 if (chess.vars.gameID) {
-    chessGame.enterGameView.hide();
     startGame();
 } else {
+    chessGame.enterGameView = new chess.EnterGameView({
+        eventHandler: chessGame.eventHandler
+    });
     chessGame.enterGameView.show();
 }
 
