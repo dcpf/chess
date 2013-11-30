@@ -13,7 +13,7 @@ var mailTransport = nodemailer.createTransport('SMTP', {
 
 exports.sendGameCreationEmail = function (player1Email, player2Email, gameID, key) {
 
-	var html = templateHandler.processTemplate('html/player1Email.html', {
+	var html = templateHandler.processTemplate('src/server/html/player1Email.html', {
 		player1Email: player1Email,
 		player2Email: player2Email,
 		gameID: gameID,
@@ -34,7 +34,7 @@ exports.sendGameCreationEmail = function (player1Email, player2Email, gameID, ke
 
 exports.sendInviteEmail = function (player1Email, player2Email, gameID, key, move) {
 
-	var html = templateHandler.processTemplate('html/player2InviteEmail.html', {
+	var html = templateHandler.processTemplate('src/server/html/player2InviteEmail.html', {
 		player1Email: player1Email,
 		gameID: gameID,
 		key: key,
@@ -55,7 +55,7 @@ exports.sendInviteEmail = function (player1Email, player2Email, gameID, key, mov
 
 exports.sendMoveNotificationEmail = function (playerEmail, gameID, key, move) {
 
-	var html = templateHandler.processTemplate('html/moveNotificationEmail.html', {
+	var html = templateHandler.processTemplate('src/server/html/moveNotificationEmail.html', {
 		move: move,
 		gameUrl: buildGameUrl(gameID, key),
 		appUrl: APP_URL.url

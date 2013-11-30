@@ -88,7 +88,7 @@ log('Server running at ' + APP_URL.url);
 function initConfig () {
 
 	// read the config file and make the config object globally available
-	var configFile = process.argv[2] || 'server/conf/config.json';
+	var configFile = process.argv[2] || 'src/server/conf/config.json';
 	var config = {};
 	try {
 		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
