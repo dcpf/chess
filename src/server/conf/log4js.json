@@ -1,0 +1,10 @@
+{
+  "appenders": [
+    {
+      "category": "server",
+      "type": "dateFile",
+      "filename": "logs/server.log",
+      "pattern": "-yyyy-MM-dd"
+    }
+  ]
+}

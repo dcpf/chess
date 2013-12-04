@@ -1,9 +1,7 @@
 var fs = require('fs');
+// instantiate the logger to reset all console logging functions to use log4js
+require('./logger');
 var appUrl = require('./model/appUrl');
-
-var log = function (msg) {
-	console.log(msg);
-}
 
 // before doing anything, initialize the configuration
 initConfig();
@@ -78,12 +76,12 @@ http.createServer(function (req, res) {
 		});
 
 	} catch (e) {
-		log(e);
+		console.error(e);
 	}
 
 }).listen(APP_URL.port, APP_URL.domain);
 
-log('Server running at ' + APP_URL.url);
+console.info('Server running at ' + APP_URL.url);
 
 function initConfig () {
 
@@ -93,7 +91,7 @@ function initConfig () {
 	try {
 		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
 	} catch (e) {
-		log('No config file found at: ' + configFile + '. Starting with no configuration.');
+		console.warn('No config file found at: ' + configFile + '. Starting with no configuration.');
 	}
 	GLOBAL.CONFIG = config;
 
