@@ -155,7 +155,8 @@ var chess = {
         perspective: '<%= perspective %>',
         canMove: <%= canMove %>,
         whiteEmail: '<%= whiteEmail %>',
-        blackEmail: '<%= blackEmail %>'
+        blackEmail: '<%= blackEmail %>',
+        error: "<%= error %>"
     }
 
 };
@@ -247,13 +248,13 @@ function startGame (attrs) {
 
 // If the page has loaded with a gameID (and key), start the game. This will occur when the following URL params are passed in: ?gameID=yl9pqqgamdgd&key=123456
 // Else, show the enterGame view.
-if (chess.vars.gameID) {
+if (chess.vars.gameID && !chess.vars.error) {
     startGame();
 } else {
     chessGame.enterGameView = new chess.EnterGameView({
         eventHandler: chessGame.eventHandler
     });
-    chessGame.enterGameView.show();
+    chessGame.enterGameView.show(chess.vars.error);
 }
 
 </script>

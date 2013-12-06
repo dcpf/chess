@@ -78,8 +78,11 @@ chess.EnterGameView = Backbone.View.extend({
         this.$el.hide();
     },
 
-    show: function () {
+    show: function (errorMsg) {
         this.$el.show();
+        if (errorMsg) {
+            this.eventHandler.trigger(this.eventHandler.messageNames.error, errorMsg);
+        }
     },
 
     _selectRadioButton: function (num) {

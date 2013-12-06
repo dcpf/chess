@@ -64,14 +64,25 @@ http.createServer(function (req, res) {
 			var dfrd = requestHandler.handleRequest(req, path, params);
 			dfrd.promise.then(function(mav) {
 				if (mav) {
+
+					// if an error ocurred, log it
+					if (mav.model) {
+						var error = (mav.model instanceof Error) ? mav.model : mav.model.error;
+						if (error) {
+							console.warn(error);
+						}
+					}
+
 					if (mav.view) {
 						doOutput(res, mav.view, mav.model);
 					} else {
 						doJsonOutput(res, mav.model);
 					}
+
 				} else {
 					doOutput(res, path);
 				}
+
 			});
 		});
 

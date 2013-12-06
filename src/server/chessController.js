@@ -83,8 +83,8 @@ function saveMove (postData) {
 	return {status: 'ok', opponentEmail: opponentEmail};
 }
 
-function buildDefaultEnterGameAttrMap () {
-	return _buildEnterGameAttrMap({}, '', '', '', false);
+function buildDefaultEnterGameAttrMap (error) {
+	return _buildEnterGameAttrMap({}, '', '', '', false, error);
 }
 
 exports.createGame = createGame;
@@ -96,7 +96,7 @@ exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 // private functions
 //
 
-function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove) {
+function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove, error) {
 	var moveHistory = gameObj.moveHistory || [];
 	return {
 		gameID: gameID,
@@ -106,6 +106,7 @@ function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove) {
 		canMove: canMove,
 		whiteEmail: (gameObj.W) ? gameObj.W.email : '',
 		blackEmail: (gameObj.B) ? gameObj.B.email : '',
+		error: error,
 		// add any config needed by the client
 		config: {
 			recaptcha: {
@@ -163,7 +164,7 @@ function _createGame (player1Email, player2Email) {
 	};
 	var gameID = _createGameFile(gameObj);
 	emailHandler.sendGameCreationEmail(player1Email, player2Email, gameID, whiteKey);
-	return _buildEnterGameAttrMap(gameObj, gameID, whiteKey, 'W', true);
+	return _buildEnterGameAttrMap(gameObj, gameID, whiteKey, 'W', true, null);
 }
 
 /*
@@ -178,7 +179,7 @@ function _enterExistingGame (gameID, key) {
 	}
 	var perspective = _getPerspective(gameObj, key);
 	var canMove = _playerCanMove(gameObj, key);
-	return _buildEnterGameAttrMap(gameObj, gameID, key, perspective, canMove);
+	return _buildEnterGameAttrMap(gameObj, gameID, key, perspective, canMove, null);
 }
 
 function _createGameFile (gameObj) {

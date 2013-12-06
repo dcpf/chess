@@ -35,6 +35,9 @@ exports.handleRequest = function (req, path, params) {
 
 		// GET enterGame request where gameID is passed as a URL param
 		var obj = chessController.enterGame(params);
+		if (obj instanceof Error) {
+			obj = chessController.buildDefaultEnterGameAttrMap(obj);
+		}
 		mav = modelAndView.getModelAndView(obj, 'src/client/html/index.html');
 		deferred.resolve(mav);
 
