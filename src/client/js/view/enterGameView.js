@@ -14,7 +14,10 @@ chess.EnterGameView = Backbone.View.extend({
         var self = this;
 
         // initalize the captcha
-        self._createCaptcha();
+        if (chess.config.recaptcha.enabled) {
+            document.write('<script src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"><\/script>');
+            self._createCaptcha(self);
+        }
 
     	// assign focus handlers to the text input fields
     	self.$('#player1Email').focus(function() {
@@ -92,8 +95,15 @@ chess.EnterGameView = Backbone.View.extend({
     	}
     },
 
-    _createCaptcha: function() {
-        if (window.Recaptcha) {
+    /*
+    * Create the captcha UI. Must wait until Google's recaptcha_ajax.js has loaded before the Recaptcha
+    * object is available, so we use setTimeout() within the method, until the object is available.
+    */
+    _createCaptcha: function (self) {
+        if (!window.Recaptcha) {
+            // If the Recaptcha object is not yet available, try again.
+            setTimeout(function(){self._createCaptcha(self)}, 100);
+        } else {
             Recaptcha.create(
                 chess.config.recaptcha.publicKey,
                 "captcha",
