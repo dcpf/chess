@@ -205,7 +205,7 @@ $(document).bind("ajaxSend", function() {
  });
 
 // Instantiate the appContext
-chess.appContext = chess.AppContext.initializeGame();
+chess.appContext = chess.AppContext.getAppContext();
 
 // If the page has loaded with a gameID (and key), start the game. This will occur when the following URL params are passed in: ?gameID=yl9pqqgamdgd&key=123456
 // Else, show the enterGame view.
