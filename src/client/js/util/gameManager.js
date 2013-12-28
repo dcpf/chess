@@ -10,6 +10,7 @@ chess.GameManager = Backbone.Model.extend({
 		this.eventHandler = attrs.eventHandler;
         this.notationConverter = attrs.notationConverter;
         this.board = attrs.board;
+        this.boardView = attrs.boardView;
     },
 
 	createGame: function (params) {
@@ -49,7 +50,7 @@ chess.GameManager = Backbone.Model.extend({
 
 		var self = this;
 
-    	// if attrs were passed in, update chess.vars
+        // if attrs were passed in, update chess.vars
     	if (attrs) {
         	// initialMoveHistory is a string, so we need to get it back into json format before assigning to chess.vars
         	attrs.initialMoveHistory = JSON.parse(attrs.initialMoveHistory);
@@ -57,9 +58,8 @@ chess.GameManager = Backbone.Model.extend({
     	}
 
     	// kick things off
-    	chess.appContext.initializeGame(chess.vars.canMove);
     	self.board.findAllLegalMoves();
-    	self.boardView.render(chess.vars.perspective);
+        self.boardView.render(chess.vars.perspective, chess.vars.canMove);
 
     	// If there is an existing move history, use it to get the game into the current state
     	for (var i in chess.vars.initialMoveHistory) {

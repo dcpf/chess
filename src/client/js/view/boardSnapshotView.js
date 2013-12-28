@@ -18,9 +18,6 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         this.moveHistory = this.options.moveHistory;
         this.notationConverter = this.options.notationConverter;
 
-        // set mode to view only
-        this.mode = 'view';
-
         // set up the listeners
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveHistoryLinkClicked, this._render);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.replayGameLinkClicked, function(){this._render();this._autoMove(this, 0);});
@@ -41,11 +38,9 @@ chess.BoardSnapshotView = chess.BoardView.extend({
 
         // stop the timers
         if (this.movePieceTimeoutId) {
-            log('stopping movePieceTimeoutId');
             clearTimeout(this.movePieceTimeoutId);
         }
         if (this.autoMoveTimeoutId) {
-            log('stopping autoMoveTimeoutId');
             clearTimeout(this.autoMoveTimeoutId);
         }
 
@@ -66,7 +61,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         this.board = new chess.Board();
         var gameBoard = this._generateBoard();
         this.$('#chessBoardSnapshotContainer').html(gameBoard);
-        this.updateBoard();
+        this.updateBoard(false);
         this.$el.modal();
         var notation;
         if (index) {
@@ -85,9 +80,6 @@ chess.BoardSnapshotView = chess.BoardView.extend({
                 for (var j in moveArray) {
                     var move = moveArray[j];
                     var piece = move.piece;
-                    // this.board.boardArray[piece.row][piece.column] = ''; // Blank out the previous location
-                    // this.board.boardArray[move.toRow][move.toCol] = piece.qualifiedName; // Populate the new location
-                    // this.updateBoard();
                     var fromSquare = '#sq' + piece.row + piece.column;
                     var $img = this.$('#chessBoardSnapshotContainer ' + fromSquare).children('img');
                     this.$(fromSquare).html(''); // Blank out the previous location

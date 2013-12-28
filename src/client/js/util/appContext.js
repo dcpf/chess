@@ -4,12 +4,20 @@
 
 var chess = chess || {};
 
-chess.AppContext = function () {
+chess.AppContext = {
+
+    initialized: false,
 
     /**
-    * Instantiates the basic objects needed for the game
+    * Instantiates all of the objects and their dependencies needed for the chess game
     */
-    this.initializeBasicObjects = function () {
+    initializeGame: function () {
+
+        // If already initialized, just return this object
+        if (this.initialized) {
+            return this;
+        }
+
         this.eventHandler = new chess.EventHandler();
         this.notationConverter = new chess.NotationConverter();
         this.genericDialogView = new chess.GenericDialogView({
@@ -18,22 +26,9 @@ chess.AppContext = function () {
         this.board = new chess.Board({
             eventHandler: this.eventHandler
         });
-        this.gameManager = new chess.GameManager({
-            eventHandler: this.eventHandler,
-            notationConverter: this.notationConverter,
-            board: this.board
-        });
-    };
-
-    /**
-    * Instantiates all of the objects and their dependencies needed for the chess game
-    */
-    this.initializeGame = function (canMove) {
-        
         this.capturedPieces = new chess.CapturedPieces();
         this.moveHistory = new chess.MoveHistory();
         this.boardView = new chess.BoardView({
-            mode: (canMove) ? '' : 'view', 
             board: this.board,
             eventHandler: this.eventHandler,
             capturedPieces: this.capturedPieces,
@@ -47,6 +42,16 @@ chess.AppContext = function () {
         });
         this.confirmMoveDialogView = new chess.ConfirmMoveDialogView({
             eventHandler: this.eventHandler
+        });
+        this.gameManager = new chess.GameManager({
+            eventHandler: this.eventHandler,
+            notationConverter: this.notationConverter,
+            board: this.board,
+            boardView: this.boardView
+        });
+        this.enterGameView = new chess.EnterGameView({
+            eventHandler: this.eventHandler,
+            gameManager: this.gameManager
         });
 
         // These views just need to be instantiated - no need to assign to a variable
@@ -62,12 +67,10 @@ chess.AppContext = function () {
             board: this.board
         });
 
-        // update the gameManager with the boardView object
-        this.gameManager.boardView = this.boardView;
+        this.initialized = true;
 
+        return this;
         
-    };
-
-    return this;
+    }
 
 };

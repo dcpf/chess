@@ -203,19 +203,14 @@ $(document).bind("ajaxSend", function() {
    $("#progressDialog").modal('hide');
  });
 
-// Instantiate the appContext, and some basic objects we need for the game.
-chess.appContext = new chess.AppContext();
-chess.appContext.initializeBasicObjects();
+// Instantiate the appContext
+chess.appContext = chess.AppContext.initializeGame();
 
 // If the page has loaded with a gameID (and key), start the game. This will occur when the following URL params are passed in: ?gameID=yl9pqqgamdgd&key=123456
 // Else, show the enterGame view.
 if (chess.vars.gameID && !chess.vars.error) {
     chess.appContext.gameManager.startGame();
 } else {
-    chess.appContext.enterGameView = new chess.EnterGameView({
-        eventHandler: chess.appContext.eventHandler,
-        gameManager: chess.appContext.gameManager 
-    });
     chess.appContext.enterGameView.show(chess.vars.error);
 }
 

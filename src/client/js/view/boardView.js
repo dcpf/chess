@@ -23,9 +23,6 @@ chess.BoardView = Backbone.View.extend({
         this.moveHistory = this.options.moveHistory;
         this.notationConverter = this.options.notationConverter;
 
-        // set mode to view for 'view-only' rendering
-        this.mode = this.options.mode;
-
         // set up the listeners
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveConfirmed, function (notation, pieceId, toRow, toCol) {
             this.updateGameWithLatestMove(notation, pieceId, toRow, toCol, true);
@@ -58,9 +55,9 @@ chess.BoardView = Backbone.View.extend({
 
     },
 
-    _buildPieceImageElem: function (piece) {
+    _buildPieceImageElem: function (piece, canMove) {
         var legalMoves = this.board.legalMovesMap[piece.id];
-        var draggable = (this.mode !== 'view' && legalMoves && legalMoves.length > 0) ? true : false;
+        var draggable = (canMove && legalMoves && legalMoves.length > 0) ? true : false;
         var imgTag = '<img id="' + piece.id + '" src="src/client/images/' + piece.qualifiedName + '.gif" draggable="' + draggable + '"';
         imgTag += '/>';
         return imgTag;
@@ -182,16 +179,16 @@ chess.BoardView = Backbone.View.extend({
     /*
     * Draw the board
     */
-    render: function (perspective) {
+    render: function (perspective, canMove) {
         var gameBoard = this._generateBoard(perspective);
         this.$el.html(gameBoard);
-        this.updateBoard();
+        this.updateBoard(canMove);
     },
 
     /*
     * Update the board based on the Chess object's boardArray
     */
-    updateBoard: function () {
+    updateBoard: function (canMove) {
         for (var row in this.board.boardArray) {
             var cols = this.board.boardArray[row];
             for (var col in cols) {
@@ -200,7 +197,7 @@ chess.BoardView = Backbone.View.extend({
                 var piece = this.board.getPieceByCoords(row, col);
                 if (piece) {
                     // Put the piece on the square
-                    this.$('#sq' + row + col).html(this._buildPieceImageElem(piece));
+                    this.$('#sq' + row + col).html(this._buildPieceImageElem(piece, canMove));
                 }
             }
         }
@@ -227,7 +224,7 @@ chess.BoardView = Backbone.View.extend({
     */
     _cancelMove: function () {
          // Revert the board to the position that's still in the boardArray
-        this.updateBoard();
+        this.updateBoard(true);
         // Remove the piece from limbo
         this.board.limbo = null;
     },
@@ -389,10 +386,9 @@ chess.BoardView = Backbone.View.extend({
         // Switch player
         this.board.currentPlayer = (this.board.currentPlayer === 'W') ? 'B' : 'W';
 
-        // If this move was confirmed by the player, put the board into view mode, and set canMove to false;
+        // If this move was confirmed by the player, set canMove to false.
         // It's no longer their turn, so they shouldn't be able to move.
         if (confirmedByPlayer) {
-            this.mode = 'view';
             chess.vars.canMove = false;
         }
 
@@ -400,7 +396,7 @@ chess.BoardView = Backbone.View.extend({
         this.board.findAllLegalMoves();
 
         // Update the board view
-        this.updateBoard();
+        this.updateBoard(chess.vars.canMove);
 
         // Add the move to the 'moveHistory' collection
         this.moveHistory.add({notation: notation, capturedPiece: capturedPiece});
