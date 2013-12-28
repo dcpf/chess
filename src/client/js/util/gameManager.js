@@ -11,6 +11,7 @@ chess.GameManager = Backbone.Model.extend({
         this.notationConverter = attrs.notationConverter;
         this.board = attrs.board;
         this.boardView = attrs.boardView;
+        this.playGameView = attrs.playGameView;
     },
 
 	createGame: function (params) {
@@ -72,11 +73,8 @@ chess.GameManager = Backbone.Model.extend({
         	}
     	}
 
-    	$('#whiteEmail').html(chess.vars.whiteEmail);
-    	$('#blackEmail').html(chess.vars.blackEmail);
-
     	// Show the game
-    	$('#playGameView').show();
+        this.playGameView.show(chess.vars.whiteEmail, chess.vars.blackEmail);
 
 	}
 

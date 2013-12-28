@@ -43,11 +43,13 @@ chess.AppContext = {
         this.confirmMoveDialogView = new chess.ConfirmMoveDialogView({
             eventHandler: this.eventHandler
         });
+        this.playGameView = new chess.PlayGameView();
         this.gameManager = new chess.GameManager({
             eventHandler: this.eventHandler,
             notationConverter: this.notationConverter,
             board: this.board,
-            boardView: this.boardView
+            boardView: this.boardView,
+            playGameView: this.playGameView
         });
         this.enterGameView = new chess.EnterGameView({
             eventHandler: this.eventHandler,
