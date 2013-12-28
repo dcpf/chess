@@ -11,6 +11,7 @@ chess.EnterGameView = Backbone.View.extend({
     initialize: function () {
 
         this.eventHandler = this.options.eventHandler;
+        this.gameManager = this.options.gameManager;
         var self = this;
 
         // initalize the captcha
@@ -37,8 +38,6 @@ chess.EnterGameView = Backbone.View.extend({
     	self.$('#enterGameSubmitButton').click(function() {
     		var action = self.$("input[type='radio'][name='newOrExisting']:checked").val();
     		var params = {action: action};
-            var endPoint = '';
-            var reloadCaptcha = false;
     		if (action === 'N') {
                 // new
                 params.player1Email = self.$('#player1Email').val().trim();
@@ -47,31 +46,24 @@ chess.EnterGameView = Backbone.View.extend({
                     params.captchaResponse = Recaptcha.get_response();
                     params.captchaChallenge = Recaptcha.get_challenge();
                 }
-                endPoint = '/createGame';
-                reloadCaptcha = true;
+                var deferred = self.gameManager.createGame(params);
+                deferred.done(function() {
+                    self.hide();
+                });
+                deferred.fail(function() {
+                    if (window.Recaptcha) {
+                        Recaptcha.reload();
+                    }
+                });
     		} else if (action === 'E') {
         		// existing
         		params.gameID = self.$('#gameID').val().trim();
         		params.key = self.$('#key').val().trim();
-                endPoint = '/enterGame';
+                var deferred = self.gameManager.enterGame(params);
+                deferred.done(function() {
+                    self.hide();
+                });
     		}
-
-            // Post the data
-            // TODO, all of this should probably all be handled by publishing an event
-    		var deferred = $.post(endPoint, params);
-    		deferred.done(function(res) {
-                self.hide();
-                startGame(res);
-                if (action === 'N') {
-                    self.eventHandler.trigger(self.eventHandler.messageNames.gameCreated);
-                }
-            });
-            deferred.fail(function(jqXHR) {
-                self.eventHandler.trigger(self.eventHandler.messageNames.error, jqXHR.responseText);
-                if (reloadCaptcha && window.Recaptcha) {
-                    Recaptcha.reload();
-                }
-            });
 
 		});
 

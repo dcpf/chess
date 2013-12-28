@@ -190,8 +190,9 @@ var chess = {
 <script src="src/client/js/view/moveHistoryView.js?ver=<%= runtimestamp %>"></script>
 <script src="src/client/js/view/messagesView.js?ver=<%= runtimestamp %>"></script>
 
-<!-- load the initializer -->
-<script src="src/client/js/util/initializer.js?ver=<%= runtimestamp %>"></script>
+<!-- load the gameManager and appContext -->
+<script src="src/client/js/util/gameManager.js?ver=<%= runtimestamp %>"></script>
+<script src="src/client/js/util/appContext.js?ver=<%= runtimestamp %>"></script>
 
 <script>
 
@@ -202,55 +203,20 @@ $(document).bind("ajaxSend", function() {
    $("#progressDialog").modal('hide');
  });
 
-// Instantiate the chessGame object, and some basic objects we need for the game.
-var chessGame = {};
-chessGame.eventHandler = new chess.EventHandler();
-chessGame.genericDialogView = new chess.GenericDialogView({
-    eventHandler: chessGame.eventHandler
-});
-
-function startGame (attrs) {
-
-    // if attrs were passed in, update chess.vars
-    if (attrs) {
-        // initialMoveHistory is a string, so we need to get it back into json format before assigning to chess.vars
-        attrs.initialMoveHistory = JSON.parse(attrs.initialMoveHistory);
-        chess.vars = attrs;
-    }
-
-    // kick things off
-    chess.initializer.initialize(chessGame, chess.vars.canMove);
-    chessGame.board.findAllLegalMoves();
-    chessGame.boardView.render(chess.vars.perspective);
-
-    // If there is an existing move history, use it to get the game into the current state
-    for (var i in chess.vars.initialMoveHistory) {
-        var notation = chess.vars.initialMoveHistory[i];
-        var moveArray = chessGame.notationConverter.convertNotation(notation, i);
-        for (var j in moveArray) {
-            var move = moveArray[j];
-            chessGame.boardView.doMove(move.piece.id, move.toRow, move.toCol, false);
-            chessGame.boardView.updateGameWithLatestMove(notation, move.piece.id, move.toRow, move.toCol);
-        }
-    }
-
-    $('#whiteEmail').html(chess.vars.whiteEmail);
-    $('#blackEmail').html(chess.vars.blackEmail);
-
-    // Show the game
-    $('#playGameView').show();
-
-}
+// Instantiate the appContext, and some basic objects we need for the game.
+chess.appContext = new chess.AppContext();
+chess.appContext.initializeBasicObjects();
 
 // If the page has loaded with a gameID (and key), start the game. This will occur when the following URL params are passed in: ?gameID=yl9pqqgamdgd&key=123456
 // Else, show the enterGame view.
 if (chess.vars.gameID && !chess.vars.error) {
-    startGame();
+    chess.appContext.gameManager.startGame();
 } else {
-    chessGame.enterGameView = new chess.EnterGameView({
-        eventHandler: chessGame.eventHandler
+    chess.appContext.enterGameView = new chess.EnterGameView({
+        eventHandler: chess.appContext.eventHandler,
+        gameManager: chess.appContext.gameManager 
     });
-    chessGame.enterGameView.show(chess.vars.error);
+    chess.appContext.enterGameView.show(chess.vars.error);
 }
 
 </script>
