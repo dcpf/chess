@@ -4,78 +4,78 @@
 
 var chess = chess || {};
 
-chess.GameManager = Backbone.Model.extend({
+chess.GameManager = function (attrs) {
 
-	initialize: function (attrs) {
-		this.eventHandler = attrs.eventHandler;
-        this.notationConverter = attrs.notationConverter;
-        this.board = attrs.board;
-        this.boardView = attrs.boardView;
-        this.playGameView = attrs.playGameView;
-    },
+    var obj = {
 
-	createGame: function (params) {
+        // passed-in attrs
+        eventHandler: attrs.eventHandler,
+        notationConverter: attrs.notationConverter,
+        board: attrs.board,
+        boardView: attrs.boardView,
+        playGameView: attrs.playGameView,
 
-		var self = this;
+        createGame: function (params) {
+            var self = this;
+            var deferred = $.post('/createGame', params);
+            deferred.done(function(res) {
+                self.startGame(res);
+                self.eventHandler.trigger(self.eventHandler.messageNames.gameCreated);
+            });
+            deferred.fail(function(jqXHR) {
+                self.eventHandler.trigger(self.eventHandler.messageNames.error, jqXHR.responseText);
+            });
+            return deferred;
+        },
 
-    	var deferred = $.post('/createGame', params);
-    	deferred.done(function(res) {
-            self.startGame(res);
-            self.eventHandler.trigger(self.eventHandler.messageNames.gameCreated);
-        });
-        deferred.fail(function(jqXHR) {
-            self.eventHandler.trigger(self.eventHandler.messageNames.error, jqXHR.responseText);
-        });
+        enterGame: function (params) {
+            var self = this;
+            var deferred = $.post('/enterGame', params);
+            deferred.done(function(res) {
+                self.startGame(res);
+            });
+            deferred.fail(function(jqXHR) {
+                self.eventHandler.trigger(self.eventHandler.messageNames.error, jqXHR.responseText);
+            });
+            return deferred;
+        },
 
-        return deferred;
+        startGame: function (attrs) {
 
-	},
+            var self = this;
 
-	enterGame: function (params) {
+            // if attrs were passed in, update chess.vars
+            if (attrs) {
+                // initialMoveHistory is a string, so we need to get it back into json format before assigning to chess.vars
+                attrs.initialMoveHistory = JSON.parse(attrs.initialMoveHistory);
+                chess.vars = attrs;
+            }
 
-		var self = this;
+            // kick things off
+            self.board.findAllLegalMoves();
+            self.boardView.render(chess.vars.perspective, chess.vars.canMove);
 
-		var deferred = $.post('/enterGame', params);
-    	deferred.done(function(res) {
-            self.startGame(res);
-        });
-        deferred.fail(function(jqXHR) {
-            self.eventHandler.trigger(self.eventHandler.messageNames.error, jqXHR.responseText);
-        });
+            // If there is an existing move history, use it to get the game into the current state
+            for (var i in chess.vars.initialMoveHistory) {
+                var notation = chess.vars.initialMoveHistory[i];
+                var moveArray = self.notationConverter.convertNotation(notation, i);
+                for (var j in moveArray) {
+                    var move = moveArray[j];
+                    self.boardView.doMove(move.piece.id, move.toRow, move.toCol, false);
+                    self.boardView.updateGameWithLatestMove(notation, move.piece.id, move.toRow, move.toCol);
+                }
+            }
 
-        return deferred;
+            // show the game
+            this.playGameView.show(chess.vars.whiteEmail, chess.vars.blackEmail);
 
-	},
+	   }
 
-	startGame: function (attrs) {
+    };
 
-		var self = this;
+    // mixin the backbone event module
+    _.extend(obj, Backbone.Events);
 
-        // if attrs were passed in, update chess.vars
-    	if (attrs) {
-        	// initialMoveHistory is a string, so we need to get it back into json format before assigning to chess.vars
-        	attrs.initialMoveHistory = JSON.parse(attrs.initialMoveHistory);
-        	chess.vars = attrs;
-    	}
+    return obj;
 
-    	// kick things off
-    	self.board.findAllLegalMoves();
-        self.boardView.render(chess.vars.perspective, chess.vars.canMove);
-
-    	// If there is an existing move history, use it to get the game into the current state
-    	for (var i in chess.vars.initialMoveHistory) {
-        	var notation = chess.vars.initialMoveHistory[i];
-        	var moveArray = self.notationConverter.convertNotation(notation, i);
-        	for (var j in moveArray) {
-            	var move = moveArray[j];
-            	self.boardView.doMove(move.piece.id, move.toRow, move.toCol, false);
-            	self.boardView.updateGameWithLatestMove(notation, move.piece.id, move.toRow, move.toCol);
-        	}
-    	}
-
-    	// Show the game
-        this.playGameView.show(chess.vars.whiteEmail, chess.vars.blackEmail);
-
-	}
-
-});
+};
