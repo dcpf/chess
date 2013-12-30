@@ -53,7 +53,9 @@ chess.GameManager = function (attrs) {
 
             // kick things off
             self.board.findAllLegalMoves();
-            self.boardView.render(chess.vars.perspective, chess.vars.canMove);
+            // make sure viewMode is set accordingly based on canMove
+            self.boardView.viewMode = !chess.vars.canMove;
+            self.boardView.render(chess.vars.perspective);
 
             // If there is an existing move history, use it to get the game into the current state
             for (var i in chess.vars.initialMoveHistory) {

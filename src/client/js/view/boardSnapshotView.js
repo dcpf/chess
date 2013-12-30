@@ -18,6 +18,9 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         this.moveHistory = this.options.moveHistory;
         this.notationConverter = this.options.notationConverter;
 
+        // set mode to view-only
+        this.viewMode = true;
+
         // set up the listeners
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveHistoryLinkClicked, this._render);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.replayGameLinkClicked, function(){this._render();this._autoMove(this, 0);});
@@ -61,7 +64,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         this.board = new chess.Board();
         var gameBoard = this._generateBoard();
         this.$('#chessBoardSnapshotContainer').html(gameBoard);
-        this.updateBoard(false);
+        this.updateBoard();
         this.$el.modal();
         var notation;
         if (index) {
