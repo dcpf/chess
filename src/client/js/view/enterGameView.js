@@ -13,9 +13,9 @@ chess.EnterGameView = Backbone.View.extend({
         this.eventHandler = this.options.eventHandler;
 
         // set up the listeners
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.gameEntered, this.hide);
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.createGameError, this._createGameError);
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.enterGameError, this._enterGameError);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.GAME_ENTERED, this.hide);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.CREATE_GAME_ERROR, this._createGameError);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.ENTER_GAME_ERROR, this._enterGameError);
 
         var self = this;
 
@@ -51,12 +51,12 @@ chess.EnterGameView = Backbone.View.extend({
                     params.captchaResponse = Recaptcha.get_response();
                     params.captchaChallenge = Recaptcha.get_challenge();
                 }
-                self.eventHandler.trigger(self.eventHandler.messageNames.createGame, params);
+                self.eventHandler.trigger(self.eventHandler.messageNames.CREATE_GAME, params);
     		} else if (action === 'E') {
         		// existing
                 params.gameID = self.$('#gameID').val().trim();
                 params.key = self.$('#key').val().trim();
-                self.eventHandler.trigger(self.eventHandler.messageNames.enterGame, params);
+                self.eventHandler.trigger(self.eventHandler.messageNames.ENTER_GAME, params);
     		}
 
 		});
@@ -70,7 +70,7 @@ chess.EnterGameView = Backbone.View.extend({
     show: function (errorMsg) {
         this.$el.show();
         if (errorMsg) {
-            this.eventHandler.trigger(this.eventHandler.messageNames.error, errorMsg);
+            this.eventHandler.trigger(this.eventHandler.messageNames.ERROR, errorMsg);
         }
     },
 
@@ -101,14 +101,14 @@ chess.EnterGameView = Backbone.View.extend({
     },
 
     _createGameError: function (errMsg) {
-        this.eventHandler.trigger(this.eventHandler.messageNames.error, errMsg);
+        this.eventHandler.trigger(this.eventHandler.messageNames.ERROR, errMsg);
         if (window.Recaptcha) {
             Recaptcha.reload();
         }
     },
 
     _enterGameError: function (errMsg) {
-        this.eventHandler.trigger(this.eventHandler.messageNames.error, errMsg);
+        this.eventHandler.trigger(this.eventHandler.messageNames.ERROR, errMsg);
     }
 
 

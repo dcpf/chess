@@ -66,12 +66,12 @@ chess.MoveHistoryView = Backbone.View.extend({
         // The css class should be in the form 'moveHistoryLink #', where # is the move number.
         // We'll grab that, and pass it as an arg with the message.
         var index = cssClass.split(' ')[1];
-        this.eventHandler.trigger(this.eventHandler.messageNames.moveHistoryLinkClicked, index);
+        this.eventHandler.trigger(this.eventHandler.messageNames.MOVE_HISTORY_LINK_CLICKED, index);
         return false;
     },
 
     _handleReplayGameLinkClick: function () {
-        this.eventHandler.trigger(this.eventHandler.messageNames.replayGameLinkClicked);
+        this.eventHandler.trigger(this.eventHandler.messageNames.REPLAY_GAME_LINK_CLICKED);
         return false;
     }
 

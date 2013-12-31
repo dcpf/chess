@@ -27,11 +27,11 @@ chess.BoardView = Backbone.View.extend({
         this.viewMode = false;
 
         // set up the listeners
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveConfirmed, function (notation, pieceId, toRow, toCol) {
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.MOVE_CONFIRMED, function (notation, pieceId, toRow, toCol) {
             this.updateGameWithLatestMove(notation, pieceId, toRow, toCol, true);
         });
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveConfirmed, this._saveMove);
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.cancelMove, this._cancelMove);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.MOVE_CONFIRMED, this._saveMove);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.CANCEL_MOVE, this._cancelMove);
 
         // set up the drag/drop event handlers for all squares on the board where the id starts with 'sq'
         var self = this;
@@ -308,7 +308,7 @@ chess.BoardView = Backbone.View.extend({
 
         // Render the confirm dialog if in UI mode
         if (ui) {
-            this.eventHandler.trigger(this.eventHandler.messageNames.renderConfirmMoveDialog, possibleMoves);
+            this.eventHandler.trigger(this.eventHandler.messageNames.RENDER_CONFIRM_MOVE_DIALOG, possibleMoves);
         }
 
     },
@@ -416,7 +416,7 @@ chess.BoardView = Backbone.View.extend({
             move: notation
         });
         deferred.done(function(res) {
-            self.eventHandler.trigger(self.eventHandler.messageNames.moveSaved, res);
+            self.eventHandler.trigger(self.eventHandler.messageNames.MOVE_SAVED, res);
         });
     }
 

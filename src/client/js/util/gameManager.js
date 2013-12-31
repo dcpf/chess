@@ -19,10 +19,10 @@ chess.GameManager = function (attrs) {
             var deferred = $.post('/createGame', params);
             deferred.done(function(res) {
                 self.startGame(res);
-                self.eventHandler.trigger(self.eventHandler.messageNames.gameCreated);
+                self.eventHandler.trigger(self.eventHandler.messageNames.GAME_CREATED);
             });
             deferred.fail(function(jqXHR) {
-                self.eventHandler.trigger(self.eventHandler.messageNames.createGameError, jqXHR.responseText);
+                self.eventHandler.trigger(self.eventHandler.messageNames.CREATE_GAME_ERROR, jqXHR.responseText);
             });
         },
 
@@ -33,7 +33,7 @@ chess.GameManager = function (attrs) {
                 self.startGame(res);
             });
             deferred.fail(function(jqXHR) {
-                self.eventHandler.trigger(self.eventHandler.messageNames.enterGameError, jqXHR.responseText);
+                self.eventHandler.trigger(self.eventHandler.messageNames.ENTER_GAME_ERROR, jqXHR.responseText);
             });
         },
 
@@ -65,7 +65,7 @@ chess.GameManager = function (attrs) {
                 }
             }
 
-            self.eventHandler.trigger(self.eventHandler.messageNames.gameEntered);
+            self.eventHandler.trigger(self.eventHandler.messageNames.GAME_ENTERED);
 
 	   }
 
@@ -75,8 +75,8 @@ chess.GameManager = function (attrs) {
     _.extend(obj, Backbone.Events);
 
     // set up the listeners
-    obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.createGame, obj.createGame);
-    obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.enterGame, obj.enterGame);
+    obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.CREATE_GAME, obj.createGame);
+    obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.ENTER_GAME, obj.enterGame);
 
     return obj;
 

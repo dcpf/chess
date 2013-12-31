@@ -15,7 +15,7 @@ chess.MessagesView = Backbone.View.extend({
         this.board = this.options.board;
 
         // set up the listener
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.updatedLegalMoves, this._handleLegalMovesUpdate);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.UPDATED_LEGAL_MOVES, this._handleLegalMovesUpdate);
 
     },
 

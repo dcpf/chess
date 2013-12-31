@@ -77,7 +77,7 @@ chess.Board = Backbone.Model.extend({
         }
         if (!this._hypothetical) {
             // only publish if not in hypothetical mode
-            this.eventHandler.trigger(this.eventHandler.messageNames.updatedLegalMoves);
+            this.eventHandler.trigger(this.eventHandler.messageNames.UPDATED_LEGAL_MOVES);
         }
     },
 

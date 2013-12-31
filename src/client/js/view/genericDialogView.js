@@ -13,9 +13,9 @@ chess.GenericDialogView = Backbone.View.extend({
 
     initialize: function () {
         this.eventHandler = this.options.eventHandler;
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.error, this._renderErrorDialog);
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.gameCreated, this._renderGameCreatedDialog);
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveSaved, this._renderMoveSavedDialog);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.ERROR, this._renderErrorDialog);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.GAME_CREATED, this._renderGameCreatedDialog);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.MOVE_SAVED, this._renderMoveSavedDialog);
     },
 
     _renderErrorDialog: function (msg) {

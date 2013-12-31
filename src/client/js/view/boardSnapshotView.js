@@ -22,8 +22,8 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         this.viewMode = true;
 
         // set up the listeners
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.moveHistoryLinkClicked, this._render);
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.replayGameLinkClicked, function(){this._render();this._autoMove(this, 0);});
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.MOVE_HISTORY_LINK_CLICKED, this._render);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.REPLAY_GAME_LINK_CLICKED, function(){this._render();this._autoMove(this, 0);});
 
         // set the click handler on the dialog's close icon
         var self = this;

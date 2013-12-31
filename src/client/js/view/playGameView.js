@@ -13,7 +13,7 @@ chess.PlayGameView = Backbone.View.extend({
 		this.eventHandler = this.options.eventHandler;
 
 		// set up the listeners
-		this.listenTo(this.eventHandler, this.eventHandler.messageNames.gameEntered, this.show);
+		this.listenTo(this.eventHandler, this.eventHandler.messageNames.GAME_ENTERED, this.show);
 
     },
 

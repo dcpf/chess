@@ -24,18 +24,18 @@ chess.EventHandler = function () {
 * Static message names defined here so only one copy exists.
 */
 chess.EventHandler.prototype.messageNames = {
-	error: 'error',
-	createGame: 'createGame',
-	enterGame: 'enterGame',
-	gameCreated: 'gameCreated',
-	gameEntered: 'gameEntered',
-	createGameError: 'createGameError',
-	enterGameError: 'enterGameError',
-	updatedLegalMoves: 'updatedLegalMoves',
-	renderConfirmMoveDialog: 'renderConfirmMoveDialog',
-	moveConfirmed: 'moveConfirmed',
-	moveSaved: 'moveSaved',
-	cancelMove: 'cancelMove',
-	moveHistoryLinkClicked: 'moveHistoryLinkClicked',
-	replayGameLinkClicked: 'replayGameLinkClicked'
+	ERROR: 'error',
+	CREATE_GAME: 'createGame',
+	ENTER_GAME: 'enterGame',
+	GAME_CREATED: 'gameCreated',
+	GAME_ENTERED: 'gameEntered',
+	CREATE_GAME_ERROR: 'createGameError',
+	ENTER_GAME_ERROR: 'enterGameError',
+	UPDATED_LEGAL_MOVES: 'updatedLegalMoves',
+	RENDER_CONFIRM_MOVE_DIALOG: 'renderConfirmMoveDialog',
+	MOVE_CONFIRMED: 'moveConfirmed',
+	MOVE_SAVED: 'moveSaved',
+	CANCEL_MOVE: 'cancelMove',
+	MOVE_HISTORY_LINK_CLICKED: 'moveHistoryLinkClicked',
+	REPLAY_GAME_LINK_CLICKED: 'replayGameLinkClicked'
 };
