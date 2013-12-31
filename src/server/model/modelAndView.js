@@ -1,3 +1,5 @@
+'use strict';
+
 exports.getModelAndView = function (model, view) {
 
 	this.model = model;

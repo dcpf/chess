@@ -150,8 +150,9 @@ img[draggable=true] {
 
 #messageContainer {
     font-size: 30px;
+    height: 50px;
     line-height: normal;
-    margin: 0 0 15px 25px;
+    margin: 0 0 0 25px;
 }
 
 #chessBoardSnapshotDialog {

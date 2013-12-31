@@ -1,3 +1,5 @@
+'use strict';
+
 var templateHandler = require('./templateHandler');
 var nodemailer = require('nodemailer/lib/nodemailer');
 

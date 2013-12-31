@@ -1,3 +1,5 @@
+'use strict';
+
 var log4js = require('log4js');
 
 log4js.configure('src/server/conf/log4js.json');

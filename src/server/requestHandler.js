@@ -1,3 +1,5 @@
+'use strict';
+
 var q = require('q');
 var chessController = require('./chessController');
 var modelAndView = require('./model/modelAndView');

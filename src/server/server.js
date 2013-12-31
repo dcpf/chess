@@ -1,3 +1,5 @@
+'use strict';
+
 var fs = require('fs');
 // instantiate the logger to reset all console logging functions to use log4js
 require('./logger');
