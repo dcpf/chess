@@ -34,6 +34,7 @@ chess.EventHandler.prototype.messageNames = {
 	UPDATED_LEGAL_MOVES: 'updatedLegalMoves',
 	RENDER_CONFIRM_MOVE_DIALOG: 'renderConfirmMoveDialog',
 	MOVE_CONFIRMED: 'moveConfirmed',
+	SAVE_MOVE: 'saveMove',
 	MOVE_SAVED: 'moveSaved',
 	CANCEL_MOVE: 'cancelMove',
 	MOVE_HISTORY_LINK_CLICKED: 'moveHistoryLinkClicked',

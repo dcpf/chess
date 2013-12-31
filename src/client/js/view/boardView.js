@@ -407,17 +407,8 @@ chess.BoardView = Backbone.View.extend({
 
     },
 
-    // Save the move to the server
     _saveMove: function (notation) {
-        var self = this;
-        var deferred = $.post('/saveMove', {
-            gameID: chess.vars.gameID,
-            key: chess.vars.key,
-            move: notation
-        });
-        deferred.done(function(res) {
-            self.eventHandler.trigger(self.eventHandler.messageNames.MOVE_SAVED, res);
-        });
+        this.eventHandler.trigger(this.eventHandler.messageNames.SAVE_MOVE, notation);
     }
 
 });

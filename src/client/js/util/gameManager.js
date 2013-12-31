@@ -67,7 +67,22 @@ chess.GameManager = function (attrs) {
 
             self.eventHandler.trigger(self.eventHandler.messageNames.GAME_ENTERED);
 
-	   }
+        },
+
+        /**
+        * Save the move to the server
+        */
+        saveMove: function (notation) {
+            var self = this;
+            var deferred = $.post('/saveMove', {
+                gameID: chess.vars.gameID,
+                key: chess.vars.key,
+                move: notation
+            });
+            deferred.done(function(res) {
+                self.eventHandler.trigger(self.eventHandler.messageNames.MOVE_SAVED, res);
+            });
+        }
 
     };
 
@@ -77,6 +92,7 @@ chess.GameManager = function (attrs) {
     // set up the listeners
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.CREATE_GAME, obj.createGame);
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.ENTER_GAME, obj.enterGame);
+    obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.SAVE_MOVE, obj.saveMove);
 
     return obj;
 
