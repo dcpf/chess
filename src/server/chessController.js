@@ -150,8 +150,17 @@ function _saveGameObject (gameID, gameObj) {
 }
 
 function _createGame (player1Email, player2Email) {
+
+	// Get the keys for each player
 	var whiteKey = _generateKey();
 	var blackKey = _generateKey();
+
+	// If the two keys happen to be the same, loop until they are unique.
+	while (whiteKey === blackKey) {
+		blackKey = _generateKey();
+	}
+
+	// Build the game object
 	var gameObj = {
 		W: {
 			email: player1Email,
@@ -162,9 +171,12 @@ function _createGame (player1Email, player2Email) {
 			key: blackKey
 		}
 	};
+
+	// Create the game file, send the email, and return the game attr map.
 	var gameID = _createGameFile(gameObj);
 	emailHandler.sendGameCreationEmail(player1Email, player2Email, gameID, whiteKey);
 	return _buildEnterGameAttrMap(gameObj, gameID, whiteKey, 'W', true, null);
+
 }
 
 /*
