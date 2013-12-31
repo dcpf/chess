@@ -11,7 +11,12 @@ chess.EnterGameView = Backbone.View.extend({
     initialize: function () {
 
         this.eventHandler = this.options.eventHandler;
-        this.gameManager = this.options.gameManager;
+
+        // set up the listeners
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.gameEntered, this.hide);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.createGameError, this._createGameError);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.enterGameError, this._enterGameError);
+
         var self = this;
 
         // initalize the captcha
@@ -21,22 +26,22 @@ chess.EnterGameView = Backbone.View.extend({
         }
 
     	// assign focus handlers to the text input fields
-    	self.$('#player1Email').focus(function() {
+        self.$('#player1Email').focus(function() {
             self._selectRadioButton(0);
     	});
-    	self.$('#player2Email').focus(function() {
+        self.$('#player2Email').focus(function() {
             self._selectRadioButton(0);
     	});
-    	self.$('#gameID').focus(function() {
+        self.$('#gameID').focus(function() {
             self._selectRadioButton(1);
     	});
-    	self.$('#key').focus(function() {
+        self.$('#key').focus(function() {
             self._selectRadioButton(1);
     	});
 
     	// assign the click handler to the submit button
-    	self.$('#enterGameSubmitButton').click(function() {
-    		var action = self.$("input[type='radio'][name='newOrExisting']:checked").val();
+        self.$('#enterGameSubmitButton').click(function() {
+            var action = self.$("input[type='radio'][name='newOrExisting']:checked").val();
     		var params = {action: action};
     		if (action === 'N') {
                 // new
@@ -46,23 +51,12 @@ chess.EnterGameView = Backbone.View.extend({
                     params.captchaResponse = Recaptcha.get_response();
                     params.captchaChallenge = Recaptcha.get_challenge();
                 }
-                var deferred = self.gameManager.createGame(params);
-                deferred.done(function() {
-                    self.hide();
-                });
-                deferred.fail(function() {
-                    if (window.Recaptcha) {
-                        Recaptcha.reload();
-                    }
-                });
+                self.eventHandler.trigger(self.eventHandler.messageNames.createGame, params);
     		} else if (action === 'E') {
         		// existing
-        		params.gameID = self.$('#gameID').val().trim();
-        		params.key = self.$('#key').val().trim();
-                var deferred = self.gameManager.enterGame(params);
-                deferred.done(function() {
-                    self.hide();
-                });
+                params.gameID = self.$('#gameID').val().trim();
+                params.key = self.$('#key').val().trim();
+                self.eventHandler.trigger(self.eventHandler.messageNames.enterGame, params);
     		}
 
 		});
@@ -104,6 +98,18 @@ chess.EnterGameView = Backbone.View.extend({
                 }
             );
         }
+    },
+
+    _createGameError: function (errMsg) {
+        this.eventHandler.trigger(this.eventHandler.messageNames.error, errMsg);
+        if (window.Recaptcha) {
+            Recaptcha.reload();
+        }
+    },
+
+    _enterGameError: function (errMsg) {
+        this.eventHandler.trigger(this.eventHandler.messageNames.error, errMsg);
     }
+
 
 });

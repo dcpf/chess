@@ -25,7 +25,12 @@ chess.EventHandler = function () {
 */
 chess.EventHandler.prototype.messageNames = {
 	error: 'error',
+	createGame: 'createGame',
+	enterGame: 'enterGame',
 	gameCreated: 'gameCreated',
+	gameEntered: 'gameEntered',
+	createGameError: 'createGameError',
+	enterGameError: 'enterGameError',
 	updatedLegalMoves: 'updatedLegalMoves',
 	renderConfirmMoveDialog: 'renderConfirmMoveDialog',
 	moveConfirmed: 'moveConfirmed',

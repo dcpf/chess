@@ -30,6 +30,9 @@ chess.AppContext = {
         });
         appContext.capturedPieces = new chess.CapturedPieces();
         appContext.moveHistory = new chess.MoveHistory();
+        appContext.enterGameView = new chess.EnterGameView({
+            eventHandler: appContext.eventHandler
+        });
         appContext.boardView = new chess.BoardView({
             board: appContext.board,
             eventHandler: appContext.eventHandler,
@@ -45,20 +48,17 @@ chess.AppContext = {
         appContext.confirmMoveDialogView = new chess.ConfirmMoveDialogView({
             eventHandler: appContext.eventHandler
         });
-        appContext.playGameView = new chess.PlayGameView();
         appContext.gameManager = new chess.GameManager({
             eventHandler: appContext.eventHandler,
             notationConverter: appContext.notationConverter,
             board: appContext.board,
-            boardView: appContext.boardView,
-            playGameView: appContext.playGameView
-        });
-        appContext.enterGameView = new chess.EnterGameView({
-            eventHandler: appContext.eventHandler,
-            gameManager: appContext.gameManager
+            boardView: appContext.boardView
         });
 
         // These views just need to be instantiated - no need to assign to a variable
+        new chess.PlayGameView({
+            eventHandler: appContext.eventHandler
+        });
         new chess.CapturedPiecesView({
             capturedPieces: appContext.capturedPieces
         });

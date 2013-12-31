@@ -13,7 +13,6 @@ chess.GameManager = function (attrs) {
         notationConverter: attrs.notationConverter,
         board: attrs.board,
         boardView: attrs.boardView,
-        playGameView: attrs.playGameView,
 
         createGame: function (params) {
             var self = this;
@@ -23,9 +22,8 @@ chess.GameManager = function (attrs) {
                 self.eventHandler.trigger(self.eventHandler.messageNames.gameCreated);
             });
             deferred.fail(function(jqXHR) {
-                self.eventHandler.trigger(self.eventHandler.messageNames.error, jqXHR.responseText);
+                self.eventHandler.trigger(self.eventHandler.messageNames.createGameError, jqXHR.responseText);
             });
-            return deferred;
         },
 
         enterGame: function (params) {
@@ -35,9 +33,8 @@ chess.GameManager = function (attrs) {
                 self.startGame(res);
             });
             deferred.fail(function(jqXHR) {
-                self.eventHandler.trigger(self.eventHandler.messageNames.error, jqXHR.responseText);
+                self.eventHandler.trigger(self.eventHandler.messageNames.enterGameError, jqXHR.responseText);
             });
-            return deferred;
         },
 
         startGame: function (attrs) {
@@ -68,8 +65,7 @@ chess.GameManager = function (attrs) {
                 }
             }
 
-            // show the game
-            this.playGameView.show(chess.vars.whiteEmail, chess.vars.blackEmail);
+            self.eventHandler.trigger(self.eventHandler.messageNames.gameEntered);
 
 	   }
 
@@ -77,6 +73,10 @@ chess.GameManager = function (attrs) {
 
     // mixin the backbone event module
     _.extend(obj, Backbone.Events);
+
+    // set up the listeners
+    obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.createGame, obj.createGame);
+    obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.enterGame, obj.enterGame);
 
     return obj;
 

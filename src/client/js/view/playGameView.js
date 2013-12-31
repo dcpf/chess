@@ -8,9 +8,18 @@ chess.PlayGameView = Backbone.View.extend({
 
     el: '#playGameView',
 
-    show: function (whiteEmail, blackEmail) {
-        this.$('#whiteEmail').html(whiteEmail);
-        this.$('#blackEmail').html(blackEmail);
+    initialize: function () {
+
+		this.eventHandler = this.options.eventHandler;
+
+		// set up the listeners
+		this.listenTo(this.eventHandler, this.eventHandler.messageNames.gameEntered, this.show);
+
+    },
+
+    show: function () {
+        this.$('#whiteEmail').html(chess.vars.whiteEmail);
+        this.$('#blackEmail').html(chess.vars.blackEmail);
         this.$el.show();
     }
 
