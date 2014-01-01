@@ -13,9 +13,6 @@ chess.BoardView = Backbone.View.extend({
     // Variable to track the piece being moved. Normally, we would use the dataTransfer object, but that does not appear to work properly.
     pieceInMotion: '',
 
-    // flag for enabling/disabling showLegalMoves()
-    showLegalMovesEnabled: true,
-
     initialize: function () {
 
         // set the passed-in options
@@ -37,22 +34,22 @@ chess.BoardView = Backbone.View.extend({
 
         // set up the drag/drop event handlers for all squares on the board where the id starts with 'sq'
         var self = this;
-        this.$el.on('drop', 'td[id^="sq"]', function (e) {
-            self.drop(e);
+        this.$el.on('drop', 'td[id^="sq"]', function (event) {
+            self.drop(event);
         });
-        this.$el.on('dragover', 'td[id^="sq"]', function (e) {
-            self.allowDrop(e);
+        this.$el.on('dragover', 'td[id^="sq"]', function (event) {
+            self.allowDrop(event);
         });
 
         // set up the drag/drop event handlers for any piece added to the board with draggable=true attr
-        this.$el.on('dragstart', 'img[draggable="true"]', function (e) {
-            self.drag(e);
+        this.$el.on('dragstart', 'img[draggable="true"]', function (event) {
+            self.drag(event);
         });
-        this.$el.on('dragend', 'img[draggable="true"]', function (e) {
-            self.dragEnd(e);
+        this.$el.on('dragend', 'img[draggable="true"]', function (event) {
+            self.dragEnd(event);
         });
-        this.$el.on('mouseover', 'img[draggable="true"]', function (e) {
-            self.showLegalMoves(e);
+        this.$el.on('mouseover', 'img[draggable="true"]', function (event) {
+            self.showLegalMoves(event);
         });
         this.$el.on('mouseout', 'img[draggable="true"]', function () {
             self.hideLegalMoves();
@@ -71,25 +68,25 @@ chess.BoardView = Backbone.View.extend({
     /*
     * Called from the UI when a piece is dragged
     */
-    drag: function (e) {
-        e.target.style.opacity = '.5';
-        this.pieceInMotion = e.target.id;
+    drag: function (event) {
+        event.target.style.opacity = '.5';
+        this.pieceInMotion = event.target.id;
     },
 
     // On drag-end, set the opacity of the object back to 1
-    dragEnd: function (e) {
-        var pieceId = e.target.id;
+    dragEnd: function (event) {
+        var pieceId = event.target.id;
         this.$('#' + pieceId).css('opacity', '1');
     },
 
     /*
     * Called from the UI when a piece is either dragged over or dropped
     */
-    allowDrop: function (e) {
+    allowDrop: function (event) {
         var pieceId = this.pieceInMotion;
-        var coords = e.target.id.substr(2);
+        var coords = event.target.id.substr(2);
         if (this.board.isLegalMove(pieceId, coords)) {
-            e.preventDefault();
+            event.preventDefault();
             return true;
         }
         return false;
@@ -98,11 +95,11 @@ chess.BoardView = Backbone.View.extend({
     /*
     * Called from the UI when a piece is dropped
     */
-    drop: function (e) {
-        if (this.allowDrop(e)) {
+    drop: function (event) {
+        if (this.allowDrop(event)) {
             var pieceId = this.pieceInMotion;
-            var toRow = e.target.id.substr(2, 1);
-            var toCol = e.target.id.substr(3, 1);
+            var toRow = event.target.id.substr(2, 1);
+            var toCol = event.target.id.substr(3, 1);
             this.doMove(pieceId, toRow, toCol, true);
         }
     },
@@ -110,14 +107,13 @@ chess.BoardView = Backbone.View.extend({
     /*
     * Called from the UI when a piece is hovered over
     */
-    showLegalMoves: function (e) {
-        if (!this.showLegalMovesEnabled) {
-            return;
-        }
-        var legalMoves = this.board.legalMovesMap[e.target.id];
-        if (legalMoves) {
-            for (var i in legalMoves) {
-                this.$('#sq' + legalMoves[i]).addClass('moveableSquare');
+    showLegalMoves: function (event) {
+        if (chess.vars.showLegalMovesEnabled) {
+            var legalMoves = this.board.legalMovesMap[event.target.id];
+            if (legalMoves) {
+                for (var i in legalMoves) {
+                    this.$('#sq' + legalMoves[i]).addClass('moveableSquare');
+                }
             }
         }
     },
@@ -126,7 +122,9 @@ chess.BoardView = Backbone.View.extend({
     * Called from the UI when a piece on mouse out
     */
     hideLegalMoves: function () {
-        this.$('td').removeClass('moveableSquare');
+        if (chess.vars.showLegalMovesEnabled) {
+            this.$('td').removeClass('moveableSquare');
+        }
     },
 
     /*

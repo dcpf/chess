@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="src/client/css/chess.css?ver=<%= runtimestamp %>" />
 </head>
 <body style="padding: 20px">
+
     <!-- Create/enter view -->
     <div id="enterGameView" style="display: none">
         <form>
@@ -58,6 +59,24 @@
 
     <!-- Play game view-->
     <div id="playGameView">
+
+        <!-- options menu -->
+        <div id="optionsMenuContainer">
+
+            <div id="optionsMenuIcon" title="Options">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+
+            <div id="optionsMenu">
+                <ul>
+                    <li><a href="/">Start new game</a></li>
+                    <li><a id="showLegalMovesOption" href="#">Show legal moves:</a> <span id="showLegalMovesValue"></span></li>
+                </ul>
+            </div>
+
+        </div>
 
         <div style="display: inline-block; vertical-align: top">
 
@@ -148,6 +167,7 @@ var chess = {
         }
     },
 
+    // These are generated on the server by chessController._buildEnterGameAttrMap()
     vars: {
         gameID: '<%= gameID %>',
         key: '<%= key %>',
@@ -156,6 +176,7 @@ var chess = {
         canMove: <%= canMove %>,
         whiteEmail: '<%= whiteEmail %>',
         blackEmail: '<%= blackEmail %>',
+        showLegalMovesEnabled: <%= showLegalMovesEnabled %>,
         error: "<%= error %>"
     }
 
@@ -183,6 +204,7 @@ var chess = {
 <!-- load views -->
 <script src="src/client/js/view/enterGameView.js?ver=<%= runtimestamp %>"></script>
 <script src="src/client/js/view/playGameView.js?ver=<%= runtimestamp %>"></script>
+<script src="src/client/js/view/optionsMenuView.js?ver=<%= runtimestamp %>"></script>
 <script src="src/client/js/view/boardView.js?ver=<%= runtimestamp %>"></script>
 <script src="src/client/js/view/boardSnapshotView.js?ver=<%= runtimestamp %>"></script>
 <script src="src/client/js/view/genericDialogView.js?ver=<%= runtimestamp %>"></script>

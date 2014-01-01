@@ -52,6 +52,68 @@ input[type="radio"], input[type="checkbox"] {
 
 /* enter game form end */
 
+/* options menu begin */
+
+#optionsMenuContainer {
+    background-color: #fff;
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+#optionsMenuIcon {
+    border: 1px solid #fff;
+    cursor: pointer;
+    float: right;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+#optionsMenuIcon:hover {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+#optionsMenuIcon div {
+    background-color: #666;
+    border: 1px inset #666;
+    border-radius: 2px;
+    height: 2px;
+    margin-bottom: 2px;
+    width: 15px;
+}
+
+#optionsMenuIcon div:last-child {
+    margin-bottom: 0;
+}
+
+#optionsMenu {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    clear: both;
+    display: none;
+    padding: 5px 10px 5px 10px;
+}
+
+#optionsMenu ul {
+    margin: 0 0 0 15px;
+}
+
+#optionsMenu li {
+    white-space: nowrap;
+}
+
+#optionsMenu li a {
+    text-decoration: none;
+}
+
+#optionsMenu li a:hover {
+    color: #0088cc;
+}
+
+/* options menu end */
+
 /* prevent selectability of anything on the chess board */
 #chessBoardContainer {
     -moz-user-select: none;

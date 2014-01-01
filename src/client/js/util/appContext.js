@@ -58,6 +58,7 @@ chess.AppContext = {
         });
 
         // These views just need to be instantiated - no need to assign to a variable
+        new chess.OptionsMenuView();
         new chess.PlayGameView({
             eventHandler: appContext.eventHandler
         });

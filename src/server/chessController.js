@@ -108,6 +108,8 @@ function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove, err
 		canMove: canMove,
 		whiteEmail: (gameObj.W) ? gameObj.W.email : '',
 		blackEmail: (gameObj.B) ? gameObj.B.email : '',
+		// TODO: set/get this as a user pref
+		showLegalMovesEnabled: true,
 		error: error,
 		// add any config needed by the client
 		config: {
