@@ -45,9 +45,8 @@ chess.GameManager = function (attrs) {
 
             // if attrs were passed in, update chess.vars
             if (attrs) {
-                // initialMoveHistory is a string, so we need to get it back into json format before assigning to chess.vars
-                attrs.initialMoveHistory = JSON.parse(attrs.initialMoveHistory);
-                chess.vars = attrs;
+                // chessVars is a string, so we need to convert it back into an object before assigning to chess.vars
+                chess.vars = JSON.parse(attrs.chessVars);
             }
 
             // kick things off

@@ -157,29 +157,11 @@ function log (msg) {
     }
 }
 
-// create the chess object with config and game variables
+// Create the chess object with config and game variables. These are generated
+// on the server by chessController._buildEnterGameAttrMap().
 var chess = {
-
-    config: {
-        recaptcha: {
-            enabled: <%= config.recaptcha.enabled %>,
-            publicKey: '<%= config.recaptcha.publicKey %>'
-        }
-    },
-
-    // These are generated on the server by chessController._buildEnterGameAttrMap()
-    vars: {
-        gameID: '<%= gameID %>',
-        key: '<%= key %>',
-        initialMoveHistory: <%= initialMoveHistory %>,
-        perspective: '<%= perspective %>',
-        canMove: <%= canMove %>,
-        whiteEmail: '<%= whiteEmail %>',
-        blackEmail: '<%= blackEmail %>',
-        showLegalMovesEnabled: <%= showLegalMovesEnabled %>,
-        error: "<%= error %>"
-    }
-
+    config: <%= config %>,
+    vars: <%= chessVars %>
 };
 
 </script>

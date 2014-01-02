@@ -98,26 +98,36 @@ exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 // private functions
 //
 
+/**
+* Generate the chessVars and config objects needed by the client.
+*/
 function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove, error) {
-	var moveHistory = gameObj.moveHistory || [];
-	return {
+
+	// vars needed for the game
+	var chessVars = {
 		gameID: gameID,
 		key: key,
-		initialMoveHistory: JSON.stringify(moveHistory),
+		initialMoveHistory: gameObj.moveHistory || [],
 		perspective: perspective,
 		canMove: canMove,
 		whiteEmail: (gameObj.W) ? gameObj.W.email : '',
 		blackEmail: (gameObj.B) ? gameObj.B.email : '',
 		// TODO: set/get this as a user pref
 		showLegalMovesEnabled: true,
-		error: error,
-		// add any config needed by the client
-		config: {
-			recaptcha: {
-				enabled: CONFIG.recaptcha.enabled,
-				publicKey: CONFIG.recaptcha.publicKey
-			}
+		error: (error) ? error.message : ''
+	};
+
+	// add config needed by the client
+	var config = {
+		recaptcha: {
+			enabled: CONFIG.recaptcha.enabled,
+			publicKey: CONFIG.recaptcha.publicKey
 		}
+	};
+
+	return {
+		chessVars: JSON.stringify(chessVars),
+		config: JSON.stringify(config)
 	};
 }
 
