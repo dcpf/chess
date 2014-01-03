@@ -33,6 +33,13 @@ exports.handleRequest = function (req, path, params) {
 		mav = modelAndView.getModelAndView(obj);
 		deferred.resolve(mav);
 
+	} else if (path === 'updateUserPrefs') {
+
+		// POST updateUserPrefs request
+		var obj = chessController.updateUserPrefs(params);
+		mav = modelAndView.getModelAndView(obj);
+		deferred.resolve(mav);
+
 	} else if (params.gameID) {
 
 		// GET enterGame request where gameID is passed as a URL param

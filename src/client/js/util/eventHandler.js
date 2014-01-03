@@ -40,5 +40,6 @@ chess.EventHandler.prototype.messageNames = {
 	MOVE_SAVED: 'moveSaved',
 	CANCEL_MOVE: 'cancelMove',
 	MOVE_HISTORY_LINK_CLICKED: 'moveHistoryLinkClicked',
-	REPLAY_GAME_LINK_CLICKED: 'replayGameLinkClicked'
+	REPLAY_GAME_LINK_CLICKED: 'replayGameLinkClicked',
+	UPDATE_USER_PREFS: 'updateUserPrefs'
 };

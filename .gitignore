@@ -1,5 +1,6 @@
 .DS_Store
 .data
+.user_prefs
 .c9revisions
 node_modules
 logs

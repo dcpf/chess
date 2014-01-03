@@ -43,10 +43,11 @@ chess.GameManager = function (attrs) {
 
             var self = this;
 
-            // if attrs were passed in, update chess.vars
+            // If attrs were passed in, update chess.vars and chess.user
             if (attrs) {
-                // chessVars is a string, so we need to convert it back into an object before assigning to chess.vars
+                // These are strings, so we need to convert them back into objects before assigning
                 chess.vars = JSON.parse(attrs.chessVars);
+                chess.user = JSON.parse(attrs.user);
             }
 
             // kick things off
@@ -83,6 +84,17 @@ chess.GameManager = function (attrs) {
             deferred.done(function(res) {
                 self.eventHandler.trigger(self.eventHandler.messageNames.MOVE_SAVED, res);
             });
+        },
+
+        /**
+        * Update user prefs
+        */
+        updateUserPrefs: function (name, value) {
+            $.post('/updateUserPrefs', {
+                userEmail: chess.user.email,
+                name: name,
+                value: value
+            });
         }
 
     };
@@ -94,6 +106,7 @@ chess.GameManager = function (attrs) {
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.CREATE_GAME, obj.createGame);
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.ENTER_GAME, obj.enterGame);
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.SAVE_MOVE, obj.saveMove);
+    obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.UPDATE_USER_PREFS, obj.updateUserPrefs);
 
     return obj;
 

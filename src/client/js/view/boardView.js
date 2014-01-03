@@ -108,7 +108,7 @@ chess.BoardView = Backbone.View.extend({
     * Called from the UI when a piece is hovered over
     */
     showLegalMoves: function (event) {
-        if (chess.vars.showLegalMovesEnabled) {
+        if (chess.user.prefs.showLegalMovesEnabled) {
             var legalMoves = this.board.legalMovesMap[event.target.id];
             if (legalMoves) {
                 for (var i in legalMoves) {
@@ -122,7 +122,7 @@ chess.BoardView = Backbone.View.extend({
     * Called from the UI when a piece on mouse out
     */
     hideLegalMoves: function () {
-        if (chess.vars.showLegalMovesEnabled) {
+        if (chess.user.prefs.showLegalMovesEnabled) {
             this.$('td').removeClass('moveableSquare');
         }
     },

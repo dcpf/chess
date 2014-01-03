@@ -11,6 +11,12 @@ var DATA_DIR = '.data/';
 var GAME_ID_CHARS = 'abcdefghijkmnopqrstuvwxyz234567890';
 var KEY_CHARS = '123456789';
 
+// Create the game data dir if it doesn't alreay exist
+if (!fs.existsSync(DATA_DIR)) {
+	fs.mkdirSync(DATA_DIR);
+	console.log('Created game data dir: ' + DATA_DIR);
+}
+
 //
 // public functions
 //
@@ -86,6 +92,13 @@ function saveMove (postData) {
 	return {status: 'ok', opponentEmail: opponentEmail};
 }
 
+function updateUserPrefs (postData) {
+	var userEmail = postData.userEmail;
+	var name = postData.name;
+	var value = postData.value;
+	return userPrefsDao.setUserPref(userEmail, name, value);
+}
+
 function buildDefaultEnterGameAttrMap (error) {
 	return _buildEnterGameAttrMap({}, '', '', '', false, error);
 }
@@ -93,6 +106,7 @@ function buildDefaultEnterGameAttrMap (error) {
 exports.createGame = createGame;
 exports.enterGame = enterGame;
 exports.saveMove = saveMove;
+exports.updateUserPrefs = updateUserPrefs;
 exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 
 //
@@ -113,8 +127,6 @@ function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove, err
 		canMove: canMove,
 		whiteEmail: (gameObj.W) ? gameObj.W.email : '',
 		blackEmail: (gameObj.B) ? gameObj.B.email : '',
-		// TODO: set/get this as a user pref
-		showLegalMovesEnabled: true,
 		error: (error) ? error.message : ''
 	};
 
@@ -128,6 +140,7 @@ function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove, err
 
 	var userEmail = _getCurrentUserEmail(gameObj, key);
 	var user = {
+		email: userEmail,
 		prefs: userPrefsDao.getUserPrefs(userEmail)
 	};
 
@@ -217,9 +230,6 @@ function _enterExistingGame (gameID, key) {
 
 function _createGameFile (gameObj) {
 	var gameID;
-	if (!fs.existsSync(DATA_DIR)) {
-		fs.mkdirSync(DATA_DIR);
-	}
 	while (true) {
 		gameID = _generateRandomGameID();
 		var file = DATA_DIR + gameID;
