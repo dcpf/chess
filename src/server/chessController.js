@@ -2,7 +2,7 @@
 
 var fs = require('fs');
 var q = require('q');
-var userPrefsDao = require('./userPrefsDAO');
+var userPrefsDao = require('./dao/userPrefsDAO');
 var validator = require('validator');
 var reCaptchaHandler = require('./reCaptchaHandler');
 var emailHandler = require('./emailHandler');
