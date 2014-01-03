@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var q = require('q');
+var userPrefsDao = require('./userPrefsDAO');
 var validator = require('validator');
 var reCaptchaHandler = require('./reCaptchaHandler');
 var emailHandler = require('./emailHandler');
@@ -125,9 +126,15 @@ function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove, err
 		}
 	};
 
+	var userEmail = _getCurrentUserEmail(gameObj, key);
+	var user = {
+		prefs: userPrefsDao.getUserPrefs(userEmail)
+	};
+
 	return {
 		chessVars: JSON.stringify(chessVars),
-		config: JSON.stringify(config)
+		config: JSON.stringify(config),
+		user: JSON.stringify(user)
 	};
 }
 
@@ -262,4 +269,17 @@ function _playerCanMove (gameObj, key) {
 		canMove = true;
 	}
 	return canMove;
+}
+
+/**
+* Gets the email of the current user based on the passed-in key
+*/
+function _getCurrentUserEmail (gameObj, key) {
+	var email = '';
+	if (gameObj.W && key == gameObj.W.key) {
+		email = gameObj.W.email;
+	} else if (gameObj.B && key == gameObj.B.key) {
+		email = gameObj.B.email;
+	}
+	return email;
 }
