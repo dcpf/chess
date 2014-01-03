@@ -100,7 +100,7 @@ exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 //
 
 /**
-* Generate the chessVars and config objects needed by the client.
+* Generate the chessVars, config, and user objects needed by the client.
 */
 function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove, error) {
 
