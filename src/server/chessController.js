@@ -2,20 +2,13 @@
 
 var fs = require('fs');
 var q = require('q');
+var gameDao = require('./dao/gameDAO');
 var userPrefsDao = require('./dao/userPrefsDAO');
 var validator = require('validator');
 var reCaptchaHandler = require('./reCaptchaHandler');
 var emailHandler = require('./emailHandler');
 
-var DATA_DIR = '.data/';
-var GAME_ID_CHARS = 'abcdefghijkmnopqrstuvwxyz234567890';
 var KEY_CHARS = '123456789';
-
-// Create the game data dir if it doesn't alreay exist
-if (!fs.existsSync(DATA_DIR)) {
-	fs.mkdirSync(DATA_DIR);
-	console.log('Created game data dir: ' + DATA_DIR);
-}
 
 //
 // public functions
@@ -72,13 +65,13 @@ function enterGame (postData) {
 
 function saveMove (postData) {
 	var gameID = postData.gameID;
-	var gameObj = _getGameObject(gameID);
+	var gameObj = gameDao.getGameObject(gameID);
 	var key = postData.key;
 	var opponentEmail = '';
 	if (_playerCanMove(gameObj, key)) {
 		var move = postData.move;
 		gameObj.moveHistory.push(move);
-		_saveGameObject(gameID, gameObj);
+		gameDao.saveGame(gameID, gameObj);
 		console.log('updated game ' + gameID + ' with move ' + move);
 		if (gameObj.moveHistory.length == 1) {
 			opponentEmail = gameObj.B.email;
@@ -162,27 +155,6 @@ function _validateEmailAddress (email) {
 	}
 }
 
-/**
-* Get the game object from disk by gameID. Throws an error if no game exists by the ID.
-*/
-function _getGameObject (gameID) {
-	var gameObj = {};
-	var file = DATA_DIR + gameID;
-	try {
-		var jsonStr = fs.readFileSync(file, {encoding: 'utf8'});
-		gameObj = JSON.parse(jsonStr);
-	} catch (e) {
-		e.message = 'Invalid Game ID: ' + gameID;
-		throw e;
-	}
-	return gameObj;
-}
-
-function _saveGameObject (gameID, gameObj) {
-	var file = DATA_DIR + gameID;
-	fs.writeFileSync(file, JSON.stringify(gameObj));
-}
-
 function _createGame (player1Email, player2Email) {
 
 	// Get the keys for each player
@@ -207,7 +179,7 @@ function _createGame (player1Email, player2Email) {
 	};
 
 	// Create the game file, send the email, and return the game attr map.
-	var gameID = _createGameFile(gameObj);
+	var gameID = gameDao.createGame(gameObj);
 	emailHandler.sendGameCreationEmail(player1Email, player2Email, gameID, whiteKey);
 	return _buildEnterGameAttrMap(gameObj, gameID, whiteKey, 'W', true, null);
 
@@ -219,35 +191,13 @@ function _createGame (player1Email, player2Email) {
 function _enterExistingGame (gameID, key) {
 	var gameObj;
 	try {
-		gameObj = _getGameObject(gameID);
+		gameObj = gameDao.getGameObject(gameID);
 	} catch (e) {
 		throw e;
 	}
 	var perspective = _getPerspective(gameObj, key);
 	var canMove = _playerCanMove(gameObj, key);
 	return _buildEnterGameAttrMap(gameObj, gameID, key, perspective, canMove, null);
-}
-
-function _createGameFile (gameObj) {
-	var gameID;
-	while (true) {
-		gameID = _generateRandomGameID();
-		var file = DATA_DIR + gameID;
-		if (!fs.existsSync(file)) {
-			_saveGameObject(gameID, gameObj);
-			console.log('created file ' + file);
-			break;
-		}
-	}
-	return gameID;
-}
-
-function _generateRandomGameID () {
-	var s = '';
-    for (var i = 0; i < 12; i++) {
-        s += GAME_ID_CHARS.charAt(Math.floor(Math.random() * GAME_ID_CHARS.length));
-    }
-    return s;
 }
 
 function _generateKey () {
