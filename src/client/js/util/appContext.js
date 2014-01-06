@@ -27,6 +27,7 @@ chess.AppContext = {
         appContext.genericDialogView = new chess.GenericDialogView({
             eventHandler: appContext.eventHandler
         });
+        appContext.userPrefs = new chess.UserPrefs();
         appContext.board = new chess.Board({
             eventHandler: appContext.eventHandler
         });
@@ -38,6 +39,7 @@ chess.AppContext = {
         appContext.boardView = new chess.BoardView({
             board: appContext.board,
             eventHandler: appContext.eventHandler,
+            userPrefs: appContext.userPrefs,
             capturedPieces: appContext.capturedPieces,
             moveHistory: appContext.moveHistory,
             notationConverter: appContext.notationConverter
@@ -59,7 +61,7 @@ chess.AppContext = {
 
         // These views just need to be instantiated - no need to assign to a variable
         new chess.OptionsMenuView({
-            eventHandler: appContext.eventHandler
+            userPrefs: appContext.userPrefs
         });
         new chess.PlayGameView({
             eventHandler: appContext.eventHandler

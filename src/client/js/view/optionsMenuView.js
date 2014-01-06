@@ -12,24 +12,22 @@ chess.OptionsMenuView = Backbone.View.extend({
 
     initialize: function () {
 
-        this.eventHandler = this.options.eventHandler;
+        this.userPrefs = this.options.userPrefs;
 
         var duration = 200;
         var self = this;
 
 		self.$('#optionsMenuIcon').click(function() {
-            self.$('#showLegalMovesValue').text(self.getShowLegalMovesDisplayValue());
+            self.$('#showLegalMovesValue').text(self._getShowLegalMovesDisplayValue());
             self.$('#optionsMenu').toggle(duration);
         });
 
         self.$('#showLegalMovesOption').click(function(event) {
             event.preventDefault();
-            // toggle showLegalMovesEnabled
-            chess.user.prefs.showLegalMovesEnabled = !chess.user.prefs.showLegalMovesEnabled;
-            self.eventHandler.trigger(self.eventHandler.messageNames.UPDATE_USER_PREFS, 'showLegalMovesEnabled', chess.user.prefs.showLegalMovesEnabled);
+            self.userPrefs.toggleShowLegalMovesEnabled();
             var showLegalMovesValueElement = self.$('#showLegalMovesValue');
             showLegalMovesValueElement.fadeOut(duration, function() {
-                showLegalMovesValueElement.text(self.getShowLegalMovesDisplayValue());
+                showLegalMovesValueElement.text(self._getShowLegalMovesDisplayValue());
                 showLegalMovesValueElement.fadeIn(duration, function() {
                     self.$('#optionsMenu').delay(duration).toggle(duration);
                 });
@@ -38,8 +36,8 @@ chess.OptionsMenuView = Backbone.View.extend({
 
     },
 
-    getShowLegalMovesDisplayValue: function () {
-        return chess.user.prefs.showLegalMovesEnabled ? 'On' : 'Off';
+    _getShowLegalMovesDisplayValue: function () {
+        return this.userPrefs.isShowLegalMovesEnabled() ? 'On' : 'Off';
     }
 
 });
