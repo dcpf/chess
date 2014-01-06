@@ -20,7 +20,7 @@ chess.UserPrefs = Backbone.Model.extend({
     * Toggle showLegalMovesEnabled from true to false or visa-versa
     */
     toggleShowLegalMovesEnabled: function () {
-    	var bool = !this.isShowLegalMovesEnabled();
+        var bool = !this.isShowLegalMovesEnabled();
 		chess.user.prefs.showLegalMovesEnabled = bool;
 		this._updateUserPrefs('showLegalMovesEnabled', bool);
     },

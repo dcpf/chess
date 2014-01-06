@@ -8,6 +8,7 @@ exports.handleRequest = function (req, path, params) {
 
 	var deferred = q.defer();
 	var mav = null;
+	var obj;
 
 	if (path === 'createGame') {
 
@@ -22,28 +23,28 @@ exports.handleRequest = function (req, path, params) {
 	} else if (path === 'enterGame') {
 
 		// POST enterGame request
-		var obj = chessController.enterGame(params);
+		obj = chessController.enterGame(params);
 		mav = modelAndView.getModelAndView(obj);
 		deferred.resolve(mav);
 
 	} else if (path === 'saveMove') {
 
 		// POST saveMove request
-		var obj = chessController.saveMove(params);
+		obj = chessController.saveMove(params);
 		mav = modelAndView.getModelAndView(obj);
 		deferred.resolve(mav);
 
 	} else if (path === 'updateUserPrefs') {
 
 		// POST updateUserPrefs request
-		var obj = chessController.updateUserPrefs(params);
+		obj = chessController.updateUserPrefs(params);
 		mav = modelAndView.getModelAndView(obj);
 		deferred.resolve(mav);
 
 	} else if (params.gameID) {
 
 		// GET enterGame request where gameID is passed as a URL param
-		var obj = chessController.enterGame(params);
+		obj = chessController.enterGame(params);
 		if (obj instanceof Error) {
 			obj = chessController.buildDefaultEnterGameAttrMap(obj);
 		}
@@ -53,7 +54,7 @@ exports.handleRequest = function (req, path, params) {
 	} else if (!path) {
 
 		// if path does not exist, use index.html by default
-		var obj = chessController.buildDefaultEnterGameAttrMap();
+		obj = chessController.buildDefaultEnterGameAttrMap();
 		mav = modelAndView.getModelAndView(obj, 'src/client/html/index.html');
 		deferred.resolve(mav);
 

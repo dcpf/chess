@@ -39,28 +39,28 @@ chess.NotationConverter = function () {
             if (notation === 'O-O') {
                 // king-side castle
                 if (color === 'W') {
-                	rook = new chess.Piece({id: color + 'R77'});
-                	king = new chess.Piece({id: color + 'K74'});
-                	rookMove = {piece: rook, toRow: 7, toCol: 5};
-                	kingMove = {piece: king, toRow: 7, toCol: 6};
+                    rook = new chess.Piece({id: color + 'R77'});
+                    king = new chess.Piece({id: color + 'K74'});
+                    rookMove = {piece: rook, toRow: 7, toCol: 5};
+                    kingMove = {piece: king, toRow: 7, toCol: 6};
                 } else {
-                	rook = new chess.Piece({id: color + 'R07'});
-                	king = new chess.Piece({id: color + 'K04'});
-                	rookMove = {piece: rook, toRow: 0, toCol: 5};
-                	kingMove = {piece: king, toRow: 0, toCol: 6};
+                    rook = new chess.Piece({id: color + 'R07'});
+                    king = new chess.Piece({id: color + 'K04'});
+                    rookMove = {piece: rook, toRow: 0, toCol: 5};
+                    kingMove = {piece: king, toRow: 0, toCol: 6};
                 }
             } else if (notation === 'O-O-O') {
                 // queen-side castle
                 if (color === 'W') {
-                	rook = new chess.Piece({id: color + 'R70'});
-                	king = new chess.Piece({id: color + 'K74'});
-                	rookMove = {piece: rook, toRow: 7, toCol: 3};
-                	kingMove = {piece: king, toRow: 7, toCol: 2};
+                    rook = new chess.Piece({id: color + 'R70'});
+                    king = new chess.Piece({id: color + 'K74'});
+                    rookMove = {piece: rook, toRow: 7, toCol: 3};
+                    kingMove = {piece: king, toRow: 7, toCol: 2};
                 } else {
-                	rook = new chess.Piece({id: color + 'R00'});
-                	king = new chess.Piece({id: color + 'K04'});
-                	rookMove = {piece: rook, toRow: 0, toCol: 3};
-                	kingMove = {piece: king, toRow: 0, toCol: 2};
+                    rook = new chess.Piece({id: color + 'R00'});
+                    king = new chess.Piece({id: color + 'K04'});
+                    rookMove = {piece: rook, toRow: 0, toCol: 3};
+                    kingMove = {piece: king, toRow: 0, toCol: 2};
                 }
             }
             return [rookMove, kingMove];
@@ -72,29 +72,30 @@ chess.NotationConverter = function () {
         var fromRow = notation.substr(2, 1);
         var toCol = notation.substr(4, 1);
         var toRow = notation.substr(5, 1);
-        for (var i in this.letters) {
-            var letter = this.letters[i];
+        var i, letter, rowNum;
+        for (i in this.letters) {
+            letter = this.letters[i];
             if (letter == fromCol) {
                 fromCol = i;
                 break;
             }
         }
-        for (var i in this.letters) {
-            var letter = this.letters[i];
+        for (i in this.letters) {
+            letter = this.letters[i];
             if (letter == toCol) {
                 toCol = i;
                 break;
             }
         }
-        for (var i in this.rowNums) {
-            var rowNum = this.rowNums[i];
+        for (i in this.rowNums) {
+            rowNum = this.rowNums[i];
             if (rowNum == fromRow) {
                 fromRow = i;
                 break;
             }
         }
-        for (var i in this.rowNums) {
-            var rowNum = this.rowNums[i];
+        for (i in this.rowNums) {
+            rowNum = this.rowNums[i];
             if (rowNum == toRow) {
                 toRow = i;
                 break;

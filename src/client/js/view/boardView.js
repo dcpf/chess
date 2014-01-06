@@ -170,11 +170,11 @@ chess.BoardView = Backbone.View.extend({
         gameBoard += '<tr><td>&nbsp;</td>';
     
         // Draw the bottom row of column letters
-        for (var i in letters) {
+        for (i in letters) {
             gameBoard += '<td>' + letters[i] + '</td>';
         }
     
-        gameBoard += '<td>&nbsp;</td></tr></table>'
+        gameBoard += '<td>&nbsp;</td></tr></table>';
     
         return gameBoard;
 
@@ -275,10 +275,10 @@ chess.BoardView = Backbone.View.extend({
         }
 
         // The stuff in here only needs to be done in UI mode
+        var possibleMoves = [];
         if (ui) {
 
             // Build the notation string
-            var possibleMoves = [];
             var notation = pieceType + this.notationConverter.getNotation(fromCol, fromRow) + x + this.notationConverter.getNotation(toCol, toRow) + ep;
             possibleMoves.push({notation: notation, pieceId: pieceId, toRow: toRow, toCol: toCol});
 

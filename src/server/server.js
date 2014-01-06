@@ -154,7 +154,7 @@ function doJsonOutput (res, obj) {
 		res.writeHead(200, {'Content-Type': contentTypeMap.json});
 		res.write(JSON.stringify(obj));
 	}
-   	res.end();
+	res.end();
 }
 
 function setNoCacheHeaders (headers) {

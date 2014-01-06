@@ -15,4 +15,4 @@ exports.getModelAndView = function (model, view) {
 
 	return this;
 
-}
+};

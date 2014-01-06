@@ -50,7 +50,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         }
 
         // clear the tempPiecePlaceHolder
-        self.$('#tempPiecePlaceHolder').html('');
+        this.$('#tempPiecePlaceHolder').html('');
 
         // hide the dialog
         this.$('#chessBoardSnapshotContainer').html('');
@@ -159,10 +159,12 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             var goLeft = (origOffset.left > targetOffset.left);
             var goRight = (origOffset.left < targetOffset.left);
 
+            var distanceUp, distanceDown, distanceRight, distanceLeft;
             var moveUp = 0, moveDown = 0, moveLeft = 0, moveRight = 0;
+
             if (goUp && goRight) {
-                var distanceUp = origOffset.top - targetOffset.top;
-                var distanceRight = targetOffset.left - origOffset.left;
+                distanceUp = origOffset.top - targetOffset.top;
+                distanceRight = targetOffset.left - origOffset.left;
                 if (distanceUp > distanceRight) {
                     moveUp = 1;
                     moveRight = 1/(distanceUp/distanceRight);
@@ -174,8 +176,8 @@ chess.BoardSnapshotView = chess.BoardView.extend({
                     moveRight = 1;
                 }
             } else if (goUp && goLeft) {
-                var distanceUp = origOffset.top - targetOffset.top;
-                var distanceLeft = origOffset.left - targetOffset.left;
+                distanceUp = origOffset.top - targetOffset.top;
+                distanceLeft = origOffset.left - targetOffset.left;
                 if (distanceUp > distanceLeft) {
                     moveUp = 1;
                     moveLeft = 1/(distanceUp/distanceLeft);
@@ -187,8 +189,8 @@ chess.BoardSnapshotView = chess.BoardView.extend({
                     moveLeft = 1;
                 }
             } else if (goDown && goRight) {
-                var distanceDown = targetOffset.top - origOffset.top;
-                var distanceRight = targetOffset.left - origOffset.left;
+                distanceDown = targetOffset.top - origOffset.top;
+                distanceRight = targetOffset.left - origOffset.left;
                 if (distanceDown > distanceRight) {
                     moveDown = 1;
                     moveRight = 1/(distanceDown/distanceRight);
@@ -200,8 +202,8 @@ chess.BoardSnapshotView = chess.BoardView.extend({
                     moveRight = 1;
                 }
             } else if (goDown && goLeft) {
-                var distanceDown = targetOffset.top - origOffset.top;
-                var distanceLeft = origOffset.left - targetOffset.left;
+                distanceDown = targetOffset.top - origOffset.top;
+                distanceLeft = origOffset.left - targetOffset.left;
                 if (distanceDown > distanceLeft) {
                     moveDown = 1;
                     moveLeft = 1/(distanceDown/distanceLeft);
@@ -262,7 +264,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             keepMoving = true;
         }
         if (keepMoving) {
-            this.movePieceTimeoutId = setTimeout(function(){self._movePiece(self, $obj, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece)}, 5);
+            this.movePieceTimeoutId = setTimeout(function(){self._movePiece(self, $obj, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece);}, 5);
         } else {
             // We've reached the destination. Remove the captured piece (if any), reset the img positioning, put the piece on the square, and call autoMove() with the next index.
             if (capturedPiece) {
@@ -273,7 +275,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             $obj.css('left', 'default');
             $target.html($obj);
             // Call autoMove() after a 1 second pause
-            this.autoMoveTimeoutId = setTimeout(function(){self._autoMove(self, ++index)}, 1000);
+            this.autoMoveTimeoutId = setTimeout(function(){self._autoMove(self, ++index);}, 1000);
         }
     },
 

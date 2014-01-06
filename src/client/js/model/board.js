@@ -249,8 +249,9 @@ chess.Board = Backbone.Model.extend({
     _getLegalPawnMoves: function (piece) {
         var row = piece.row;
         var col = piece.column;
+        var otherPiece;
         if (this.currentPlayer === 'W') {
-            var otherPiece = this.boardArray[row - 1][col];
+            otherPiece = this.boardArray[row - 1][col];
             if (!otherPiece) {
                 this._updateLegalMovesMap(piece, row - 1, col);
                 if (row == 6) {
@@ -263,7 +264,7 @@ chess.Board = Backbone.Model.extend({
             this._evaluatePawnCapture(piece, row - 1, col - 1);
             this._evaluatePawnCapture(piece, row - 1, col + 1);
         } else {
-            var otherPiece = this.boardArray[row + 1][col];
+            otherPiece = this.boardArray[row + 1][col];
             if (!otherPiece) {
                 this._updateLegalMovesMap(piece, row + 1, col);
                 if (row == 1) {
@@ -358,9 +359,9 @@ chess.Board = Backbone.Model.extend({
             board2.boardArray[toRow][toCol] = cellContents;
         }
         // Find the location of current player's king
-        var kingCoords;
+        var i, kingCoords;
         outer:
-        for (var i in board2.boardArray) {
+        for (i in board2.boardArray) {
             var rowArray = board2.boardArray[i];
             for (var j in rowArray) {
                 var testPiece = board2.getPieceByCoords(i, j);
@@ -375,7 +376,7 @@ chess.Board = Backbone.Model.extend({
         // Now go through all legal moves to see if the king is in check
         for (var key in board2.legalMovesMap) {
             var legalMovesArray = board2.legalMovesMap[key];
-            for (var i in legalMovesArray) {
+            for (i in legalMovesArray) {
                 if (legalMovesArray[i] === kingCoords) {
                     return true;
                 }
