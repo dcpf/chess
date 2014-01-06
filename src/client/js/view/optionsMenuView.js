@@ -18,11 +18,17 @@ chess.OptionsMenuView = Backbone.View.extend({
         var self = this;
 
 		self.$('#optionsMenuIcon').click(function() {
-            self.$('#showLegalMovesValue').text(self._getShowLegalMovesDisplayValue());
+            if (chess.user.email) {
+                // Only show legalMovesDisplay option if there's a valid user
+                self.$('#showLegalMovesValue').text(self._getShowLegalMovesDisplayValue());
+                self.$('#showLegalMovesOption').show();
+            } else {
+                self.$('#showLegalMovesOption').hide();
+            }
             self.$('#optionsMenu').toggle(duration);
         });
 
-        self.$('#showLegalMovesOption').click(function(event) {
+        self.$('#showLegalMovesOption a').click(function(event) {
             event.preventDefault();
             self.userPrefs.toggleShowLegalMovesEnabled();
             var showLegalMovesValueElement = self.$('#showLegalMovesValue');
