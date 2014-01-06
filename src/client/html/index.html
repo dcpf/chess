@@ -203,13 +203,6 @@ var chess = {
 
 <script>
 
-// set the progressDialog to show/hide whenever an ajax call is made
-$(document).bind("ajaxSend", function() {
-   $("#progressDialog").modal();
- }).bind("ajaxComplete", function() {
-   $("#progressDialog").modal('hide');
- });
-
 // Instantiate the appContext
 chess.appContext = chess.AppContext.getAppContext();
 
