@@ -126,8 +126,8 @@ function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove, err
 	// add config needed by the client
 	var config = {
 		recaptcha: {
-			enabled: CONFIG.recaptcha.enabled,
-			publicKey: CONFIG.recaptcha.publicKey
+			enabled: GLOBAL.CONFIG.recaptcha.enabled,
+			publicKey: GLOBAL.CONFIG.recaptcha.publicKey
 		}
 	};
 

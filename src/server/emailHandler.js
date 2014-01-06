@@ -3,7 +3,7 @@
 var templateHandler = require('./templateHandler');
 var nodemailer = require('nodemailer/lib/nodemailer');
 
-var emailServiceConfig = CONFIG.emailService;
+var emailServiceConfig = GLOBAL.CONFIG.emailService;
 
 var mailTransport = nodemailer.createTransport('SMTP', {
     service: emailServiceConfig.serviceName,
@@ -60,7 +60,7 @@ exports.sendMoveNotificationEmail = function (playerEmail, gameID, key, move) {
 	var html = templateHandler.processTemplate('src/server/html/moveNotificationEmail.html', {
 		move: move,
 		gameUrl: buildGameUrl(gameID, key),
-		appUrl: APP_URL.url
+		appUrl: GLOBAL.APP_URL.url
 	});
 
 	mailTransport.sendMail({
@@ -75,5 +75,5 @@ exports.sendMoveNotificationEmail = function (playerEmail, gameID, key, move) {
 };
 
 function buildGameUrl (gameID, key) {
-	return APP_URL.url + '?gameID=' + gameID + '&key=' + key;
+	return GLOBAL.APP_URL.url + '?gameID=' + gameID + '&key=' + key;
 }

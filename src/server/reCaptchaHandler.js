@@ -7,13 +7,13 @@ exports.validateCaptcha = function (ip, captchaChallenge, captchaResponse) {
 
 	var deferred = q.defer();
 
-	if (CONFIG.recaptcha.enabled) {
+	if (GLOBAL.CONFIG.recaptcha.enabled) {
 		request(
 			{
 				method: 'post',
-				url: CONFIG.recaptcha.verifyUrl,
+				url: GLOBAL.CONFIG.recaptcha.verifyUrl,
 				form: {
-					privatekey: CONFIG.recaptcha.privateKey,
+					privatekey: GLOBAL.CONFIG.recaptcha.privateKey,
 					remoteip: ip,
 					challenge: captchaChallenge,
 					response: captchaResponse

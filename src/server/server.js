@@ -92,9 +92,9 @@ http.createServer(function (req, res) {
 		console.error(e);
 	}
 
-}).listen(APP_URL.port, APP_URL.domain);
+}).listen(GLOBAL.APP_URL.port, GLOBAL.APP_URL.domain);
 
-console.info('Server running at ' + APP_URL.url);
+console.info('Server running at ' + GLOBAL.APP_URL.url);
 
 function initConfig () {
 
