@@ -245,6 +245,10 @@ chess.BoardView = Backbone.View.extend({
     */
     doMove: function (pieceId, toRow, toCol, ui) {
 
+        // make sure these are numbers
+        toRow = parseInt(toRow, 10);
+        toCol = parseInt(toCol, 10);
+
         var piece = new chess.Piece({id: pieceId});
         var pieceType = piece.type;
         var fromRow = piece.row;
@@ -286,9 +290,9 @@ chess.BoardView = Backbone.View.extend({
                 // If the king has not moved yet, and the rook is moving on the base row from either squares 7 - 5 or 0 - 3, this is a possible castle move
                 if (!this.board.rookAndKingMoves[origKingId] && fromRow == baseRow && toRow == baseRow) {
                     var castleNotation;
-                    if (fromCol == 7 && toCol == 5) {
+                    if (fromCol === 7 && toCol === 5) {
                         castleNotation = 'O-O';
-                    } else if (fromCol == 0 && toCol == 3) {
+                    } else if (fromCol === 0 && toCol === 3) {
                         castleNotation = 'O-O-O';
                     }
                     if (castleNotation) {
