@@ -2,10 +2,6 @@
 * Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
-'use strict';
-
-var chess = chess || {};
-
 chess.OptionsMenuView = Backbone.View.extend({
 
     el: '#optionsMenuContainer',

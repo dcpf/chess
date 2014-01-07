@@ -2,10 +2,6 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-'use strict';
-
-var chess = chess || {};
-
 chess.EventHandler = function () {
 
 	// this is the object we'll return

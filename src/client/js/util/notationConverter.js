@@ -2,10 +2,6 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-'use strict';
-
-var chess = chess || {};
-
 chess.NotationConverter = function () {
 
     this.letters = ['a','b','c','d','e','f','g','h'];

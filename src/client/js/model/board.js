@@ -2,10 +2,6 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-'use strict';
-
-var chess = chess || {};
-
 /*
 * Represents the board, piece positions, and all logic regarding chess rules, legal moves, etc.
 */

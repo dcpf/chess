@@ -2,10 +2,6 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-'use strict';
-
-var chess = chess || {};
-
 /*
 * Child of chess.BoardView with the sole purpose of rendering the board in 'view only' mode in a dialog.
 */
