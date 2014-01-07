@@ -24,11 +24,14 @@ chess.NotationConverter = function () {
     */
     this.convertNotation = function (notation, index) {
 
+        // make sure index is a number
+        index = parseInt(index, 10);
+
         // get the color
-        var color = (index == 0 || index % 2 == 0) ? 'W' : 'B';
+        var color = (index === 0 || index % 2 === 0) ? 'W' : 'B';
 
         // If this is castle move, figure out the coords for king-side or queen-side castle for either white or black.
-        if (notation.indexOf('O-O') == 0) {
+        if (notation.indexOf('O-O') === 0) {
 
             // get the moves
             var rook, king, rookMove, kingMove;
