@@ -365,7 +365,7 @@ chess.BoardView = Backbone.View.extend({
             var leftPiece = this.board.getPieceByCoords(toRow, toCol - 1);
             if ((rightPiece && rightPiece.isPawn()) || (leftPiece && leftPiece.isPawn())) {
                 // Set the en-passant capturable coords
-                var enPassantCaptureCoords = '' + ((parseInt(fromRow) + parseInt(toRow))/2) + toCol;
+                var enPassantCaptureCoords = '' + ((parseInt(fromRow, 10) + parseInt(toRow, 10))/2) + toCol;
                 this.board.enPassantCapture[enPassantCaptureCoords] = new chess.Piece({id: piece.qualifiedName + toRow + toCol});
             }
         }

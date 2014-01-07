@@ -279,9 +279,9 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     * Given an index from the moveHistory collection, figure out the move# to display in the UI. Then display the move# and the move notation.
     */
     _updateDisplayMove: function (index, notation) {
-        var moveNum = parseInt(index) + 1;
+        var moveNum = parseInt(index, 10) + 1;
         var dots = '... ';
-        if (moveNum % 2 != 0) {
+        if (moveNum % 2 !== 0) {
             moveNum++;
             dots = '. ';
         }

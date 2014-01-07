@@ -41,7 +41,7 @@ chess.MoveHistoryView = Backbone.View.extend({
         var cell = '<td class="moveHistoryLink ' + index + '">' + notation + '</td>';
         if (index == 0 || index % 2 == 0) {
             // white's move
-            var count = (parseInt(index) + 2)/2;
+            var count = (parseInt(index, 10) + 2)/2;
             var html = '<tr><td style="text-align: right">' + count + '</td>' + cell + '</tr>';
             this.$('#moveHistoryTable tr:last').after(html);
             this.$('#moveHistoryTable th:eq(1)').removeClass('currentPlayer');
