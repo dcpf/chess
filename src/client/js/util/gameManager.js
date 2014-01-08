@@ -23,7 +23,7 @@ chess.GameManager = function (attrs) {
             deferred.fail(function(jqXHR) {
                 self.eventHandler.trigger(self.eventHandler.messageNames.CREATE_GAME_ERROR, jqXHR.responseText);
             });
-            deferred.always(function(){
+            deferred.always(function() {
                 $("#progressDialog").modal('hide');
             });
         },
@@ -38,7 +38,7 @@ chess.GameManager = function (attrs) {
             deferred.fail(function(jqXHR) {
                 self.eventHandler.trigger(self.eventHandler.messageNames.ENTER_GAME_ERROR, jqXHR.responseText);
             });
-            deferred.always(function(){
+            deferred.always(function() {
                 $("#progressDialog").modal('hide');
             });
         },
@@ -89,7 +89,7 @@ chess.GameManager = function (attrs) {
             deferred.done(function(res) {
                 self.eventHandler.trigger(self.eventHandler.messageNames.MOVE_SAVED, res);
             });
-            deferred.always(function(){
+            deferred.always(function() {
                 $("#progressDialog").modal('hide');
             });
         }

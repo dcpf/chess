@@ -25,7 +25,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
 
         // set the click handler on the dialog's close icon
         var self = this;
-        this.$('a.closeIcon').click(function(){
+        this.$('a.closeIcon').click(function() {
             self._closeDialog();
             return false;
         });
