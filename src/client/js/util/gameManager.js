@@ -64,11 +64,15 @@ chess.GameManager = function (attrs) {
             for (var i in chess.vars.initialMoveHistory) {
                 var notation = chess.vars.initialMoveHistory[i];
                 var moveArray = self.notationConverter.convertNotation(notation, i);
-                for (var j in moveArray) {
-                    var move = moveArray[j];
-                    self.boardView.doMove(move.piece.id, move.toRow, move.toCol, false);
-                    self.boardView.updateGameWithLatestMove(notation, move.piece.id, move.toRow, move.toCol);
-                }
+                // notationConverter.convertNotation() usually returns an array with just one object in it,
+                // except in the case of a castle move, where it contains two objects: one for the rook move
+                // and one for the king move. We need this for the boardSnapshotView, which moves each piece
+                // automatically, but boardView.doMove() and boardView.updateGameWithLatestMove() only need
+                // the rook move and know how to move the king accordingly. So we just grab the first object
+                // from the array, and pass it in.
+                var move = moveArray[0];
+                self.boardView.doMove(move.piece.id, move.toRow, move.toCol, false);
+                self.boardView.updateGameWithLatestMove(notation, move.piece.id, move.toRow, move.toCol);
             }
 
             self.eventHandler.trigger(self.eventHandler.messageNames.GAME_ENTERED);
