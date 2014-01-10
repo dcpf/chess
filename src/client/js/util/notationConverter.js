@@ -16,7 +16,7 @@ chess.NotationConverter = function () {
 
 	/*
     * Converts the move notation string to a piece, and toRow and toCol. Note that the return type is an array to handle a castle move, where both the rook and king need to move.
-    * Normally, the array will contain one move, but for a castle move, it needs to contain two moves: one for the rook, and one for the king.
+    * Normally, the array will contain one move, but for a castle move, it will contain two moves: one for the rook, and one for the king.
     *
     * @param move notation
     * @param 0-based index of the move in the moveHistory collection

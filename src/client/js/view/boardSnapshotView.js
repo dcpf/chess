@@ -21,7 +21,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
 
         // set up the listeners
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.MOVE_HISTORY_LINK_CLICKED, this._render);
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.REPLAY_GAME_LINK_CLICKED, function(){this._render();this._autoMove(this, 0);});
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.REPLAY_GAME_LINK_CLICKED, function(){this._render();this._startAutoMove();});
 
         // set the click handler on the dialog's close icon
         var self = this;
@@ -94,6 +94,37 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         }
     },
 
+    /**
+    * Creates an array of moves for _autoMove() to work off of, then calls _autoMove().
+    */
+    _startAutoMove: function () {
+
+        // build the array of moves
+        this.moveObjArray = [];
+        for (var i in this.moveHistory.models) {
+            var moveHistoryObj = this.moveHistory.models[i];
+            var notation = moveHistoryObj.attributes.notation;
+            var capturedPiece = moveHistoryObj.attributes.capturedPiece;
+            var moveArray = this.notationConverter.convertNotation(notation, i);
+            // In the case of a castle move, notationConverter.convertNotation() will return an array of two moves: one for the rook,
+            // and one for the king. We need to put both in the moveObjArray, so each piece can be auto-moved.
+            for (var j in moveArray) {
+                var moveObj = {
+                    moveIndex: i,
+                    notation: notation,
+                    capturedPiece: capturedPiece,
+                    move: moveArray[j]
+                };
+                this.moveObjArray.push(moveObj);
+            }
+        }
+
+        // now that we've built the array, call _autoMove()
+        this._autoMove(this, 0);
+
+    },
+
+
     /*
     * Auto-moves the piece on the board for the move in the moveHistory collection specified by the passed-in index.
     * It gets the move notation from the moveHistory collection, computes the direction and distance to move, and 
@@ -106,124 +137,124 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     */
     _autoMove: function (self, index) {
 
-        // get the move notation from the moveHistory collection, and convert it
-        var moveHistoryObj = self.moveHistory.models[index];
-        if (!moveHistoryObj) {
-            // If we've reached the end of the move history, return.
+        // Get the move object from the moveObjArray
+        var moveObj = self.moveObjArray[index];
+
+        // If we've reached the end of the array, return.
+        if (!moveObj) {
             return;
         }
-        var notation = moveHistoryObj.attributes.notation;
-        // update the display notation
-        self._updateDisplayMove(index, notation);
-        var capturedPiece = moveHistoryObj.attributes.capturedPiece;
-        var moveArray = self.notationConverter.convertNotation(notation, index);
- 
-        for (var i in moveArray) {
 
-            var move = moveArray[i];
-            var piece = move.piece;
+        var notation = moveObj.notation;
+        var move = moveObj.move;
+        var piece = move.piece;
 
-            // get the piece and its orig offset
-            var fromSquare = '#sq' + piece.row + piece.column;
-            var $img = self.$('#chessBoardSnapshotContainer ' + fromSquare).children('img');
-            var origOffset = $img.offset();
+        // Update the display notation *unless* this is a castle move and the piece being moved is a king.
+        // In this case, the display notation was already updated when the rook was moved.
+        if (!(notation.indexOf('O-O') === 0 && piece.isKing())) {
+            self._updateDisplayMove(moveObj.moveIndex, notation);
+        }
 
-            // blank out the square where it lives
-            self.$(fromSquare).html('');
+        // get the piece and its orig offset
+        var fromSquare = '#sq' + piece.row + piece.column;
+        var $img = self.$('#chessBoardSnapshotContainer ' + fromSquare).children('img');
+        var origOffset = $img.offset();
 
-            // Get a handle on the target square. If there is a piece there, get its offset. Else, put the piece we already have there, and get its new offset.
-            var targetOffset;
-            var toSquare = '#sq' + move.toRow + move.toCol;
-            var $target = self.$('#chessBoardSnapshotContainer ' + toSquare);
-            var $img2 = $target.children('img');
-            if ($img2[0]) {
-                targetOffset = $img2.offset();
-            } else {
-                $target.html($img);
-                targetOffset = $img.offset();
-                // blank out the target square
-                $target.html('');
-            }
+        // blank out the square where it lives
+        self.$(fromSquare).html('');
 
-            // attach the img to the tempPiecePlaceHolder and set its offset to the original offset
-            self.$('#tempPiecePlaceHolder').append($img);
-            $img.offset(origOffset);
+        // Get a handle on the target square. If there is a piece there, get its offset. Else, put the piece we already have there, and get its new offset.
+        var targetOffset;
+        var toSquare = '#sq' + move.toRow + move.toCol;
+        var $target = self.$('#chessBoardSnapshotContainer ' + toSquare);
+        var $img2 = $target.children('img');
+        if ($img2[0]) {
+            targetOffset = $img2.offset();
+        } else {
+            $target.html($img);
+            targetOffset = $img.offset();
+            // blank out the target square
+            $target.html('');
+        }
 
-            // Calculate which direction to go and how far
-            var goUp = (origOffset.top > targetOffset.top);
-            var goDown = (origOffset.top < targetOffset.top);
-            var goLeft = (origOffset.left > targetOffset.left);
-            var goRight = (origOffset.left < targetOffset.left);
+        // attach the img to the tempPiecePlaceHolder and set its offset to the original offset
+        self.$('#tempPiecePlaceHolder').append($img);
+        $img.offset(origOffset);
 
-            var distanceUp, distanceDown, distanceRight, distanceLeft;
-            var moveUp = 0, moveDown = 0, moveLeft = 0, moveRight = 0;
+        // Calculate which direction to go and how far
+        var goUp = (origOffset.top > targetOffset.top);
+        var goDown = (origOffset.top < targetOffset.top);
+        var goLeft = (origOffset.left > targetOffset.left);
+        var goRight = (origOffset.left < targetOffset.left);
 
-            if (goUp && goRight) {
-                distanceUp = origOffset.top - targetOffset.top;
-                distanceRight = targetOffset.left - origOffset.left;
-                if (distanceUp > distanceRight) {
-                    moveUp = 1;
-                    moveRight = 1/(distanceUp/distanceRight);
-                } else if (distanceUp < distanceRight) {
-                    moveUp = 1/(distanceRight/distanceUp);
-                    moveRight = 1;
-                } else {
-                    moveUp = 1;
-                    moveRight = 1;
-                }
-            } else if (goUp && goLeft) {
-                distanceUp = origOffset.top - targetOffset.top;
-                distanceLeft = origOffset.left - targetOffset.left;
-                if (distanceUp > distanceLeft) {
-                    moveUp = 1;
-                    moveLeft = 1/(distanceUp/distanceLeft);
-                } else if (distanceUp < distanceLeft) {
-                    moveUp = 1/(distanceLeft/distanceUp);
-                    moveLeft = 1;
-                } else {
-                    moveUp = 1;
-                    moveLeft = 1;
-                }
-            } else if (goDown && goRight) {
-                distanceDown = targetOffset.top - origOffset.top;
-                distanceRight = targetOffset.left - origOffset.left;
-                if (distanceDown > distanceRight) {
-                    moveDown = 1;
-                    moveRight = 1/(distanceDown/distanceRight);
-                } else if (distanceDown < distanceRight) {
-                    moveDown = 1/(distanceRight/distanceDown);
-                    moveRight = 1;
-                } else {
-                    moveDown = 1;
-                    moveRight = 1;
-                }
-            } else if (goDown && goLeft) {
-                distanceDown = targetOffset.top - origOffset.top;
-                distanceLeft = origOffset.left - targetOffset.left;
-                if (distanceDown > distanceLeft) {
-                    moveDown = 1;
-                    moveLeft = 1/(distanceDown/distanceLeft);
-                } else if (distanceDown < distanceLeft) {
-                    moveDown = 1/(distanceLeft/distanceDown);
-                    moveLeft = 1;
-                } else {
-                    moveDown = 1;
-                    moveLeft = 1;
-                }
-            } else if (goUp) {
+        var distanceUp, distanceDown, distanceRight, distanceLeft;
+        var moveUp = 0, moveDown = 0, moveLeft = 0, moveRight = 0;
+
+        if (goUp && goRight) {
+            distanceUp = origOffset.top - targetOffset.top;
+            distanceRight = targetOffset.left - origOffset.left;
+            if (distanceUp > distanceRight) {
                 moveUp = 1;
-            } else if (goDown) {
-                moveDown = 1;
-            } else if (goRight) {
+                moveRight = 1/(distanceUp/distanceRight);
+            } else if (distanceUp < distanceRight) {
+                moveUp = 1/(distanceRight/distanceUp);
                 moveRight = 1;
-            } else if (goLeft) {
+            } else {
+                moveUp = 1;
+                moveRight = 1;
+            }
+        } else if (goUp && goLeft) {
+            distanceUp = origOffset.top - targetOffset.top;
+            distanceLeft = origOffset.left - targetOffset.left;
+            if (distanceUp > distanceLeft) {
+                moveUp = 1;
+                moveLeft = 1/(distanceUp/distanceLeft);
+            } else if (distanceUp < distanceLeft) {
+                moveUp = 1/(distanceLeft/distanceUp);
+                moveLeft = 1;
+            } else {
+                moveUp = 1;
                 moveLeft = 1;
             }
-
-            // move the piece
-            self._movePiece(self, $img, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece);
-
+        } else if (goDown && goRight) {
+            distanceDown = targetOffset.top - origOffset.top;
+            distanceRight = targetOffset.left - origOffset.left;
+            if (distanceDown > distanceRight) {
+                moveDown = 1;
+                moveRight = 1/(distanceDown/distanceRight);
+            } else if (distanceDown < distanceRight) {
+                moveDown = 1/(distanceRight/distanceDown);
+                moveRight = 1;
+            } else {
+                moveDown = 1;
+                moveRight = 1;
+            }
+        } else if (goDown && goLeft) {
+            distanceDown = targetOffset.top - origOffset.top;
+            distanceLeft = origOffset.left - targetOffset.left;
+            if (distanceDown > distanceLeft) {
+                moveDown = 1;
+                moveLeft = 1/(distanceDown/distanceLeft);
+            } else if (distanceDown < distanceLeft) {
+                moveDown = 1/(distanceLeft/distanceDown);
+                moveLeft = 1;
+            } else {
+                moveDown = 1;
+                moveLeft = 1;
+            }
+        } else if (goUp) {
+            moveUp = 1;
+        } else if (goDown) {
+            moveDown = 1;
+        } else if (goRight) {
+            moveRight = 1;
+        } else if (goLeft) {
+            moveLeft = 1;
         }
+
+        // move the piece
+        self._movePiece(self, $img, $target, piece, notation, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, moveObj.capturedPiece);
+
     },
 
     /*
@@ -233,6 +264,8 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     * @param self - the boardSnapShotView object instance
     * @param $obj - the jQuery image object for the piece being moved
     * @param $target - the jQuery target object where the piece is being moved to
+    * @param piece - the piece object being moved
+    * @param notation - the string notation for this move
     * @param moveUp - number of pixels to move up on each iteration
     * @param moveRight - number of pixels to move right on each iteration
     * @param moveDown - number of pixels to move down on each iteration
@@ -241,7 +274,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     * @param index - the moveHistory index needed by autoMove()
     * @param capturedPiece - the captured piece (if any) for this move
     */
-    _movePiece: function (self, $obj, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece) {
+    _movePiece: function (self, $obj, $target, piece, notation, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece) {
         var keepMoving = false;
         if (moveUp && $obj.offset().top > targetOffset.top) {
             $obj.offset({top: $obj.offset().top - moveUp});
@@ -260,8 +293,11 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             keepMoving = true;
         }
         if (keepMoving) {
-            this.movePieceTimeoutId = setTimeout(function(){self._movePiece(self, $obj, $target, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece);}, 5);
+
+            self.movePieceTimeoutId = setTimeout(function(){self._movePiece(self, $obj, $target, piece, notation, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece);}, 5);
+
         } else {
+
             // We've reached the destination. Remove the captured piece (if any), reset the img positioning, put the piece on the square, and call autoMove() with the next index.
             if (capturedPiece) {
                 self.$('#sq' + capturedPiece.row + capturedPiece.column).html('');
@@ -270,8 +306,11 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             $obj.css('top', 'default');
             $obj.css('left', 'default');
             $target.html($obj);
-            // Call autoMove() after a 1 second pause
-            this.autoMoveTimeoutId = setTimeout(function(){self._autoMove(self, ++index);}, 1000);
+
+            // Call autoMove() after a slight pause
+            var waitTime = (notation.indexOf('O-O') === 0 && piece.isRook()) ? 0 : 1000;
+            self.autoMoveTimeoutId = setTimeout(function(){self._autoMove(self, ++index);}, waitTime);
+
         }
     },
 
