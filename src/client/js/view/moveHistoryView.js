@@ -39,7 +39,7 @@ chess.MoveHistoryView = Backbone.View.extend({
         var index = numMoves - 1;
         var notation = this.moveHistory.models[index].attributes.notation;
         var cell = '<td class="moveHistoryLink ' + index + '">' + notation + '</td>';
-        if (index == 0 || index % 2 == 0) {
+        if (index === 0 || index % 2 === 0) {
             // white's move
             var count = (parseInt(index, 10) + 2)/2;
             var html = '<tr><td style="text-align: right">' + count + '</td>' + cell + '</tr>';

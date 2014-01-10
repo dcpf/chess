@@ -73,8 +73,9 @@ chess.EnterGameView = Backbone.View.extend({
     },
 
     _selectRadioButton: function (num) {
-        if ((num == 0 && !this.$('#gameID').val().trim() && !this.$('#key').val().trim()) ||
-            (num == 1 && !this.$('#player1Email').val().trim() && !this.$('#player2Email').val().trim())) {
+        num = parseInt(num, 10);
+        if ((num === 0 && !this.$('#gameID').val().trim() && !this.$('#key').val().trim()) ||
+            (num === 1 && !this.$('#player1Email').val().trim() && !this.$('#player2Email').val().trim())) {
             this.$('input[name="newOrExisting"]')[num].click();
         }
     },
