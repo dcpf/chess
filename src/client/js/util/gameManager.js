@@ -8,7 +8,6 @@ chess.GameManager = function (attrs) {
 
         // passed-in attrs
         eventHandler: attrs.eventHandler,
-        notationConverter: attrs.notationConverter,
         board: attrs.board,
         boardView: attrs.boardView,
 
@@ -54,26 +53,20 @@ chess.GameManager = function (attrs) {
                 chess.user = JSON.parse(attrs.user);
             }
 
-            // kick things off
-            self.board.findAllLegalMoves();
-            // make sure viewMode is set accordingly based on canMove
-            self.boardView.viewMode = !chess.vars.canMove;
-            self.boardView.render(chess.vars.perspective);
-
             // If there is an existing move history, use it to get the game into the current state
             for (var i in chess.vars.initialMoveHistory) {
                 var notation = chess.vars.initialMoveHistory[i];
-                var moveArray = self.notationConverter.convertNotation(notation, i);
-                // notationConverter.convertNotation() usually returns an array with just one object in it,
-                // except in the case of a castle move, where it contains two objects: one for the rook move
-                // and one for the king move. We need this for the boardSnapshotView, which moves each piece
-                // automatically, but boardView.doMove() and boardView.updateGameWithLatestMove() only need
-                // the rook move and know how to move the king accordingly. So we just grab the first object
-                // from the array, and pass it in.
-                var move = moveArray[0];
-                self.boardView.doMove(move.piece.id, move.toRow, move.toCol, false);
-                self.boardView.updateGameWithLatestMove(notation, move.piece.id, move.toRow, move.toCol);
+                self.board.updateGameState(notation);
             }
+
+            // Update the legal moves
+            this.board.findAllLegalMoves();
+
+            // make sure viewMode is set accordingly based on canMove
+            self.boardView.viewMode = !chess.vars.canMove;
+
+            // render the board
+            self.boardView.render(chess.vars.perspective);
 
             self.eventHandler.trigger(self.eventHandler.messageNames.GAME_ENTERED);
 

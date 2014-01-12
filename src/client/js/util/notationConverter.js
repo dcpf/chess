@@ -19,16 +19,10 @@ chess.NotationConverter = function () {
     * Normally, the array will contain one move, but for a castle move, it will contain two moves: one for the rook, and one for the king.
     *
     * @param move notation
-    * @param 0-based index of the move in the moveHistory collection
+    * @param currentPlayer (W or B)
     * @returns an object with the piece, toRow, and toCol
     */
-    this.convertNotation = function (notation, index) {
-
-        // make sure index is a number
-        index = parseInt(index, 10);
-
-        // get the color
-        var color = (index === 0 || index % 2 === 0) ? 'W' : 'B';
+    this.convertNotation = function (notation, currentPlayer) {
 
         // If this is castle move, figure out the coords for king-side or queen-side castle for either white or black.
         if (notation.indexOf('O-O') === 0) {
@@ -37,27 +31,27 @@ chess.NotationConverter = function () {
             var rook, king, rookMove, kingMove;
             if (notation === 'O-O') {
                 // king-side castle
-                if (color === 'W') {
-                    rook = new chess.Piece({id: color + 'R77'});
-                    king = new chess.Piece({id: color + 'K74'});
+                if (currentPlayer === 'W') {
+                    rook = new chess.Piece({id: currentPlayer + 'R77'});
+                    king = new chess.Piece({id: currentPlayer + 'K74'});
                     rookMove = {piece: rook, toRow: 7, toCol: 5};
                     kingMove = {piece: king, toRow: 7, toCol: 6};
                 } else {
-                    rook = new chess.Piece({id: color + 'R07'});
-                    king = new chess.Piece({id: color + 'K04'});
+                    rook = new chess.Piece({id: currentPlayer + 'R07'});
+                    king = new chess.Piece({id: currentPlayer + 'K04'});
                     rookMove = {piece: rook, toRow: 0, toCol: 5};
                     kingMove = {piece: king, toRow: 0, toCol: 6};
                 }
             } else if (notation === 'O-O-O') {
                 // queen-side castle
-                if (color === 'W') {
-                    rook = new chess.Piece({id: color + 'R70'});
-                    king = new chess.Piece({id: color + 'K74'});
+                if (currentPlayer === 'W') {
+                    rook = new chess.Piece({id: currentPlayer + 'R70'});
+                    king = new chess.Piece({id: currentPlayer + 'K74'});
                     rookMove = {piece: rook, toRow: 7, toCol: 3};
                     kingMove = {piece: king, toRow: 7, toCol: 2};
                 } else {
-                    rook = new chess.Piece({id: color + 'R00'});
-                    king = new chess.Piece({id: color + 'K04'});
+                    rook = new chess.Piece({id: currentPlayer + 'R00'});
+                    king = new chess.Piece({id: currentPlayer + 'K04'});
                     rookMove = {piece: rook, toRow: 0, toCol: 3};
                     kingMove = {piece: king, toRow: 0, toCol: 2};
                 }
@@ -66,11 +60,12 @@ chess.NotationConverter = function () {
         }
 
         // If it's not a castle move, figure out the coords by parsing the move notation string.
-        var type = notation.substr(0, 1);
+        var pieceType = notation.substr(0, 1);
         var fromCol = notation.substr(1, 1);
         var fromRow = notation.substr(2, 1);
         var toCol = notation.substr(4, 1);
         var toRow = notation.substr(5, 1);
+        var enPassantCapture = (notation.indexOf('e.p.') > 0);
         var i, letter, rowNum;
         for (i in this.letters) {
             letter = this.letters[i];
@@ -100,8 +95,8 @@ chess.NotationConverter = function () {
                 break;
             }
         }
-        var piece = new chess.Piece({id: color + type + fromRow + fromCol});
-        var move = {piece: piece, toRow: toRow, toCol: toCol};
+        var piece = new chess.Piece({id: currentPlayer + pieceType + fromRow + fromCol});
+        var move = {piece: piece, toRow: parseInt(toRow, 10), toCol: parseInt(toCol, 10), enPassantCapture: enPassantCapture};
         return [move];
 
     };

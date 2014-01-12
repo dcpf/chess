@@ -24,33 +24,33 @@ chess.AppContext = {
             eventHandler: appContext.eventHandler
         });
         appContext.userPrefs = new chess.UserPrefs();
-        appContext.board = new chess.Board({
-            eventHandler: appContext.eventHandler
-        });
         appContext.capturedPieces = new chess.CapturedPieces();
         appContext.moveHistory = new chess.MoveHistory();
+        appContext.board = new chess.Board({
+            eventHandler: appContext.eventHandler,
+            notationConverter: appContext.notationConverter,
+            capturedPieces: appContext.capturedPieces,
+            moveHistory: appContext.moveHistory
+        });
         appContext.enterGameView = new chess.EnterGameView({
             eventHandler: appContext.eventHandler
         });
         appContext.boardView = new chess.BoardView({
             board: appContext.board,
             eventHandler: appContext.eventHandler,
-            userPrefs: appContext.userPrefs,
-            capturedPieces: appContext.capturedPieces,
-            moveHistory: appContext.moveHistory,
-            notationConverter: appContext.notationConverter
+            notationConverter: appContext.notationConverter,
+            userPrefs: appContext.userPrefs
         });
         appContext.boardSnapshotView = new chess.BoardSnapshotView({
             eventHandler: appContext.eventHandler,
-            moveHistory: appContext.moveHistory,
-            notationConverter: appContext.notationConverter
+            notationConverter: appContext.notationConverter,
+            moveHistory: appContext.moveHistory
         });
         appContext.confirmMoveDialogView = new chess.ConfirmMoveDialogView({
             eventHandler: appContext.eventHandler
         });
         appContext.gameManager = new chess.GameManager({
             eventHandler: appContext.eventHandler,
-            notationConverter: appContext.notationConverter,
             board: appContext.board,
             boardView: appContext.boardView
         });

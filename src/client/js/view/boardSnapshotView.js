@@ -74,10 +74,9 @@ chess.BoardSnapshotView = chess.BoardView.extend({
                 var capturedPiece = moveHistoryObj.attributes.capturedPiece;
                 if (capturedPiece) {
                     // blank out the location of the captured piece
-                    // this.board.boardArray[capturedPiece.row][capturedPiece.column] = '';
                     this.$('#sq' + capturedPiece.row + capturedPiece.column).html('');
                 }
-                var moveArray = this.notationConverter.convertNotation(notation, i);
+                var moveArray = this.notationConverter.convertNotation(notation, this._getCurentPlayerByMoveIndex(i));
                 for (var j in moveArray) {
                     var move = moveArray[j];
                     var piece = move.piece;
@@ -105,7 +104,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
             var moveHistoryObj = this.moveHistory.models[i];
             var notation = moveHistoryObj.attributes.notation;
             var capturedPiece = moveHistoryObj.attributes.capturedPiece;
-            var moveArray = this.notationConverter.convertNotation(notation, i);
+            var moveArray = this.notationConverter.convertNotation(notation, this._getCurentPlayerByMoveIndex(i));
             // In the case of a castle move, notationConverter.convertNotation() will return an array of two moves: one for the rook,
             // and one for the king. We need to put both in the moveObjArray, so each piece can be auto-moved.
             for (var j in moveArray) {
@@ -326,6 +325,16 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         }
         moveNum = moveNum/2;
         this.$('.modal-body .move').text(moveNum + dots + notation);
+    },
+
+    /*
+    * Gets the currentPlayer by move index. For example:
+    * 0, 2, 4, 6 ... = W
+    * 1, 3, 5, 7 ... = B
+    */
+    _getCurentPlayerByMoveIndex: function (index) {
+        index = parseInt(index, 10);
+        return (index === 0 || index % 2 === 0) ? 'W' : 'B';
     }
 
 });

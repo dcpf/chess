@@ -11,6 +11,9 @@ chess.Board = Backbone.Model.extend({
 
         if (attrs) {
             this.eventHandler = attrs.eventHandler;
+            this.notationConverter = attrs.notationConverter;
+            this.capturedPieces = attrs.capturedPieces;
+            this.moveHistory = attrs.moveHistory;
         }
 
         // start with the default player of white and the default game board
@@ -27,8 +30,6 @@ chess.Board = Backbone.Model.extend({
         ];
         // map of all legal moves
         this.legalMovesMap = {};
-        // temporary holding place for a captured piece, while we await the user's response to the 'are you sure' dialog
-        this.limbo = null;
         // temporary holding place for a piece that's capturable via en-passant
         this.enPassantCapture = {};
         // map for tracking rook and king moves to determine if castling is possible
@@ -77,6 +78,80 @@ chess.Board = Backbone.Model.extend({
             // only publish if not in hypothetical mode
             this.eventHandler.trigger(this.eventHandler.messageNames.UPDATED_LEGAL_MOVES);
         }
+    },
+
+    updateGameState: function (notation) {
+
+        var moveArray = this.notationConverter.convertNotation(notation, this.currentPlayer);
+        // notationConverter.convertNotation() usually returns an array with just one object in it,
+        // except in the case of a castle move, where it contains two objects: one for the rook move
+        // and one for the king move. We need this for the boardSnapshotView, which moves each piece
+        // automatically, but here, we only need the rook move, as we know how to move the king
+        // accordingly. So we only need the first object from the array.
+        var move = moveArray[0];
+        var piece = move.piece;
+        var toRow = move.toRow;
+        var toCol = move.toCol;
+
+        // Update the boardArray with the new piece location
+        var fromRow = piece.row;
+        var fromCol = piece.column;
+        this.boardArray[fromRow][fromCol] = ''; // Blank out the previous location
+        // Variable to track if a piece was captured
+        var capturedPiece = this.getPieceByCoords(toRow, toCol);
+        // Populate the new location.
+        this.boardArray[toRow][toCol] = piece.qualifiedName;
+
+        // If this is a pawn move, and it's capturing en-passant, remove the captured piece.
+        if (piece.isPawn() && move.enPassantCapture) {
+            if (piece.color === 'W') {
+                capturedPiece = this.getPieceByCoords(toRow + 1, toCol);
+                this.boardArray[toRow + 1][toCol] = '';
+            } else {
+                capturedPiece = this.getPieceByCoords(toRow - 1, toCol);
+                this.boardArray[toRow - 1][toCol] = '';
+            }
+        }
+
+        // Clear en-passant capturable square marked from the previous move, if any.
+        this.enPassantCapture = {};
+
+        // If this is a castle move, move the king as well
+        if (notation === 'O-O' || notation === 'O-O-O') {
+            var newCol = (notation === 'O-O') ? 6 : 2;
+            this.boardArray[fromRow][4] = ''; // Blank out the orig king square
+            this.boardArray[fromRow][newCol] = piece.color + 'K'; // Put the king in the new location
+            this.rookAndKingMoves[piece.color + 'K' + fromRow + '4'] = 1; // Update the rookAndKingMoves map
+        }
+
+        // If this is a pawn move, and the pawn has moved from either row 6 to row 4 (white) or from row 1 to row 3 (black),
+        // check to see if there's a pawn on an adjacent square that can capture it en-passant in the next move.
+        if (piece.isPawn() && ((fromRow == 6 && toRow == 4) || (fromRow == 1 && toRow == 3))) {
+            var rightPiece = this.getPieceByCoords(toRow, toCol + 1);
+            var leftPiece = this.getPieceByCoords(toRow, toCol - 1);
+            if ((rightPiece && rightPiece.isPawn()) || (leftPiece && leftPiece.isPawn())) {
+                // Set the en-passant capturable coords
+                var enPassantCaptureCoords = '' + ((parseInt(fromRow, 10) + parseInt(toRow, 10))/2) + toCol;
+                this.enPassantCapture[enPassantCaptureCoords] = new chess.Piece({id: piece.qualifiedName + toRow + toCol});
+            }
+        }
+
+        // If we have a captured piece, add it to the capturedPieces collection
+        if (capturedPiece) {
+            this.capturedPieces.add(capturedPiece);
+        }
+
+        // Track rook or king moves, so we can determine castling possibilies
+        if (piece.isRook() || piece.isKing()) {
+            this.rookAndKingMoves[piece.id] = 1;
+        }
+
+        // Switch player
+        this.currentPlayer = (this.currentPlayer === 'W') ? 'B' : 'W';
+
+        // Add the move to the 'moveHistory' collection
+        this.moveHistory.add({notation: notation});
+
     },
 
     /*
@@ -309,11 +384,9 @@ chess.Board = Backbone.Model.extend({
                     otherPiece = enPassantCapturePiece;
                 }
             }
-            if (otherPiece) {
-                if (otherPiece.color !== this.currentPlayer) {
-                    // valid capture - add move to map
-                    this._updateLegalMovesMap(piece, toRow, toCol);
-                }
+            if (otherPiece && otherPiece.color !== this.currentPlayer) {
+                // valid capture - add move to map
+                this._updateLegalMovesMap(piece, toRow, toCol);
             }
         }
     },

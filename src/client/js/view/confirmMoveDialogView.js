@@ -11,15 +11,15 @@ chess.ConfirmMoveDialogView = Backbone.View.extend({
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.RENDER_CONFIRM_MOVE_DIALOG, this._render);
     },
 
-    _render: function (moves) {
+    _render: function (moveNotations) {
 
         var self = this;
         var possibleMoves = [];
         var i;
 
-        for (i in moves) {
-            var move = moves[i];
-            var moveLink = $('<a>').attr({href: '#'}).append(move.notation).click(function(){self._confirmMove({notation: move.notation, pieceId: move.pieceId, toRow: move.toRow, toCol: move.toCol}); return false;});
+        for (i in moveNotations) {
+            var moveNotation = moveNotations[i];
+            var moveLink = $('<a>').attr({href: '#'}).append(moveNotation).click(function(){self._confirmMove(moveNotation); return false;});
             possibleMoves.push(moveLink);
         }
 
@@ -39,13 +39,9 @@ chess.ConfirmMoveDialogView = Backbone.View.extend({
     /*
     * Called from the confirm dialog
     */
-    _confirmMove: function (args) {
+    _confirmMove: function (notation) {
         this.$el.modal('hide');
-        var notation = args.notation;
-        var pieceId = args.pieceId;
-        var toRow = args.toRow * 1;
-        var toCol = args.toCol * 1;
-        this.eventHandler.trigger(this.eventHandler.messageNames.MOVE_CONFIRMED, notation, pieceId, toRow, toCol);
+        this.eventHandler.trigger(this.eventHandler.messageNames.MOVE_CONFIRMED, notation);
     },
 
     /*
