@@ -132,7 +132,7 @@ chess.Board = Backbone.Model.extend({
         }
 
         // If we have a captured piece, add it to the capturedPieces collection
-        if (capturedPiece) {
+        if (capturedPiece && this.capturedPieces) {
             this.capturedPieces.add(capturedPiece);
         }
 
@@ -145,7 +145,9 @@ chess.Board = Backbone.Model.extend({
         this.currentPlayer = (this.currentPlayer === 'W') ? 'B' : 'W';
 
         // Add the move to the 'moveHistory' collection
-        this.moveHistory.add({notation: notation});
+        if (this.moveHistory) {
+            this.moveHistory.add({notation: notation});
+        }
 
     },
 

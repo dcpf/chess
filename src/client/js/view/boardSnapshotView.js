@@ -60,34 +60,22 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     */
     _render: function (index) {
         this.board = new chess.Board();
+        this.board.notationConverter = this.notationConverter;
         var gameBoard = this._generateBoard();
         this.$('#chessBoardSnapshotContainer').html(gameBoard);
-        this.updateBoard();
         this.$el.modal();
-        var notation;
+        var moveHistoryObj, notation;
         if (index) {
 
-            // go through each move notation and update the board
+            // go through each move and update the board array
             for (var i = 0; i <= index; i++) {
-                var moveHistoryObj = this.moveHistory.models[i];
+                moveHistoryObj = this.moveHistory.models[i];
                 notation = moveHistoryObj.attributes.notation;
-                var capturedPiece = moveHistoryObj.attributes.capturedPiece;
-                if (capturedPiece) {
-                    // blank out the location of the captured piece
-                    this.$('#sq' + capturedPiece.row + capturedPiece.column).html('');
-                }
-                var moveArray = this.notationConverter.convertNotation(notation, this._getCurentPlayerByMoveIndex(i));
-                for (var j in moveArray) {
-                    var move = moveArray[j];
-                    var piece = move.piece;
-                    var fromSquare = '#sq' + piece.row + piece.column;
-                    var $img = this.$('#chessBoardSnapshotContainer ' + fromSquare).children('img');
-                    this.$(fromSquare).html(''); // Blank out the previous location
-                    this.$('#sq' + move.toRow + move.toCol).html($img); // Populate the new location
-                }
+                this.board.updateGameState(notation);
             }
 
-            // update the display with the final notation
+            // update the board and display with the final notation
+            this.updateBoard();
             this._updateDisplayMove(index, notation);
 
         }
