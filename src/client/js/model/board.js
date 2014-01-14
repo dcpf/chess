@@ -102,15 +102,10 @@ chess.Board = Backbone.Model.extend({
         // Populate the new location.
         this.boardArray[toRow][toCol] = piece.qualifiedName;
 
-        // If this is a pawn move, and it's capturing en-passant, remove the captured piece.
-        if (piece.isPawn() && move.enPassantCapture) {
-            if (piece.color === 'W') {
-                capturedPiece = this.getPieceByCoords(toRow + 1, toCol);
-                this.boardArray[toRow + 1][toCol] = '';
-            } else {
-                capturedPiece = this.getPieceByCoords(toRow - 1, toCol);
-                this.boardArray[toRow - 1][toCol] = '';
-            }
+        // If this is an enPassant capture, remove the captured piece.
+        if (move.enPassantCaptureCoords) {
+            capturedPiece = this.getPieceByCoords(move.enPassantCaptureCoords.row, move.enPassantCaptureCoords.col);
+            this.boardArray[move.enPassantCaptureCoords.row][move.enPassantCaptureCoords.col] = '';
         }
 
         // Clear en-passant capturable square marked from the previous move, if any.

@@ -66,7 +66,7 @@ chess.NotationConverter = function () {
         var toCol = notation.substr(4, 1);
         var toRow = notation.substr(5, 1);
         var enPassantCapture = (notation.indexOf('e.p.') > 0);
-        var i, letter, rowNum;
+        var i, letter, rowNum, enPassantCaptureCoords;
         for (i in this.letters) {
             letter = this.letters[i];
             if (letter == fromCol) {
@@ -95,8 +95,21 @@ chess.NotationConverter = function () {
                 break;
             }
         }
+
+        // make sure these are numbers
+        toRow = parseInt(toRow, 10);
+        toCol = parseInt(toCol, 10);
+
+        // If this move is an enPassant capture, get the coords of the captured piece.
+        if (enPassantCapture) {
+            enPassantCaptureCoords = {
+                row: (currentPlayer === 'W') ? toRow + 1 : toRow - 1,
+                col: toCol
+            };
+        }
+
         var piece = new chess.Piece({id: currentPlayer + pieceType + fromRow + fromCol});
-        var move = {piece: piece, toRow: parseInt(toRow, 10), toCol: parseInt(toCol, 10), enPassantCapture: enPassantCapture};
+        var move = {piece: piece, toRow: toRow, toCol: toCol, enPassantCaptureCoords: enPassantCaptureCoords};
         return [move];
 
     };
