@@ -74,11 +74,14 @@ chess.BoardSnapshotView = chess.BoardView.extend({
                 this.board.updateGameState(notation);
             }
 
-            // update the board and display with the final notation
-            this.updateBoard();
+            // update the display with the final notation
             this._updateDisplayMove(index, notation);
 
         }
+
+        // lastly, update the board
+        this.updateBoard();
+
     },
 
     /**
@@ -91,7 +94,6 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         for (var i in this.moveHistory.models) {
             var moveHistoryObj = this.moveHistory.models[i];
             var notation = moveHistoryObj.attributes.notation;
-            var capturedPiece = moveHistoryObj.attributes.capturedPiece;
             var moveArray = this.notationConverter.convertNotation(notation, this._getCurentPlayerByMoveIndex(i));
             // In the case of a castle move, notationConverter.convertNotation() will return an array of two moves: one for the rook,
             // and one for the king. We need to put both in the moveObjArray, so each piece can be auto-moved.
@@ -99,7 +101,6 @@ chess.BoardSnapshotView = chess.BoardView.extend({
                 var moveObj = {
                     moveIndex: i,
                     notation: notation,
-                    capturedPiece: capturedPiece,
                     move: moveArray[j]
                 };
                 this.moveObjArray.push(moveObj);
