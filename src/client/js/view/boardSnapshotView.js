@@ -244,7 +244,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         }
 
         // move the piece
-        self._movePiece(self, $img, $target, piece, notation, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, moveObj.capturedPiece);
+        self._movePiece(self, $img, $target, piece, notation, move, moveUp, moveRight, moveDown, moveLeft, targetOffset, index);
 
     },
 
@@ -257,15 +257,15 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     * @param $target - the jQuery target object where the piece is being moved to
     * @param piece - the piece object being moved
     * @param notation - the string notation for this move
+    * @param move - the move object from notationConverter.convertNotation()
     * @param moveUp - number of pixels to move up on each iteration
     * @param moveRight - number of pixels to move right on each iteration
     * @param moveDown - number of pixels to move down on each iteration
     * @param moveLeft - number of pixels to move left on each iteration
     * @param targetOffset - the offest of the target square
     * @param index - the moveHistory index needed by autoMove()
-    * @param capturedPiece - the captured piece (if any) for this move
     */
-    _movePiece: function (self, $obj, $target, piece, notation, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece) {
+    _movePiece: function (self, $obj, $target, piece, notation, move, moveUp, moveRight, moveDown, moveLeft, targetOffset, index) {
         var keepMoving = false;
         if (moveUp && $obj.offset().top > targetOffset.top) {
             $obj.offset({top: $obj.offset().top - moveUp});
@@ -285,13 +285,13 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         }
         if (keepMoving) {
 
-            self.movePieceTimeoutId = setTimeout(function(){self._movePiece(self, $obj, $target, piece, notation, moveUp, moveRight, moveDown, moveLeft, targetOffset, index, capturedPiece);}, 5);
+            self.movePieceTimeoutId = setTimeout(function(){self._movePiece(self, $obj, $target, piece, notation, move, moveUp, moveRight, moveDown, moveLeft, targetOffset, index);}, 5);
 
         } else {
 
             // We've reached the destination. Remove the captured piece (if any), reset the img positioning, put the piece on the square, and call autoMove() with the next index.
-            if (capturedPiece) {
-                self.$('#sq' + capturedPiece.row + capturedPiece.column).html('');
+            if (move.captureCoords) {
+                self.$('#sq' + move.captureCoords.row + move.captureCoords.col).html('');
             }
             $obj.css('position', 'static');
             $obj.css('top', 'default');
