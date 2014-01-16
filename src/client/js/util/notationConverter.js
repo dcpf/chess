@@ -63,10 +63,11 @@ chess.NotationConverter = function () {
         var pieceType = notation.substr(0, 1);
         var fromCol = notation.substr(1, 1);
         var fromRow = notation.substr(2, 1);
+        var isCapture = (notation.substr(3, 1) === 'x');
         var toCol = notation.substr(4, 1);
         var toRow = notation.substr(5, 1);
-        var enPassantCapture = (notation.indexOf('e.p.') > 0);
-        var i, letter, rowNum, enPassantCaptureCoords;
+        var isEnPassantCapture = (notation.indexOf('e.p.') > 0);
+        var i, letter, rowNum, captureCoords;
         for (i in this.letters) {
             letter = this.letters[i];
             if (letter == fromCol) {
@@ -100,16 +101,21 @@ chess.NotationConverter = function () {
         toRow = parseInt(toRow, 10);
         toCol = parseInt(toCol, 10);
 
-        // If this move is an enPassant capture, get the coords of the captured piece.
-        if (enPassantCapture) {
-            enPassantCaptureCoords = {
-                row: (currentPlayer === 'W') ? toRow + 1 : toRow - 1,
+        // If a piece was captured, get the coords of the captured piece.
+        if (isCapture) {
+            // Standard capture coords are the row and col that the piece moved to.
+            captureCoords = {
+                row: toRow,
                 col: toCol
             };
+            // If this move is an en-passant capture, adjust the row coord accordingly.
+            if (isEnPassantCapture) {
+                captureCoords.row = (currentPlayer === 'W') ? toRow + 1 : toRow - 1;
+            }
         }
 
         var piece = new chess.Piece({id: currentPlayer + pieceType + fromRow + fromCol});
-        var move = {piece: piece, toRow: toRow, toCol: toCol, enPassantCaptureCoords: enPassantCaptureCoords};
+        var move = {piece: piece, toRow: toRow, toCol: toCol, captureCoords: captureCoords};
         return [move];
 
     };

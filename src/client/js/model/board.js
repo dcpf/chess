@@ -93,20 +93,22 @@ chess.Board = Backbone.Model.extend({
         var toRow = move.toRow;
         var toCol = move.toCol;
 
-        // Update the boardArray with the new piece location
+        // Firstly, if this is a capture, remove the captured piece.
+        if (move.captureCoords) {
+            var capturedPiece = this.getPieceByCoords(move.captureCoords.row, move.captureCoords.col);
+            this.boardArray[move.captureCoords.row][move.captureCoords.col] = '';
+            // Add the captured piece to the capturedPieces collection
+            if (this.capturedPieces) {
+                this.capturedPieces.add(capturedPiece);
+            }
+        }
+
+        // Now, update the boardArray with the new piece location
         var fromRow = piece.row;
         var fromCol = piece.column;
-        this.boardArray[fromRow][fromCol] = ''; // Blank out the previous location
-        // Variable to track if a piece was captured
-        var capturedPiece = this.getPieceByCoords(toRow, toCol);
-        // Populate the new location.
+        // Blank out the previous location, and populate the new location.
+        this.boardArray[fromRow][fromCol] = '';
         this.boardArray[toRow][toCol] = piece.qualifiedName;
-
-        // If this is an enPassant capture, remove the captured piece.
-        if (move.enPassantCaptureCoords) {
-            capturedPiece = this.getPieceByCoords(move.enPassantCaptureCoords.row, move.enPassantCaptureCoords.col);
-            this.boardArray[move.enPassantCaptureCoords.row][move.enPassantCaptureCoords.col] = '';
-        }
 
         // Clear en-passant capturable square marked from the previous move, if any.
         this.enPassantCapture = {};
@@ -129,11 +131,6 @@ chess.Board = Backbone.Model.extend({
                 var enPassantCaptureCoords = '' + ((parseInt(fromRow, 10) + parseInt(toRow, 10))/2) + toCol;
                 this.enPassantCapture[enPassantCaptureCoords] = new chess.Piece({id: piece.qualifiedName + toRow + toCol});
             }
-        }
-
-        // If we have a captured piece, add it to the capturedPieces collection
-        if (capturedPiece && this.capturedPieces) {
-            this.capturedPieces.add(capturedPiece);
         }
 
         // Track rook or king moves, so we can determine castling possibilies

@@ -59,15 +59,18 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     * Draw the board
     */
     _render: function (index) {
+
         this.board = new chess.Board();
         this.board.notationConverter = this.notationConverter;
         var gameBoard = this._generateBoard();
         this.$('#chessBoardSnapshotContainer').html(gameBoard);
         this.$el.modal();
         var moveHistoryObj, notation;
+
+        // If index was passed in, loop through the moves in the move history, updating the board array.
         if (index) {
 
-            // go through each move and update the board array
+            // loop through each move and update the board array
             for (var i = 0; i <= index; i++) {
                 moveHistoryObj = this.moveHistory.models[i];
                 notation = moveHistoryObj.attributes.notation;
@@ -79,7 +82,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
 
         }
 
-        // lastly, update the board
+        // Now that the board array has been updated, update the board view.
         this.updateBoard();
 
     },
