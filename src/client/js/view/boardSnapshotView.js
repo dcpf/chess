@@ -111,7 +111,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         }
 
         // now that we've built the array, call _autoMove()
-        this._autoMove(this, 0);
+        this._autoMove(0);
 
     },
 
@@ -121,15 +121,12 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     * It gets the move notation from the moveHistory collection, computes the direction and distance to move, and 
     * calls movePiece() to actually move the piece.
     *
-    * Because this function is called repeatedly via setTimeout, we need to pass in the 'self' object so it can have a reference to the boardSnapShotView object instance.
-    *
-    * @param self - the boardSnapShotView object instance
     * @param index - the index of the moveHistory collection from which to get the move
     */
-    _autoMove: function (self, index) {
+    _autoMove: function (index) {
 
         // Get the move object from the moveObjArray
-        var moveObj = self.moveObjArray[index];
+        var moveObj = this.moveObjArray[index];
 
         // If we've reached the end of the array, return.
         if (!moveObj) {
@@ -143,21 +140,21 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         // Update the display notation *unless* this is a castle move and the piece being moved is a king.
         // In this case, the display notation was already updated when the rook was moved.
         if (!(notation.indexOf('O-O') === 0 && piece.isKing())) {
-            self._updateDisplayMove(moveObj.moveIndex, notation);
+            this._updateDisplayMove(moveObj.moveIndex, notation);
         }
 
         // get the piece and its orig offset
         var fromSquare = '#sq' + piece.row + piece.column;
-        var $img = self.$('#chessBoardSnapshotContainer ' + fromSquare).children('img');
+        var $img = this.$('#chessBoardSnapshotContainer ' + fromSquare).children('img');
         var origOffset = $img.offset();
 
         // blank out the square where it lives
-        self.$(fromSquare).html('');
+        this.$(fromSquare).html('');
 
         // Get a handle on the target square. If there is a piece there, get its offset. Else, put the piece we already have there, and get its new offset.
         var targetOffset;
         var toSquare = '#sq' + move.toRow + move.toCol;
-        var $target = self.$('#chessBoardSnapshotContainer ' + toSquare);
+        var $target = this.$('#chessBoardSnapshotContainer ' + toSquare);
         var $img2 = $target.children('img');
         if ($img2[0]) {
             targetOffset = $img2.offset();
@@ -169,7 +166,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         }
 
         // attach the img to the tempPiecePlaceHolder and set its offset to the original offset
-        self.$('#tempPiecePlaceHolder').append($img);
+        this.$('#tempPiecePlaceHolder').append($img);
         $img.offset(origOffset);
 
         // Calculate which direction to go and how far
@@ -244,15 +241,13 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         }
 
         // move the piece
-        self._movePiece(self, $img, $target, piece, notation, move, moveUp, moveRight, moveDown, moveLeft, targetOffset, index);
+        this._movePiece($img, $target, piece, notation, move, moveUp, moveRight, moveDown, moveLeft, targetOffset, index);
 
     },
 
     /*
     * Called repeatedly using setTimeout() to move a piece from one square to another.
-    * Because this function is called via setTimeout, we need to pass in the 'self' object so it can have a reference to the boardSnapShotView object instance.
     *
-    * @param self - the boardSnapShotView object instance
     * @param $obj - the jQuery image object for the piece being moved
     * @param $target - the jQuery target object where the piece is being moved to
     * @param piece - the piece object being moved
@@ -265,7 +260,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     * @param targetOffset - the offest of the target square
     * @param index - the moveHistory index needed by autoMove()
     */
-    _movePiece: function (self, $obj, $target, piece, notation, move, moveUp, moveRight, moveDown, moveLeft, targetOffset, index) {
+    _movePiece: function ($obj, $target, piece, notation, move, moveUp, moveRight, moveDown, moveLeft, targetOffset, index) {
         var keepMoving = false;
         if (moveUp && $obj.offset().top > targetOffset.top) {
             $obj.offset({top: $obj.offset().top - moveUp});
@@ -285,13 +280,13 @@ chess.BoardSnapshotView = chess.BoardView.extend({
         }
         if (keepMoving) {
 
-            self.movePieceTimeoutId = setTimeout(function(){self._movePiece(self, $obj, $target, piece, notation, move, moveUp, moveRight, moveDown, moveLeft, targetOffset, index);}, 5);
+            this.movePieceTimeoutId = setTimeout(this._movePiece.bind(this, $obj, $target, piece, notation, move, moveUp, moveRight, moveDown, moveLeft, targetOffset, index), 5);
 
         } else {
 
             // We've reached the destination. Remove the captured piece (if any), reset the img positioning, put the piece on the square, and call autoMove() with the next index.
             if (move.captureCoords) {
-                self.$('#sq' + move.captureCoords.row + move.captureCoords.col).html('');
+                this.$('#sq' + move.captureCoords.row + move.captureCoords.col).html('');
             }
             $obj.css('position', 'static');
             $obj.css('top', 'default');
@@ -300,7 +295,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
 
             // Call autoMove() after a slight pause
             var waitTime = (notation.indexOf('O-O') === 0 && piece.isRook()) ? 0 : 1000;
-            self.autoMoveTimeoutId = setTimeout(function(){self._autoMove(self, ++index);}, waitTime);
+            this.autoMoveTimeoutId = setTimeout(this._autoMove.bind(this, ++index), waitTime);
 
         }
     },
