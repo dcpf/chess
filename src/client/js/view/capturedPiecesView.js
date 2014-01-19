@@ -18,7 +18,7 @@ chess.CapturedPiecesView = Backbone.View.extend({
         var piece = this.capturedPieces.at(this.capturedPieces.length - 1);
         var targetId = (piece.isBlack()) ? '#capturedBlackPieces' : '#capturedWhitePieces';
         var capturedPiecesElem = this.$(targetId);
-        capturedPiecesElem.append('<img src="src/client/images/' + piece.qualifiedName + '.gif" />');
+        capturedPiecesElem.append('<img src="webapp/images/' + piece.qualifiedName + '.gif" />');
     }
 
 });
