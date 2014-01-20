@@ -69,6 +69,10 @@ http.createServer(function (req, res) {
 
 					// if an error ocurred, log it
 					if (mav.model) {
+                        // TODO: I don't think mav.model.error can ever exist
+                        if (mav.model.error) {
+                            console.log("mav.model.error: " + mav.model.error);
+                        }
 						var error = (mav.model instanceof Error) ? mav.model : mav.model.error;
 						if (error) {
 							console.warn(error);
@@ -82,6 +86,8 @@ http.createServer(function (req, res) {
 					}
 
 				} else {
+                    // TODO: I don't think this block is ever entered
+                    console.log("No mav object");
 					doOutput(res, path);
 				}
 
