@@ -45,6 +45,13 @@ exports.handleRequest = function (req, path, params) {
 		mav = modelAndView.getModelAndView(obj);
 		deferred.resolve(mav);
 
+    } else if (path === 'logClientError') {
+
+        // POST logClientError request
+        logClientError(req, params);
+        mav = modelAndView.getModelAndView({});
+        deferred.resolve(mav);
+
 	} else if (params.gameID) {
 
 		// GET enterGame request where gameID is passed as a URL param
@@ -75,6 +82,10 @@ exports.handleRequest = function (req, path, params) {
 	return deferred;
 
 };
+
+function logClientError (req, params) {
+    console.log('Client error: ' + JSON.stringify(params) + '; User agent: ' + req.headers['user-agent']);
+}
 
 function logRequest (req, path) {
     console.log('Request: ' + req.method + '; Path: ' + path + '; User agent: ' + req.headers['user-agent']);

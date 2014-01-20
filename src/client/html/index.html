@@ -151,6 +151,14 @@
 
 <script>
 
+window.onerror = function (msg, url, lineNum) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/logClientError', true);
+    var params = 'msg=' + encodeURIComponent(msg) + '&url=' + encodeURIComponent(url) + '&lineNum=' + lineNum;
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send(params);
+};
+
 function log (msg) {
     if (window.console) {
         console.log(msg);
