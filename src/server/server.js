@@ -24,8 +24,8 @@ var contentTypeMap = {
 };
 
 // For the Expires header
-var daysArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu' ,'Fri' ,'Sat'];
-var monthsArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+var daysArray = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var monthsArray = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 // Timestamp of when the app was started. We'll use this for caching javascript and css files in the browser.
 var runtimestamp = new Date().getTime();
@@ -41,7 +41,6 @@ http.createServer(function (req, res) {
 		var path = urlObj.pathname.replace("/", "");
 		var pathParts = path.split('/');
 		var queryObj = urlObj.query;
-		var deferred = q.defer();
 
 		// if this is a POST request, extract the post data from the body 
 		if (req.method === 'POST') {
@@ -53,46 +52,12 @@ http.createServer(function (req, res) {
 
 			req.on('end', function () {
 				var postData = qs.parse(body);
-				deferred.resolve(postData);
+                handleRequest(req, res, path, postData);
 			});
 
 		} else {
-			deferred.resolve(null);
+			handleRequest(req, res, path, queryObj);
 		}
-
-		// once the post data has been parsed, call requestHandler.handleRequest() and then doOutput()
-		deferred.promise.then(function(postData) {
-			var params = postData || queryObj;
-			var dfrd = requestHandler.handleRequest(req, path, params);
-			dfrd.promise.then(function(mav) {
-				if (mav) {
-
-					// if an error ocurred, log it
-					if (mav.model) {
-                        // TODO: I don't think mav.model.error can ever exist
-                        if (mav.model.error) {
-                            console.log("mav.model.error: " + mav.model.error);
-                        }
-						var error = (mav.model instanceof Error) ? mav.model : mav.model.error;
-						if (error) {
-							console.warn(error);
-						}
-					}
-
-					if (mav.view) {
-						doOutput(res, mav.view, mav.model);
-					} else {
-						doJsonOutput(res, mav.model);
-					}
-
-				} else {
-                    // TODO: I don't think this block is ever entered
-                    console.log("No mav object");
-					doOutput(res, path);
-				}
-
-			});
-		});
 
 	} catch (e) {
 		console.error(e);
@@ -101,6 +66,39 @@ http.createServer(function (req, res) {
 }).listen(GLOBAL.APP_URL.port, GLOBAL.APP_URL.domain);
 
 console.info('Server running at ' + GLOBAL.APP_URL.url);
+
+function handleRequest (req, res, path, requestData) {
+    var dfrd = requestHandler.handleRequest(req, path, requestData);
+    dfrd.promise.then(function (mav) {
+        if (mav) {
+
+            // if an error ocurred, log it
+            if (mav.model) {
+                // TODO: I don't think mav.model.error can ever exist
+                if (mav.model.error) {
+                    console.log("mav.model.error: " + mav.model.error);
+                }
+                var error = (mav.model instanceof Error) ? mav.model : mav.model.error;
+                if (error) {
+                    console.warn(error);
+                }
+            }
+
+            if (mav.view) {
+                doOutput(res, mav.view, mav.model);
+            } else {
+                doJsonOutput(res, mav.model);
+            }
+
+        } else {
+            // TODO: I don't think this block is ever entered
+            console.log("No mav object");
+            doOutput(res, path);
+        }
+
+    });
+}
+
 
 function initConfig () {
 
