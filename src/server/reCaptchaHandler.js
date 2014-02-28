@@ -30,6 +30,6 @@ exports.validateCaptcha = function (ip, captchaChallenge, captchaResponse) {
 		deferred.resolve(response);
 	}
 
-	return deferred;
+	return deferred.promise;
 
 };

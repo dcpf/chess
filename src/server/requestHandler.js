@@ -15,8 +15,8 @@ exports.handleRequest = function (req, path, params) {
 		// POST createGame request
         logRequest(req, path);
 		var ip = req.connection.remoteAddress;
-		var dfrd = chessController.createGame(ip, params);
-		dfrd.promise.then(function(obj){
+		var createGameResponse = chessController.createGame(ip, params);
+		createGameResponse.then(function(obj){
 			mav = modelAndView.getModelAndView(obj);
 			deferred.resolve(mav);
 		});
@@ -79,7 +79,7 @@ exports.handleRequest = function (req, path, params) {
 
 	}
 
-	return deferred;
+	return deferred.promise;
 
 };
 

@@ -68,8 +68,8 @@ http.createServer(function (req, res) {
 console.info('Server running at ' + GLOBAL.APP_URL.url);
 
 function handleRequest (req, res, path, requestData) {
-    var dfrd = requestHandler.handleRequest(req, path, requestData);
-    dfrd.promise.then(function (mav) {
+    var promise = requestHandler.handleRequest(req, path, requestData);
+    promise.then(function (mav) {
         if (mav) {
 
             // if an error ocurred, log it

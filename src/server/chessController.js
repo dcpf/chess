@@ -18,8 +18,8 @@ function createGame (ip, postData) {
 
 	var deferred = q.defer();
 	var obj = {};
-	var dfrd = reCaptchaHandler.validateCaptcha(ip, postData.captchaChallenge, postData.captchaResponse);
-	dfrd.promise.then(function(captchaVerifyResponse) {
+	var validateCaptchaResponse = reCaptchaHandler.validateCaptcha(ip, postData.captchaChallenge, postData.captchaResponse);
+	validateCaptchaResponse.then(function(captchaVerifyResponse) {
 		if (captchaVerifyResponse.success === 'true') {
 
 			console.log('captcha validation passed');
@@ -33,7 +33,7 @@ function createGame (ip, postData) {
 			} catch (e) {
 				obj = e;
 				deferred.resolve(obj);
-				return deferred;
+				return deferred.promise;
 			}
 
 			// create the game
@@ -47,7 +47,7 @@ function createGame (ip, postData) {
 		}
 	});
 
-	return deferred;
+	return deferred.promise;
 
 }
 
