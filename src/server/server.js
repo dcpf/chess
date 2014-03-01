@@ -59,8 +59,8 @@ http.createServer(function (req, res) {
 			handleRequest(req, res, path, queryObj);
 		}
 
-	} catch (e) {
-		console.error(e);
+	} catch (err) {
+		console.error(err);
 	}
 
 }).listen(GLOBAL.APP_URL.port, GLOBAL.APP_URL.domain);
@@ -68,35 +68,31 @@ http.createServer(function (req, res) {
 console.info('Server running at ' + GLOBAL.APP_URL.url);
 
 function handleRequest (req, res, path, requestData) {
-    var promise = requestHandler.handleRequest(req, path, requestData);
+    
+    var promise;
+    
+    try {
+        promise = requestHandler.handleRequest(req, path, requestData);
+    } catch (err) {
+        // If requestHandler.handleRequest() throws an error, create a deferred, reject it, and assign the promise.
+        var deferred = q.defer();
+        deferred.reject(err);
+        promise = deferred.promise;
+    }
+    
     promise.then(function (mav) {
-        if (mav) {
-
-            // if an error ocurred, log it
-            if (mav.model) {
-                // TODO: I don't think mav.model.error can ever exist
-                if (mav.model.error) {
-                    console.log("mav.model.error: " + mav.model.error);
-                }
-                var error = (mav.model instanceof Error) ? mav.model : mav.model.error;
-                if (error) {
-                    console.warn(error);
-                }
-            }
-
-            if (mav.view) {
-                doOutput(res, mav.view, mav.model);
-            } else {
-                doJsonOutput(res, mav.model);
-            }
-
+        if (mav.view) {
+            doOutput(res, mav.view, mav.model);
         } else {
-            // TODO: I don't think this block is ever entered
-            console.log("No mav object");
-            doOutput(res, path);
+            doJsonOutput(res, mav.model);
         }
-
     });
+    
+    promise.fail(function (err) {
+        console.warn(err);
+        doErrorOutput(res, err);
+    });
+    
 }
 
 
@@ -107,7 +103,7 @@ function initConfig () {
 	var config = {};
 	try {
 		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
-	} catch (e) {
+	} catch (err) {
 		console.warn('No config file found at: ' + configFile + '. Starting with no configuration.');
 	}
 	GLOBAL.CONFIG = config;
@@ -151,13 +147,14 @@ function doOutput (res, path, attrs) {
 }
 
 function doJsonOutput (res, obj) {
-	if (obj instanceof Error) {
-		res.writeHead(500, {'Content-Type': contentTypeMap.html});
-		res.write(obj.message);
-	} else {
-		res.writeHead(200, {'Content-Type': contentTypeMap.json});
-		res.write(JSON.stringify(obj));
-	}
+	res.writeHead(200, {'Content-Type': contentTypeMap.json});
+    res.write(JSON.stringify(obj));
+	res.end();
+}
+
+function doErrorOutput (res, err) {
+	res.writeHead(500, {'Content-Type': contentTypeMap.html});
+    res.write(err.message);
 	res.end();
 }
 

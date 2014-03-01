@@ -17,35 +17,33 @@ var KEY_CHARS = '123456789';
 function createGame (ip, postData) {
 
 	var deferred = q.defer();
-	var obj = {};
+    
 	var validateCaptchaResponse = reCaptchaHandler.validateCaptcha(ip, postData.captchaChallenge, postData.captchaResponse);
-	validateCaptchaResponse.then(function(captchaVerifyResponse) {
-		if (captchaVerifyResponse.success === 'true') {
+    
+	validateCaptchaResponse.then(function() {
 
-			console.log('captcha validation passed');
+        console.log('captcha validation passed');
 
-			// get emails and validate tham
-			var player1Email = postData.player1Email;
-			var player2Email = postData.player2Email;
-			try {
-				_validateEmailAddress(player1Email);
-				_validateEmailAddress(player2Email);
-			} catch (e) {
-				obj = e;
-				deferred.resolve(obj);
-				return deferred.promise;
-			}
+        // get emails and validate tham
+        var player1Email = postData.player1Email;
+        var player2Email = postData.player2Email;
+        try {
+            _validateEmailAddress(player1Email);
+            _validateEmailAddress(player2Email);
+        } catch (err) {
+            deferred.reject(err);
+            return;
+        }
 
-			// create the game
-			obj = _createGame(player1Email, player2Email);
-			deferred.resolve(obj);
-
-		} else {
-			console.log('captcha validation failed');
-			obj = new Error('Incorrect captcha. Please try again.');
-			deferred.resolve(obj);
-		}
+        // create the game
+        var obj = _createGame(player1Email, player2Email);
+        deferred.resolve(obj);
+        
 	});
+    
+    validateCaptchaResponse.fail(function(err){
+        deferred.reject(err);
+    });
 
 	return deferred.promise;
 
@@ -54,12 +52,7 @@ function createGame (ip, postData) {
 function enterGame (postData) {
 	var gameID = postData.gameID;
 	var key = postData.key || '';
-	var obj;
-	try {
-		obj = _enterExistingGame(gameID, key);
-	} catch (e) {
-		obj = e;
-	}
+	var obj = _enterExistingGame(gameID, key);
 	return obj;
 }
 
@@ -148,11 +141,7 @@ function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove, err
 * Validate an email address. Throws an error if validation fails.
 */
 function _validateEmailAddress (email) {
-	try {
-		validator.check(email, 'Invalid email address: ' + email).len(6, 64).isEmail();
-	} catch (e) {
-		throw e;
-	}
+	validator.check(email, 'Invalid email address: ' + email).len(6, 64).isEmail();
 }
 
 function _createGame (player1Email, player2Email) {
@@ -186,15 +175,10 @@ function _createGame (player1Email, player2Email) {
 }
 
 /*
-* Enter an existig game. Throws an error if no game exists by the passed-in ID.
+* Enter an existing game. Throws an error if no game exists by the passed-in ID.
 */
 function _enterExistingGame (gameID, key) {
-	var gameObj;
-	try {
-		gameObj = gameDao.getGameObject(gameID);
-	} catch (e) {
-		throw e;
-	}
+	var gameObj = gameDao.getGameObject(gameID);
 	var perspective = _getPerspective(gameObj, key);
 	var canMove = _playerCanMove(gameObj, key);
 	return _buildEnterGameAttrMap(gameObj, gameID, key, perspective, canMove, null);

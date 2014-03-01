@@ -16,10 +16,13 @@ exports.handleRequest = function (req, path, params) {
         logRequest(req, path);
 		var ip = req.connection.remoteAddress;
 		var createGameResponse = chessController.createGame(ip, params);
-		createGameResponse.then(function(obj){
+		createGameResponse.then(function (obj) {
 			mav = modelAndView.getModelAndView(obj);
 			deferred.resolve(mav);
 		});
+        createGameResponse.fail(function (err) {
+            deferred.reject(err);
+        });
 
 	} else if (path === 'enterGame') {
 
@@ -56,10 +59,13 @@ exports.handleRequest = function (req, path, params) {
 
 		// GET enterGame request where gameID is passed as a URL param
         logRequest(req, 'enterGame');
-		obj = chessController.enterGame(params);
-		if (obj instanceof Error) {
-			obj = chessController.buildDefaultEnterGameAttrMap(obj);
-		}
+        try {
+            obj = chessController.enterGame(params);
+        } catch (err) {
+            // We need to catch this here in order to pass a valid mav object back to the server, so index.html can be rendered.
+            console.warn(err);
+            obj = chessController.buildDefaultEnterGameAttrMap(err);
+        }
 		mav = modelAndView.getModelAndView(obj, 'src/client/html/index.html');
 		deferred.resolve(mav);
 

@@ -20,14 +20,22 @@ exports.validateCaptcha = function (ip, captchaChallenge, captchaResponse) {
 				}
 			},
 			function (err, res, body) {
-				var responseArray = body.split('\n');
-				var response = {success: responseArray[0], message: responseArray[1]};
-				deferred.resolve(response);
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    var responseArray = body.split('\n');
+                    var success = responseArray[0];
+                    //var msg = responseArray[1];
+                    if (success === 'true') {
+                        deferred.resolve();
+                    } else {
+                        deferred.reject(new Error('Incorrect captcha. Please try again.'));
+                    }
+                }
 			}
 		);
 	} else {
-		var response = {success: 'true'};
-		deferred.resolve(response);
+		deferred.resolve();
 	}
 
 	return deferred.promise;

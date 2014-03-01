@@ -20,9 +20,9 @@ var getGameObject = function (gameID) {
 	try {
 		var jsonStr = fs.readFileSync(file, {encoding: 'utf8'});
 		gameObj = JSON.parse(jsonStr);
-	} catch (e) {
-		e.message = 'Invalid Game ID: ' + gameID;
-		throw e;
+	} catch (err) {
+		err.message = 'Invalid Game ID: ' + gameID;
+		throw err;
 	}
 	return gameObj;
 };
