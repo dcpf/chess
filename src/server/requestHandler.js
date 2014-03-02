@@ -6,21 +6,22 @@ var modelAndView = require('./model/modelAndView');
 
 exports.handleRequest = function (req, path, params) {
 
-	var deferred = q.defer();
-	var mav = null;
-	var obj;
+	var deferred = q.defer(),
+        mav = null,
+        obj,
+        promise;
 
 	if (path === 'createGame') {
 
 		// POST createGame request
         logRequest(req, path);
 		var ip = req.connection.remoteAddress;
-		var createGameResponse = chessController.createGame(ip, params);
-		createGameResponse.then(function (obj) {
+		promise = chessController.createGame(ip, params);
+		promise.then(function (obj) {
 			mav = modelAndView.getModelAndView(obj);
 			deferred.resolve(mav);
 		});
-        createGameResponse.fail(function (err) {
+        promise.fail(function (err) {
             deferred.reject(err);
         });
 
@@ -28,17 +29,27 @@ exports.handleRequest = function (req, path, params) {
 
 		// POST enterGame request
         logRequest(req, path);
-		obj = chessController.enterGame(params);
-		mav = modelAndView.getModelAndView(obj);
-		deferred.resolve(mav);
+		promise = chessController.enterGame(params);
+        promise.then(function (obj) {
+            mav = modelAndView.getModelAndView(obj);
+            deferred.resolve(mav);
+        });
+        promise.fail(function (err) {
+            deferred.reject(err);
+        });
 
 	} else if (path === 'saveMove') {
 
 		// POST saveMove request
         logRequest(req, path);
-		obj = chessController.saveMove(params);
-		mav = modelAndView.getModelAndView(obj);
-		deferred.resolve(mav);
+		promise = chessController.saveMove(params);
+        promise.then(function (obj) {
+            mav = modelAndView.getModelAndView(obj);
+            deferred.resolve(mav);
+        });
+        promise.fail(function (err) {
+            deferred.reject(err);
+        });
 
 	} else if (path === 'updateUserPrefs') {
 
@@ -59,15 +70,18 @@ exports.handleRequest = function (req, path, params) {
 
 		// GET enterGame request where gameID is passed as a URL param
         logRequest(req, 'enterGame');
-        try {
-            obj = chessController.enterGame(params);
-        } catch (err) {
-            // We need to catch this here in order to pass a valid mav object back to the server, so index.html can be rendered.
+        promise = chessController.enterGame(params);
+        promise.then(function (obj) {
+            mav = modelAndView.getModelAndView(obj, 'src/client/html/index.html');
+            deferred.resolve(mav);
+        });
+        // If chessController.enterGame() failed, we'll render index.html with an err msg in the attr map.
+        promise.fail(function (err) {
             console.warn(err);
             obj = chessController.buildDefaultEnterGameAttrMap(err);
-        }
-		mav = modelAndView.getModelAndView(obj, 'src/client/html/index.html');
-		deferred.resolve(mav);
+            mav = modelAndView.getModelAndView(obj, 'src/client/html/index.html');
+            deferred.resolve(mav);
+        });
 
 	} else if (!path) {
 

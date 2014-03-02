@@ -2,7 +2,7 @@
 
 var fs = require('fs');
 var q = require('q');
-var gameDao = require('./dao/gameDAO');
+var gameDao = require('./dao/mongoGameDAO');
 var userPrefsDao = require('./dao/userPrefsDAO');
 var validator = require('validator');
 var reCaptchaHandler = require('./reCaptchaHandler');
@@ -35,9 +35,14 @@ function createGame (ip, postData) {
             return;
         }
 
-        // create the game
-        var obj = _createGame(player1Email, player2Email);
-        deferred.resolve(obj);
+        var promise = _createGame(player1Email, player2Email);
+        promise.then(function (obj) {
+            console.log('Created game: ' + gameID);
+            deferred.resolve(obj);
+        });
+        promise.fail(function (err) {
+            deferred.reject(err);
+        });
         
 	});
     
@@ -50,32 +55,65 @@ function createGame (ip, postData) {
 }
 
 function enterGame (postData) {
+    var deferred = q.defer();
 	var gameID = postData.gameID;
 	var key = postData.key || '';
-	var obj = _enterExistingGame(gameID, key);
-	return obj;
+	var promise = _enterExistingGame(gameID, key);
+    promise.then(function (obj) {
+        deferred.resolve(obj);
+    });
+    promise.fail(function (err) {
+        deferred.reject(err);
+    });
+	return deferred.promise;
 }
 
 function saveMove (postData) {
+    
+    var deferred = q.defer();
 	var gameID = postData.gameID;
-	var gameObj = gameDao.getGameObject(gameID);
-	var key = postData.key;
-	var opponentEmail = '';
-	if (_playerCanMove(gameObj, key)) {
-		var move = postData.move;
-		gameObj.moveHistory.push(move);
-		gameDao.saveGame(gameID, gameObj);
-		console.log('updated game ' + gameID + ' with move ' + move);
-		if (gameObj.moveHistory.length == 1) {
-			opponentEmail = gameObj.B.email;
-			emailHandler.sendInviteEmail(gameObj.W.email, gameObj.B.email, gameID, gameObj.B.key, move);
-		} else {
-			var obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
-			opponentEmail = obj.email;
-			emailHandler.sendMoveNotificationEmail(obj.email, gameID, obj.key, move);
-		}
-	}
-	return {status: 'ok', opponentEmail: opponentEmail};
+    
+	var gameObjResponse = gameDao.getGameObject(gameID);
+    
+    gameObjResponse.then(function (gameObj) {
+        
+        var key = postData.key;
+        var opponentEmail = '';
+        
+        if (_playerCanMove(gameObj, key)) {
+            
+            var move = postData.move;
+            gameObj.moveHistory.push(move);
+            
+            var saveGameResponse = gameDao.saveGame(gameID, gameObj);
+            
+            saveGameResponse.then(function () {
+                console.log('Updated game ' + gameID + ' with move ' + move);
+                if (gameObj.moveHistory.length == 1) {
+                    opponentEmail = gameObj.B.email;
+                    emailHandler.sendInviteEmail(gameObj.W.email, gameObj.B.email, gameID, gameObj.B.key, move);
+                } else {
+                    var obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
+                    opponentEmail = obj.email;
+                    emailHandler.sendMoveNotificationEmail(obj.email, gameID, obj.key, move);
+                }
+                deferred.resolve({status: 'ok', opponentEmail: opponentEmail});
+            });
+            
+            saveGameResponse.fail(function (err) {
+                deferred.reject(err);
+            });
+            
+        }
+        
+    });
+    
+    gameObjResponse.fail(function (err) {
+        deferred.reject(err);
+    });
+    
+    return deferred.promise;
+    
 }
 
 function updateUserPrefs (postData) {
@@ -146,6 +184,8 @@ function _validateEmailAddress (email) {
 
 function _createGame (player1Email, player2Email) {
 
+    var deferred = q.defer();
+    
 	// Get the keys for each player
 	var whiteKey = _generateKey();
 	var blackKey = _generateKey();
@@ -167,10 +207,18 @@ function _createGame (player1Email, player2Email) {
 		}
 	};
 
-	// Create the game file, send the email, and return the game attr map.
-	var gameID = gameDao.createGame(gameObj);
-	emailHandler.sendGameCreationEmail(player1Email, player2Email, gameID, whiteKey);
-	return _buildEnterGameAttrMap(gameObj, gameID, whiteKey, 'W', true, null);
+	var promise = gameDao.createGame(gameObj);
+    
+    promise.then(function (gameID) {
+        emailHandler.sendGameCreationEmail(player1Email, player2Email, gameID, whiteKey);
+        deferred.resolve(_buildEnterGameAttrMap(gameObj, gameID, whiteKey, 'W', true, null));
+    });
+    
+    promise.fail(function (err) {
+        deferred.reject(err);
+    });
+    
+    return deferred.promise;
 
 }
 
@@ -178,10 +226,17 @@ function _createGame (player1Email, player2Email) {
 * Enter an existing game. Throws an error if no game exists by the passed-in ID.
 */
 function _enterExistingGame (gameID, key) {
-	var gameObj = gameDao.getGameObject(gameID);
-	var perspective = _getPerspective(gameObj, key);
-	var canMove = _playerCanMove(gameObj, key);
-	return _buildEnterGameAttrMap(gameObj, gameID, key, perspective, canMove, null);
+    var deferred = q.defer();
+	var promise = gameDao.getGameObject(gameID);
+    promise.then(function (gameObj) {
+        var perspective = _getPerspective(gameObj, key);
+        var canMove = _playerCanMove(gameObj, key);
+        deferred.resolve(_buildEnterGameAttrMap(gameObj, gameID, key, perspective, canMove, null));
+    });
+    promise.fail(function (err) {
+        deferred.reject(err);
+    });
+    return deferred.promise;
 }
 
 function _generateKey () {
