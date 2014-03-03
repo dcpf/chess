@@ -1,9 +1,9 @@
 'use strict';
 
-var databaseUrl = "chessdb"; // "username:password@example.com/mydb"
 var mongojs = require("mongojs");
 var q = require('q');
 
+var databaseUrl = GLOBAL.CONFIG.db.databaseUrl;
 var db = mongojs(databaseUrl, ['userPrefs']);
 
 var setUserPref = function (email, name, value) {
