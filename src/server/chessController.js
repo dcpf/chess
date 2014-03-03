@@ -3,7 +3,7 @@
 var fs = require('fs');
 var q = require('q');
 var gameDao = require('./dao/mongoGameDAO');
-var userPrefsDao = require('./dao/userPrefsDAO');
+var userPrefsDao = require('./dao/mongoUserPrefsDAO');
 var validator = require('validator');
 var reCaptchaHandler = require('./reCaptchaHandler');
 var emailHandler = require('./emailHandler');
@@ -35,12 +35,11 @@ function createGame (ip, postData) {
             return;
         }
 
-        var promise = _createGame(player1Email, player2Email);
-        promise.then(function (obj) {
-            console.log('Created game: ' + gameID);
+        var createGameResponse = _createGame(player1Email, player2Email);
+        createGameResponse.then(function (obj) {
             deferred.resolve(obj);
         });
-        promise.fail(function (err) {
+        createGameResponse.fail(function (err) {
             deferred.reject(err);
         });
         
@@ -124,7 +123,15 @@ function updateUserPrefs (postData) {
 }
 
 function buildDefaultEnterGameAttrMap (error) {
-	return _buildEnterGameAttrMap({}, '', '', '', false, error);
+    var deferred = q.defer();
+	var buildEnterGameAttrMapResponse = _buildEnterGameAttrMap({}, '', '', '', false, error);
+    buildEnterGameAttrMapResponse.then(function (obj) {
+        deferred.resolve(obj);
+    });
+    buildEnterGameAttrMapResponse.fail(function (err) {
+        deferred.reject(err);
+    });
+    return deferred.promise;
 }
 
 exports.createGame = createGame;
@@ -142,6 +149,8 @@ exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 */
 function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove, error) {
 
+    var deferred = q.defer();
+    
 	// vars needed for the game
 	var chessVars = {
 		gameID: gameID,
@@ -162,17 +171,26 @@ function _buildEnterGameAttrMap (gameObj, gameID, key, perspective, canMove, err
 		}
 	};
 
-	var userEmail = _getCurrentUserEmail(gameObj, key);
-	var user = {
-		email: userEmail,
-		prefs: userPrefsDao.getUserPrefs(userEmail)
-	};
-
-	return {
-		chessVars: JSON.stringify(chessVars),
-		config: JSON.stringify(config),
-		user: JSON.stringify(user)
-	};
+    // user prefs
+    var userEmail = _getCurrentUserEmail(gameObj, key);
+    var userPrefsResponse = userPrefsDao.getUserPrefs(userEmail);
+    userPrefsResponse.then(function (userPrefs) {
+        var user = {
+            email: userEmail,
+            prefs: userPrefs.prefs || {}
+        };
+        deferred.resolve({
+            chessVars: JSON.stringify(chessVars),
+            config: JSON.stringify(config),
+            user: JSON.stringify(user)
+        });
+    });
+    userPrefsResponse.fail(function (err) {
+        deferred.reject(err);
+    });
+	
+	return deferred.promise;
+    
 }
 
 /**
@@ -207,14 +225,21 @@ function _createGame (player1Email, player2Email) {
 		}
 	};
 
-	var promise = gameDao.createGame(gameObj);
+	var createGameResponse = gameDao.createGame(gameObj);
     
-    promise.then(function (gameID) {
+    createGameResponse.then(function (gameID) {
+        console.log('Created game ' + gameID);
         emailHandler.sendGameCreationEmail(player1Email, player2Email, gameID, whiteKey);
-        deferred.resolve(_buildEnterGameAttrMap(gameObj, gameID, whiteKey, 'W', true, null));
+        var buildEnterGameAttrMapResponse = _buildEnterGameAttrMap(gameObj, gameID, whiteKey, 'W', true, null);
+        buildEnterGameAttrMapResponse.then(function (obj) {
+            deferred.resolve(obj);
+        });
+        buildEnterGameAttrMapResponse.fail(function (err) {
+            deferred.reject(err);
+        });
     });
     
-    promise.fail(function (err) {
+    createGameResponse.fail(function (err) {
         deferred.reject(err);
     });
     
@@ -227,13 +252,19 @@ function _createGame (player1Email, player2Email) {
 */
 function _enterExistingGame (gameID, key) {
     var deferred = q.defer();
-	var promise = gameDao.getGameObject(gameID);
-    promise.then(function (gameObj) {
+	var getGameObjectResponse = gameDao.getGameObject(gameID);
+    getGameObjectResponse.then(function (gameObj) {
         var perspective = _getPerspective(gameObj, key);
         var canMove = _playerCanMove(gameObj, key);
-        deferred.resolve(_buildEnterGameAttrMap(gameObj, gameID, key, perspective, canMove, null));
+        var buildEnterGameAttrMapResponse = _buildEnterGameAttrMap(gameObj, gameID, key, perspective, canMove, null);
+        buildEnterGameAttrMapResponse.then(function (obj) {
+            deferred.resolve(obj);
+        });
+        buildEnterGameAttrMapResponse.fail(function (err) {
+            deferred.reject(err);
+        });
     });
-    promise.fail(function (err) {
+    getGameObjectResponse.fail(function (err) {
         deferred.reject(err);
     });
     return deferred.promise;

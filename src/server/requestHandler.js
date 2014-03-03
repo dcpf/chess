@@ -55,9 +55,14 @@ exports.handleRequest = function (req, path, params) {
 
 		// POST updateUserPrefs request
         logRequest(req, path);
-		obj = chessController.updateUserPrefs(params);
-		mav = modelAndView.getModelAndView(obj);
-		deferred.resolve(mav);
+		promise = chessController.updateUserPrefs(params);
+        promise.then(function (obj) {
+            mav = modelAndView.getModelAndView(obj);
+            deferred.resolve(mav);
+        });
+        promise.fail(function (err) {
+            deferred.reject(err);
+        });
 
     } else if (path === 'logClientError') {
 
@@ -78,18 +83,28 @@ exports.handleRequest = function (req, path, params) {
         // If chessController.enterGame() failed, we'll render index.html with an err msg in the attr map.
         promise.fail(function (err) {
             console.warn(err);
-            obj = chessController.buildDefaultEnterGameAttrMap(err);
-            mav = modelAndView.getModelAndView(obj, 'src/client/html/index.html');
-            deferred.resolve(mav);
+            var buildDefaultEnterGameAttrMapResponse = chessController.buildDefaultEnterGameAttrMap(err);
+            buildDefaultEnterGameAttrMapResponse.then(function (obj) {
+                mav = modelAndView.getModelAndView(obj, 'src/client/html/index.html');
+                deferred.resolve(mav);
+            });
+            buildDefaultEnterGameAttrMapResponse.fail(function (err) {
+                deferred.reject(err);
+            });
         });
 
 	} else if (!path) {
 
 		// if path does not exist, use index.html by default
         logRequest(req, 'index.html');
-		obj = chessController.buildDefaultEnterGameAttrMap();
-		mav = modelAndView.getModelAndView(obj, 'src/client/html/index.html');
-		deferred.resolve(mav);
+		promise = chessController.buildDefaultEnterGameAttrMap();
+        promise.then(function (obj) {
+            mav = modelAndView.getModelAndView(obj, 'src/client/html/index.html');
+            deferred.resolve(mav);
+        });
+        promise.fail(function (err) {
+            deferred.reject(err);
+        });
 
 	} else {
 

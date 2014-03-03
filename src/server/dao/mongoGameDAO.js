@@ -10,8 +10,19 @@ var db = mongojs(databaseUrl, ['games']);
 * Get the game object from the db by gameID.
 */
 var getGameObject = function (gameID) {
-    var deferred = q.defer();
-    db.games.findOne({_id: mongojs.ObjectId(gameID)}, function (err, game) {
+    
+    var deferred = q.defer(),
+        id;
+    
+    try {
+        id = mongojs.ObjectId(gameID);
+    } catch (err) {
+        // If ObjectId() throws an error, it means the gameID is invalid
+        deferred.reject(new Error('Invalid Game ID: ' + gameID));
+        return deferred.promise;
+    }
+    
+    db.games.findOne({_id: id}, function (err, game) {
         if (err) {
             deferred.reject(err);
         } else if (!game) {
@@ -20,12 +31,15 @@ var getGameObject = function (gameID) {
             deferred.resolve(game.gameObj);
         }
     });
+    
     return deferred.promise;
+    
 };
 
 var saveGame = function (gameID, gameObj) {
     var deferred = q.defer();
-	db.games.save({_id: mongojs.ObjectId(gameID), gameObj: gameObj}, function (err, savedObj) {
+    var id = (gameID) ? mongojs.ObjectId(gameID) : null;
+	db.games.save({_id: id, gameObj: gameObj}, function (err, savedObj) {
         if (err) {
             deferred.reject(err);
         } else if (!savedObj) {
