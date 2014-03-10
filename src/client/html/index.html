@@ -38,12 +38,8 @@
                     <td colspan="2"><input type="radio" name="newOrExisting" value="E">Continue Existing Game</td>
                 </tr>
                 <tr>
-                    <td>Existing Game Name</td>
+                    <td>Game ID</td>
                     <td><input type="text" id="gameID"></td>
-                </tr>
-                <tr>
-                    <td>Pass Code</td>
-                    <td><input type="password" id="key"></td>
                 </tr>
                 <!--tr>
                     <td colspan="2"><a href="forgot_passcode.pl">Forgot Your Pass Code?</a></td>
@@ -187,7 +183,7 @@ var chess = {
 // Instantiate the appContext
 chess.appContext = chess.AppContext.getAppContext();
 
-// If the page has loaded with a gameID (and key), start the game. This will occur when the following URL params are passed in: ?gameID=yl9pqqgamdgd&key=123456
+// If the page has loaded with a gameID, start the game. This will occur when the gameID URL param is passed in: ?gameID=531d080566b22a611f-1-82197
 // Else, show the enterGame view.
 if (chess.vars.gameID && !chess.vars.error) {
     chess.appContext.gameManager.startGame();

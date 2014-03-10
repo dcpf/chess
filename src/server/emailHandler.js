@@ -13,14 +13,13 @@ var mailTransport = nodemailer.createTransport('SMTP', {
     }
 });
 
-exports.sendGameCreationEmail = function (player1Email, player2Email, gameID, key) {
+exports.sendGameCreationEmail = function (player1Email, player2Email, gameID) {
 
 	var html = templateHandler.processTemplate('src/server/html/player1Email.html', {
 		player1Email: player1Email,
 		player2Email: player2Email,
-		gameID: gameID,
-		key: key,
-		gameUrl: buildGameUrl(gameID, key)
+		gameID: gameID.compositeID,
+		gameUrl: _buildGameUrl(gameID)
 	});
 
 	mailTransport.sendMail({
@@ -30,18 +29,17 @@ exports.sendGameCreationEmail = function (player1Email, player2Email, gameID, ke
 		html: html
 	});
 
-	console.log('Sent game creation email to ' + player1Email + ' with gameID: ' + gameID + ' and key: ' + key);
+	console.log('Sent game creation email to ' + player1Email + ' with gameID: ' + gameID.compositeID);
 	
 };
 
-exports.sendInviteEmail = function (player1Email, player2Email, gameID, key, move) {
+exports.sendInviteEmail = function (player1Email, player2Email, gameID, move) {
 
 	var html = templateHandler.processTemplate('src/server/html/player2InviteEmail.html', {
 		player1Email: player1Email,
-		gameID: gameID,
-		key: key,
+		gameID: gameID.compositeID,
 		move: move,
-		gameUrl: buildGameUrl(gameID, key)
+		gameUrl: _buildGameUrl(gameID)
 	});
 
 	mailTransport.sendMail({
@@ -51,15 +49,15 @@ exports.sendInviteEmail = function (player1Email, player2Email, gameID, key, mov
 		html: html
 	});
 
-	console.log('Sent game invitation email to ' + player2Email + ' with gameID: ' + gameID + ' and key: ' + key);
+	console.log('Sent game invitation email to ' + player2Email + ' with gameID: ' + gameID.compositeID);
 	
 };
 
-exports.sendMoveNotificationEmail = function (playerEmail, gameID, key, move) {
+exports.sendMoveNotificationEmail = function (playerEmail, gameID, move) {
 
 	var html = templateHandler.processTemplate('src/server/html/moveNotificationEmail.html', {
 		move: move,
-		gameUrl: buildGameUrl(gameID, key),
+		gameUrl: _buildGameUrl(gameID),
 		appUrl: GLOBAL.APP_URL.url
 	});
 
@@ -74,6 +72,6 @@ exports.sendMoveNotificationEmail = function (playerEmail, gameID, key, move) {
 	
 };
 
-function buildGameUrl (gameID, key) {
-	return GLOBAL.APP_URL.url + '?gameID=' + gameID + '&key=' + key;
+function _buildGameUrl (gameID) {
+	return GLOBAL.APP_URL.url + '?gameID=' + gameID.compositeID;
 }

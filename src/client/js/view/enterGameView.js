@@ -33,9 +33,6 @@ chess.EnterGameView = Backbone.View.extend({
         self.$('#gameID').focus(function() {
             self._selectRadioButton(1);
         });
-        self.$('#key').focus(function() {
-            self._selectRadioButton(1);
-        });
 
         // assign the click handler to the submit button
         self.$('#enterGameSubmitButton').click(function() {
@@ -53,7 +50,6 @@ chess.EnterGameView = Backbone.View.extend({
             } else if (action === 'E') {
                 // existing
                 params.gameID = self.$('#gameID').val().trim();
-                params.key = self.$('#key').val().trim();
                 self.eventHandler.trigger(self.eventHandler.messageNames.ENTER_GAME, params);
             }
 
@@ -74,7 +70,7 @@ chess.EnterGameView = Backbone.View.extend({
 
     _selectRadioButton: function (num) {
         num = parseInt(num, 10);
-        if ((num === 0 && !this.$('#gameID').val().trim() && !this.$('#key').val().trim()) ||
+        if ((num === 0 && !this.$('#gameID').val().trim()) ||
             (num === 1 && !this.$('#player1Email').val().trim() && !this.$('#player2Email').val().trim())) {
             this.$('input[name="newOrExisting"]')[num].click();
         }

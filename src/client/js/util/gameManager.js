@@ -80,7 +80,6 @@ chess.GameManager = function (attrs) {
             $("#progressDialog").modal();
             var deferred = $.post('/saveMove', {
                 gameID: chess.vars.gameID,
-                key: chess.vars.key,
                 move: notation
             });
             deferred.done(function(res) {
