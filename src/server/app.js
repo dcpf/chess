@@ -16,7 +16,7 @@ var path = require('path');
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', GLOBAL.APP_URL.port);
 // TODO: move the views to a better place
 app.set('views', path.join(__dirname, '../client/html'));
 app.engine('html', require('uinexpress').__express);
