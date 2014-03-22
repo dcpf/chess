@@ -4,6 +4,7 @@ var templateHandler = require('./templateHandler');
 var nodemailer = require('nodemailer/lib/nodemailer');
 
 var emailServiceConfig = GLOBAL.CONFIG.emailService;
+var emailSrcDir = 'src/server/email/';
 
 var mailTransport = nodemailer.createTransport('SMTP', {
     service: emailServiceConfig.serviceName,
@@ -15,7 +16,7 @@ var mailTransport = nodemailer.createTransport('SMTP', {
 
 exports.sendGameCreationEmail = function (player1Email, player2Email, gameID) {
 
-	var html = templateHandler.processTemplate('src/server/html/player1Email.html', {
+	var html = templateHandler.processTemplate(emailSrcDir + 'player1Email.html', {
 		player1Email: player1Email,
 		player2Email: player2Email,
 		gameID: gameID.compositeID,
@@ -35,7 +36,7 @@ exports.sendGameCreationEmail = function (player1Email, player2Email, gameID) {
 
 exports.sendInviteEmail = function (player1Email, player2Email, gameID, move) {
 
-	var html = templateHandler.processTemplate('src/server/html/player2InviteEmail.html', {
+	var html = templateHandler.processTemplate(emailSrcDir + 'player2InviteEmail.html', {
 		player1Email: player1Email,
 		gameID: gameID.compositeID,
 		move: move,
@@ -55,7 +56,7 @@ exports.sendInviteEmail = function (player1Email, player2Email, gameID, move) {
 
 exports.sendMoveNotificationEmail = function (playerEmail, gameID, move) {
 
-	var html = templateHandler.processTemplate('src/server/html/moveNotificationEmail.html', {
+	var html = templateHandler.processTemplate(emailSrcDir + 'moveNotificationEmail.html', {
 		move: move,
 		gameUrl: _buildGameUrl(gameID),
 		appUrl: GLOBAL.APP_URL.url
