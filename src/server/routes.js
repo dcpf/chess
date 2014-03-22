@@ -1,10 +1,9 @@
 'use strict';
 
-var q = require('q');
 var chessController = require('./chessController');
 
 // Timestamp of when the app was started. We use this for caching javascript and css files in the browser.
-var _runtimestamp = new Date().getTime();
+var runtimestamp = new Date().getTime();
 
 exports.index = function (req, res) {
     
@@ -124,8 +123,8 @@ function logRequest (req, path) {
 }
 
 function renderIndex (obj, res) {
-    // add the runtimestamp for caching css and javascript
-    obj.runtimestamp = _runtimestamp;
+    // add the runtimestamp for versioning css and javascript
+    obj.runtimestamp = runtimestamp;
     // set layout to false 
     obj.layout = false;
     // set no-cache headers
