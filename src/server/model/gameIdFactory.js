@@ -29,8 +29,8 @@ exports.getGameID = function (id, key) {
     }
     
     return obj;
-}
-    
+};
+
 /**
 * Obfuscate the gameID by replacing all 0s at the end of the ID with a single hyphen.
 * 5313a204d2cfc5da53000001 > 5313a204d2cfc5da53-1
