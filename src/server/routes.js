@@ -9,12 +9,13 @@ var _runtimestamp = new Date().getTime();
 exports.index = function (req, res) {
     
     var params = getParams(req);
+    var promise;
     
     if (params.gameID) {
         
         // GET enterGame request where gameID is passed as a URL param
         logRequest(req, 'enterGame');
-        var promise = chessController.enterGame(getParams(req));
+        promise = chessController.enterGame(getParams(req));
         promise.then(function (obj) {
             renderIndex(obj, res);
         });
@@ -35,7 +36,7 @@ exports.index = function (req, res) {
         
         // default request for index.html
         logRequest(req, 'index.html');
-        var promise = chessController.buildDefaultEnterGameAttrMap();
+        promise = chessController.buildDefaultEnterGameAttrMap();
         promise.then(function (obj) {
             renderIndex(obj, res);
         });

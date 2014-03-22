@@ -1,3 +1,7 @@
+/*
+  NOTE: This file has been replaced by express and is no longer used. Just keeping it around for historical purposes as my first home-grown server impl :)
+*/
+
 'use strict';
 
 var fs = require('fs');
