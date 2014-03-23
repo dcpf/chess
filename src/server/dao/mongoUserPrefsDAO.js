@@ -9,30 +9,26 @@ var db = mongojs(databaseUrl, ['userPrefs']);
 var setUserPref = function (email, name, value) {
     
     var deferred = q.defer();
-	var promise = getUserPrefs(email);
-    
-    promise.then(function (userPrefs) {
-        
-        userPrefs.prefs = userPrefs.prefs || {};
-        value = _valueConverter(value);
-        var id = userPrefs._id || null;
-        userPrefs.prefs[name] = value;
-        db.userPrefs.save({_id: id, email: email, prefs: userPrefs.prefs}, function (err, savedObj) {
-            if (err) {
-                deferred.reject(err);
-            } else if (!savedObj) {
-                deferred.reject(new Error('Error setting user pref for ' + email + ': ' + name + ' = ' + value));
-            } else {
-                console.log('Set user pref for ' + email + ': ' + name + ' = ' + value);
-                deferred.resolve(userPrefs);
-            }
+    getUserPrefs(email)
+        .then(function (userPrefs) {
+            userPrefs.prefs = userPrefs.prefs || {};
+            value = _valueConverter(value);
+            var id = userPrefs._id || null;
+            userPrefs.prefs[name] = value;
+            db.userPrefs.save({_id: id, email: email, prefs: userPrefs.prefs}, function (err, savedObj) {
+                if (err) {
+                    deferred.reject(err);
+                } else if (!savedObj) {
+                    deferred.reject(new Error('Error setting user pref for ' + email + ': ' + name + ' = ' + value));
+                } else {
+                    console.log('Set user pref for ' + email + ': ' + name + ' = ' + value);
+                    deferred.resolve(userPrefs);
+                }
+            });
+        })
+        .fail(function (err) {
+            deferred.reject(err);
         });
-        
-    });
-    
-    promise.fail(function (err) {
-        deferred.reject(err);
-    });
     
     return deferred.promise;
     

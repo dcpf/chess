@@ -19,52 +19,42 @@ function createGame (ip, postData) {
 
 	var deferred = q.defer();
     
-	var validateCaptchaResponse = reCaptchaHandler.validateCaptcha(ip, postData.captchaChallenge, postData.captchaResponse);
-    
-	validateCaptchaResponse.then(function() {
+    reCaptchaHandler.validateCaptcha(ip, postData.captchaChallenge, postData.captchaResponse)
+        .then(function() {
 
-        console.log('captcha validation passed');
+            console.log('captcha validation passed');
 
-        // get emails and validate tham
-        var player1Email = postData.player1Email;
-        var player2Email = postData.player2Email;
-        try {
-            _validateEmailAddress(player1Email);
-            _validateEmailAddress(player2Email);
-        } catch (err) {
+            // get emails and validate tham
+            var player1Email = postData.player1Email;
+            var player2Email = postData.player2Email;
+            try {
+                _validateEmailAddress(player1Email);
+                _validateEmailAddress(player2Email);
+            } catch (err) {
+                deferred.reject(err);
+                return;
+            }
+
+            _createGame(player1Email, player2Email)
+                .then(function (obj) {
+                    deferred.resolve(obj);
+                })
+                .fail(function (err) {
+                    deferred.reject(err);
+                });
+
+        })
+        .fail(function(err){
             deferred.reject(err);
-            return;
-        }
-
-        var createGameResponse = _createGame(player1Email, player2Email);
-        createGameResponse.then(function (obj) {
-            deferred.resolve(obj);
         });
-        createGameResponse.fail(function (err) {
-            deferred.reject(err);
-        });
-        
-	});
-    
-    validateCaptchaResponse.fail(function(err){
-        deferred.reject(err);
-    });
 
 	return deferred.promise;
 
 }
 
 function enterGame (postData) {
-    var deferred = q.defer();
     var gameID = gameIdFactory.getGameID(postData.gameID);
-	var promise = _enterExistingGame(gameID);
-    promise.then(function (obj) {
-        deferred.resolve(obj);
-    });
-    promise.fail(function (err) {
-        deferred.reject(err);
-    });
-	return deferred.promise;
+	return _enterExistingGame(gameID);
 }
 
 function saveMove (postData) {
@@ -72,43 +62,39 @@ function saveMove (postData) {
     var deferred = q.defer();
     var gameID = gameIdFactory.getGameID(postData.gameID);
     
-	var gameObjResponse = gameDao.getGameObject(gameID.id);
-    
-    gameObjResponse.then(function (gameObj) {
+    gameDao.getGameObject(gameID.id)
+        .then(function (gameObj) {
 
-        var opponentEmail = '';
+            var opponentEmail = '';
+
+            if (_playerCanMove(gameObj, gameID.key)) {
+
+                var move = postData.move;
+                gameObj.moveHistory.push(move);
+
+                gameDao.saveGame(gameID.id, gameObj)
+                    .then(function () {
+                        console.log('Updated game ' + gameID.id + ' with move ' + move);
+                        if (gameObj.moveHistory.length == 1) {
+                            opponentEmail = gameObj.B.email;
+                            emailHandler.sendInviteEmail(gameObj.W.email, gameObj.B.email, gameIdFactory.getGameID(gameID.id, gameObj.B.key), move);
+                        } else {
+                            var obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
+                            opponentEmail = obj.email;
+                            emailHandler.sendMoveNotificationEmail(obj.email, gameIdFactory.getGameID(gameID.id, obj.key), move);
+                        }
+                        deferred.resolve({status: 'ok', opponentEmail: opponentEmail});
+                    })
+                    .fail(function (err) {
+                        deferred.reject(err);
+                    });
+            
+            }
         
-        if (_playerCanMove(gameObj, gameID.key)) {
-            
-            var move = postData.move;
-            gameObj.moveHistory.push(move);
-            
-            var saveGameResponse = gameDao.saveGame(gameID.id, gameObj);
-            
-            saveGameResponse.then(function () {
-                console.log('Updated game ' + gameID.id + ' with move ' + move);
-                if (gameObj.moveHistory.length == 1) {
-                    opponentEmail = gameObj.B.email;
-                    emailHandler.sendInviteEmail(gameObj.W.email, gameObj.B.email, gameIdFactory.getGameID(gameID.id, gameObj.B.key), move);
-                } else {
-                    var obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
-                    opponentEmail = obj.email;
-                    emailHandler.sendMoveNotificationEmail(obj.email, gameIdFactory.getGameID(gameID.id, obj.key), move);
-                }
-                deferred.resolve({status: 'ok', opponentEmail: opponentEmail});
-            });
-            
-            saveGameResponse.fail(function (err) {
-                deferred.reject(err);
-            });
-            
-        }
-        
-    });
-    
-    gameObjResponse.fail(function (err) {
-        deferred.reject(err);
-    });
+        })
+        .fail(function (err) {
+            deferred.reject(err);
+        });
     
     return deferred.promise;
     
@@ -122,15 +108,7 @@ function updateUserPrefs (postData) {
 }
 
 function buildDefaultEnterGameAttrMap (error) {
-    var deferred = q.defer();
-	var buildEnterGameAttrMapResponse = _buildEnterGameAttrMap({}, '', '', false, error);
-    buildEnterGameAttrMapResponse.then(function (obj) {
-        deferred.resolve(obj);
-    });
-    buildEnterGameAttrMapResponse.fail(function (err) {
-        deferred.reject(err);
-    });
-    return deferred.promise;
+	return _buildEnterGameAttrMap({}, '', '', false, error);
 }
 
 exports.createGame = createGame;
@@ -171,21 +149,21 @@ function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
 
     // user prefs
     var userEmail = _getCurrentUserEmail(gameObj, gameID.key);
-    var userPrefsResponse = userPrefsDao.getUserPrefs(userEmail);
-    userPrefsResponse.then(function (userPrefs) {
-        var user = {
-            email: userEmail,
-            prefs: userPrefs.prefs || {}
-        };
-        deferred.resolve({
-            chessVars: JSON.stringify(chessVars),
-            config: JSON.stringify(config),
-            user: JSON.stringify(user)
+    userPrefsDao.getUserPrefs(userEmail)
+        .then(function (userPrefs) {
+            var user = {
+                email: userEmail,
+                prefs: userPrefs.prefs || {}
+            };
+            deferred.resolve({
+                chessVars: JSON.stringify(chessVars),
+                config: JSON.stringify(config),
+                user: JSON.stringify(user)
+            });
+        })
+        .fail(function (err) {
+            deferred.reject(err);
         });
-    });
-    userPrefsResponse.fail(function (err) {
-        deferred.reject(err);
-    });
 	
 	return deferred.promise;
     
@@ -223,24 +201,22 @@ function _createGame (player1Email, player2Email) {
 		}
 	};
 
-	var createGameResponse = gameDao.createGame(gameObj);
-    
-    createGameResponse.then(function (gameID) {
-        console.log('Created game ' + gameID);
-        var newGameIdObj = gameIdFactory.getGameID(gameID, whiteKey);
-        emailHandler.sendGameCreationEmail(player1Email, player2Email, newGameIdObj);
-        var buildEnterGameAttrMapResponse = _buildEnterGameAttrMap(gameObj, newGameIdObj, 'W', true, null);
-        buildEnterGameAttrMapResponse.then(function (obj) {
-            deferred.resolve(obj);
-        });
-        buildEnterGameAttrMapResponse.fail(function (err) {
+    gameDao.createGame(gameObj)
+        .then(function (gameID) {
+            console.log('Created game ' + gameID);
+            var newGameIdObj = gameIdFactory.getGameID(gameID, whiteKey);
+            emailHandler.sendGameCreationEmail(player1Email, player2Email, newGameIdObj);
+            _buildEnterGameAttrMap(gameObj, newGameIdObj, 'W', true, null)
+                .then(function (obj) {
+                    deferred.resolve(obj);
+                })
+                .fail(function (err) {
+                    deferred.reject(err);
+                });
+        })
+        .fail(function (err) {
             deferred.reject(err);
         });
-    });
-    
-    createGameResponse.fail(function (err) {
-        deferred.reject(err);
-    });
     
     return deferred.promise;
 
@@ -251,21 +227,21 @@ function _createGame (player1Email, player2Email) {
 */
 function _enterExistingGame (gameID) {
     var deferred = q.defer();
-	var getGameObjectResponse = gameDao.getGameObject(gameID.id);
-    getGameObjectResponse.then(function (gameObj) {
-        var perspective = _getPerspective(gameObj, gameID.key);
-        var canMove = _playerCanMove(gameObj, gameID.key);
-        var buildEnterGameAttrMapResponse = _buildEnterGameAttrMap(gameObj, gameID, perspective, canMove, null);
-        buildEnterGameAttrMapResponse.then(function (obj) {
-            deferred.resolve(obj);
-        });
-        buildEnterGameAttrMapResponse.fail(function (err) {
+    gameDao.getGameObject(gameID.id)
+        .then(function (gameObj) {
+            var perspective = _getPerspective(gameObj, gameID.key);
+            var canMove = _playerCanMove(gameObj, gameID.key);
+            _buildEnterGameAttrMap(gameObj, gameID, perspective, canMove, null)
+                .then(function (obj) {
+                    deferred.resolve(obj);
+                })
+                .fail(function (err) {
+                    deferred.reject(err);
+                });
+        })
+        .fail(function (err) {
             deferred.reject(err);
         });
-    });
-    getGameObjectResponse.fail(function (err) {
-        deferred.reject(err);
-    });
     return deferred.promise;
 }
 
