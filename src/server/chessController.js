@@ -170,41 +170,33 @@ function _validateEmailAddress (email) {
 
 function _createGame (player1Email, player2Email) {
 
-    var deferred = q.defer();
-    
-	// Get the keys for each player
-	var whiteKey = _generateKey();
-	var blackKey = _generateKey();
+    // Get the keys for each player
+    var whiteKey = _generateKey();
+    var blackKey = _generateKey();
 
-	// If the two keys happen to be the same, loop until they are unique.
-	while (whiteKey === blackKey) {
-		blackKey = _generateKey();
-	}
+    // If the two keys happen to be the same, loop until they are unique.
+    while (whiteKey === blackKey) {
+        blackKey = _generateKey();
+    }
 
-	// Build the game object
-	var gameObj = {
-		W: {
-			email: player1Email,
-			key: whiteKey
-		},
-		B: {
-			email: player2Email,
-			key: blackKey
-		}
-	};
+    // Build the game object
+    var gameObj = {
+        W: {
+            email: player1Email,
+            key: whiteKey
+        },
+        B: {
+            email: player2Email,
+            key: blackKey
+        }
+    };
 
-    gameDao.createGame(gameObj)
-        .then(function (gameID) {
-            console.log('Created game ' + gameID);
-            var newGameIdObj = gameIdFactory.getGameID(gameID, whiteKey);
-            emailHandler.sendGameCreationEmail(player1Email, player2Email, newGameIdObj);
-            deferred.resolve(_buildEnterGameAttrMap(gameObj, newGameIdObj, 'W', true, null));
-        })
-        .fail(function (err) {
-            deferred.reject(err);
-        });
-    
-    return deferred.promise;
+    return gameDao.createGame(gameObj).then(function (gameID) {
+        console.log('Created game ' + gameID);
+        var newGameIdObj = gameIdFactory.getGameID(gameID, whiteKey);
+        emailHandler.sendGameCreationEmail(player1Email, player2Email, newGameIdObj);
+        return _buildEnterGameAttrMap(gameObj, newGameIdObj, 'W', true, null);
+    });
 
 }
 
