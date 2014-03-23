@@ -117,8 +117,6 @@ exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 * Generate the chessVars, config, and user objects needed by the client.
 */
 function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
-
-    var deferred = q.defer();
     
 	// vars needed for the game
 	var chessVars = {
@@ -141,23 +139,17 @@ function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
 
     // user prefs
     var userEmail = _getCurrentUserEmail(gameObj, gameID.key);
-    userPrefsDao.getUserPrefs(userEmail)
-        .then(function (userPrefs) {
-            var user = {
-                email: userEmail,
-                prefs: userPrefs.prefs || {}
-            };
-            deferred.resolve({
-                chessVars: JSON.stringify(chessVars),
-                config: JSON.stringify(config),
-                user: JSON.stringify(user)
-            });
-        })
-        .fail(function (err) {
-            deferred.reject(err);
-        });
-	
-	return deferred.promise;
+    return userPrefsDao.getUserPrefs(userEmail).then(function (userPrefs) {
+        var user = {
+            email: userEmail,
+            prefs: userPrefs.prefs || {}
+        };
+        return {
+            chessVars: JSON.stringify(chessVars),
+            config: JSON.stringify(config),
+            user: JSON.stringify(user)
+        };
+    });
     
 }
 
