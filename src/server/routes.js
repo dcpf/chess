@@ -8,41 +8,40 @@ var runtimestamp = new Date().getTime();
 exports.index = function (req, res) {
     
     var params = getParams(req);
-    var promise;
     
     if (params.gameID) {
         
         // GET enterGame request where gameID is passed as a URL param
         logRequest(req, 'enterGame');
-        promise = chessController.enterGame(getParams(req));
-        promise.then(function (obj) {
-            renderIndex(obj, res);
-        });
-        // If chessController.enterGame() failed, we'll render index.html with an err msg in the attr map.
-        promise.fail(function (err) {
-            console.warn(err);
-            var buildDefaultEnterGameAttrMapResponse = chessController.buildDefaultEnterGameAttrMap(err);
-            buildDefaultEnterGameAttrMapResponse.then(function (obj) {
+        chessController.enterGame(getParams(req))
+            .then(function (obj) {
                 renderIndex(obj, res);
+            })
+            // If chessController.enterGame() failed, we'll render index.html with an err msg in the attr map.
+            .fail(function (err) {
+                console.warn(err);
+                chessController.buildDefaultEnterGameAttrMap(err)
+                    .then(function (obj) {
+                        renderIndex(obj, res);
+                    })
+                    .fail(function (err) {
+                        // what to do here?
+                        //deferred.reject(err);
+                    });
             });
-            buildDefaultEnterGameAttrMapResponse.fail(function (err) {
-                // what to do here?
-                //deferred.reject(err);
-            });
-        });
         
     } else {
         
         // default request for index.html
         logRequest(req, 'index.html');
-        promise = chessController.buildDefaultEnterGameAttrMap();
-        promise.then(function (obj) {
-            renderIndex(obj, res);
-        });
-        promise.fail(function (err) {
-            // what to do here?
-            //deferred.reject(err);
-        });
+        chessController.buildDefaultEnterGameAttrMap()
+            .then(function (obj) {
+                renderIndex(obj, res);
+            })
+            .fail(function (err) {
+                // what to do here?
+                //deferred.reject(err);
+            });
         
     }
 };
@@ -51,49 +50,49 @@ exports.index = function (req, res) {
 exports.createGame = function (req, res) {
     logRequest(req, 'createGame');
 	var ip = req.connection.remoteAddress;
-	var promise = chessController.createGame(ip, getParams(req));
-	promise.then(function (obj) {
-		doJsonOutput(res, obj);
-	});
-    promise.fail(function (err) {
-        doErrorOutput(res, err);
-    });
+	chessController.createGame(ip, getParams(req))
+        .then(function (obj) {
+            doJsonOutput(res, obj);
+        })
+        .fail(function (err) {
+            doErrorOutput(res, err);
+        });
 };
 
 // POST enterGame request
 exports.enterGame = function (req, res) {
     logRequest(req, 'enterGame');
-	var promise = chessController.enterGame(getParams(req));
-    promise.then(function (obj) {
-        doJsonOutput(res, obj);
-    });
-    promise.fail(function (err) {
-        doErrorOutput(res, err);
-    });
+	chessController.enterGame(getParams(req))
+        .then(function (obj) {
+            doJsonOutput(res, obj);
+        })
+        .fail(function (err) {
+            doErrorOutput(res, err);
+        });
 };
 
 // POST saveMove request
 exports.saveMove = function (req, res) {
     logRequest(req, 'saveMove');
-    var promise = chessController.saveMove(getParams(req));
-    promise.then(function (obj) {
-        doJsonOutput(res, obj);
-    });
-    promise.fail(function (err) {
-        doErrorOutput(res, err);
-    });
+    chessController.saveMove(getParams(req))
+        .then(function (obj) {
+            doJsonOutput(res, obj);
+        })
+        .fail(function (err) {
+            doErrorOutput(res, err);
+        });
 };
 
 // POST updateUserPrefs request
 exports.updateUserPrefs = function (req, res) {
     logRequest(req, 'updateUserPrefs');
-	var promise = chessController.updateUserPrefs(getParams(req));
-    promise.then(function (obj) {
-        doJsonOutput(res, obj);
-    });
-    promise.fail(function (err) {
-        doErrorOutput(res, err);
-    });
+	chessController.updateUserPrefs(getParams(req))
+        .then(function (obj) {
+            doJsonOutput(res, obj);
+        })
+        .fail(function (err) {
+            doErrorOutput(res, err);
+        });
 };
 
 // POST logClientError request
