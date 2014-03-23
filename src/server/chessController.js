@@ -208,21 +208,12 @@ function _createGame (player1Email, player2Email) {
 
 }
 
-/*
-* Enter an existing game. Throws an error if no game exists by the passed-in ID.
-*/
 function _enterExistingGame (gameID) {
-    var deferred = q.defer();
-    gameDao.getGameObject(gameID.id)
-        .then(function (gameObj) {
-            var perspective = _getPerspective(gameObj, gameID.key);
-            var canMove = _playerCanMove(gameObj, gameID.key);
-            deferred.resolve(_buildEnterGameAttrMap(gameObj, gameID, perspective, canMove, null));
-        })
-        .fail(function (err) {
-            deferred.reject(err);
-        });
-    return deferred.promise;
+    return gameDao.getGameObject(gameID.id).then(function (gameObj) {
+        var perspective = _getPerspective(gameObj, gameID.key);
+        var canMove = _playerCanMove(gameObj, gameID.key);
+        return _buildEnterGameAttrMap(gameObj, gameID, perspective, canMove, null);
+    });
 }
 
 function _generateKey () {
