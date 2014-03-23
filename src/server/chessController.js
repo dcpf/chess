@@ -30,18 +30,10 @@ function createGame (ip, postData) {
             try {
                 _validateEmailAddress(player1Email);
                 _validateEmailAddress(player2Email);
+                deferred.resolve(_createGame(player1Email, player2Email));
             } catch (err) {
                 deferred.reject(err);
-                return;
             }
-
-            _createGame(player1Email, player2Email)
-                .then(function (obj) {
-                    deferred.resolve(obj);
-                })
-                .fail(function (err) {
-                    deferred.reject(err);
-                });
 
         })
         .fail(function(err){
@@ -206,13 +198,7 @@ function _createGame (player1Email, player2Email) {
             console.log('Created game ' + gameID);
             var newGameIdObj = gameIdFactory.getGameID(gameID, whiteKey);
             emailHandler.sendGameCreationEmail(player1Email, player2Email, newGameIdObj);
-            _buildEnterGameAttrMap(gameObj, newGameIdObj, 'W', true, null)
-                .then(function (obj) {
-                    deferred.resolve(obj);
-                })
-                .fail(function (err) {
-                    deferred.reject(err);
-                });
+            deferred.resolve(_buildEnterGameAttrMap(gameObj, newGameIdObj, 'W', true, null));
         })
         .fail(function (err) {
             deferred.reject(err);
@@ -231,13 +217,7 @@ function _enterExistingGame (gameID) {
         .then(function (gameObj) {
             var perspective = _getPerspective(gameObj, gameID.key);
             var canMove = _playerCanMove(gameObj, gameID.key);
-            _buildEnterGameAttrMap(gameObj, gameID, perspective, canMove, null)
-                .then(function (obj) {
-                    deferred.resolve(obj);
-                })
-                .fail(function (err) {
-                    deferred.reject(err);
-                });
+            deferred.resolve(_buildEnterGameAttrMap(gameObj, gameID, perspective, canMove, null));
         })
         .fail(function (err) {
             deferred.reject(err);
