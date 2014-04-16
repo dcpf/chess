@@ -1,6 +1,7 @@
 'use strict';
 
 var fs = require('fs');
+var path = require('path');
 // instantiate the logger to reset all console logging functions to use log4js
 require('./logger');
 var appUrl = require('./model/appUrl');
@@ -11,7 +12,6 @@ initConfig();
 var express = require('express');
 var routes = require('./routes');
 var http = require('http');
-var path = require('path');
 
 var app = express();
 
@@ -56,7 +56,7 @@ console.log('Express server listening on ' + GLOBAL.APP_URL.url);
 function initConfig () {
 
 	// read the config file and make the config object globally available
-	var configFile = process.argv[2] || __dirname + '/conf/config.json';
+	var configFile = process.argv[2] || path.join(__dirname, 'conf/config.json');
 	var config = {};
 	try {
 		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));

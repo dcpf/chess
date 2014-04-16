@@ -1,10 +1,11 @@
 'use strict';
 
+var path = require('path');
 var templateHandler = require('./templateHandler');
 var nodemailer = require('nodemailer/lib/nodemailer');
 
 var emailServiceConfig = GLOBAL.CONFIG.emailService;
-var emailSrcDir = 'src/server/email/';
+var emailSrcDir = path.join(__dirname, 'email/');
 
 var mailTransport = nodemailer.createTransport('SMTP', {
     service: emailServiceConfig.serviceName,
