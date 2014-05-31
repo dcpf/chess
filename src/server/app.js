@@ -21,7 +21,7 @@ app.set('views', path.join(__dirname, 'view'));
 app.engine('html', require('uinexpress').__express);
 app.set('view engine', 'html');
 
-app.use(express.favicon());
+//app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
@@ -47,7 +47,7 @@ app.post('/saveMove', routes.saveMove);
 app.post('/updateUserPrefs', routes.updateUserPrefs);
 app.post('/logClientError', routes.logClientError);
 
-http.createServer(app).listen(GLOBAL.APP_URL.port, GLOBAL.APP_URL.domain);
+http.createServer(app).listen(GLOBAL.APP_URL.port);
 
 console.log('Express server listening on ' + GLOBAL.APP_URL.url);
 
@@ -55,8 +55,17 @@ console.log('Express server listening on ' + GLOBAL.APP_URL.url);
 
 function initConfig () {
 
-	// read the config file and make the config object globally available
-	var configFile = process.argv[2] || path.join(__dirname, 'conf/config.json');
+  // Get the passed-in args
+  var argMap = {};
+  process.argv.forEach(function (val, index, array) {
+    if (val.indexOf('=') > 0) {
+      var array = val.split('=');
+      argMap[array[0]] = array[1];
+    }
+  });
+
+	// Read the config file and make the config object globally available
+	var configFile = argMap.configFile || path.join(__dirname, 'conf/config.json');
 	var config = {};
 	try {
 		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
@@ -66,8 +75,9 @@ function initConfig () {
 	}
 	GLOBAL.CONFIG = config;
 
-	// get the ip and port from either the env vars or from the config file, and set the appUrl object
-	var ip = process.env.IP || config.ip;
-	var port = process.env.PORT || config.port;
-	GLOBAL.APP_URL = appUrl.constructUrl(ip, port);
+	// Get the domain and port from either the passed-in args, the env vars, or the config, and set the global appUrl object.
+	var domain = argMap.domain || process.env.DOMAIN || config.domain;
+	var port = argMap.port || process.env.PORT || config.port;
+	GLOBAL.APP_URL = appUrl.constructUrl(domain, port);
+
 }
