@@ -1,5 +1,9 @@
 'use strict';
 
+/*
+* FileSystem-based implementation
+*/
+
 var fs = require('fs');
 
 var DATA_DIR = '.data/';
