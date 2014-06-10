@@ -6,11 +6,11 @@ var chessController = require('./chessController');
 var runtimestamp = new Date().getTime();
 
 exports.index = function (req, res) {
-    
+
     var params = getParams(req);
-    
+
     if (params.gameID) {
-        
+
         // GET enterGame request where gameID is passed as a URL param
         logRequest(req, 'enterGame');
         chessController.enterGame(getParams(req))
@@ -29,9 +29,9 @@ exports.index = function (req, res) {
                         //deferred.reject(err);
                     });
             });
-        
+
     } else {
-        
+
         // default request for index.html
         logRequest(req, 'index.html');
         chessController.buildDefaultEnterGameAttrMap()
@@ -42,13 +42,13 @@ exports.index = function (req, res) {
                 // what to do here?
                 //deferred.reject(err);
             });
-        
+
     }
 };
 
 // POST createGame request
 exports.createGame = function (req, res) {
-    logRequest(req, 'createGame');
+  logRequest(req, 'createGame');
 	var ip = req.connection.remoteAddress;
 	chessController.createGame(ip, getParams(req))
         .then(function (obj) {
@@ -61,7 +61,7 @@ exports.createGame = function (req, res) {
 
 // POST enterGame request
 exports.enterGame = function (req, res) {
-    logRequest(req, 'enterGame');
+  logRequest(req, 'enterGame');
 	chessController.enterGame(getParams(req))
         .then(function (obj) {
             doJsonOutput(res, obj);
@@ -86,7 +86,7 @@ exports.saveMove = function (req, res) {
 // POST updateUserPrefs request
 exports.updateUserPrefs = function (req, res) {
     logRequest(req, 'updateUserPrefs');
-	chessController.updateUserPrefs(getParams(req))
+    chessController.updateUserPrefs(getParams(req))
         .then(function (obj) {
             doJsonOutput(res, obj);
         })
@@ -124,7 +124,7 @@ function logRequest (req, path) {
 function renderIndex (obj, res) {
     // add the runtimestamp for versioning css and javascript
     obj.runtimestamp = runtimestamp;
-    // set layout to false 
+    // set layout to false
     obj.layout = false;
     // set no-cache headers
     res.set({
@@ -138,12 +138,12 @@ function renderIndex (obj, res) {
 
 function doJsonOutput (res, obj) {
 	res.writeHead(200, {'Content-Type': 'application/json'});
-    res.write(JSON.stringify(obj));
+  res.write(JSON.stringify(obj));
 	res.end();
 }
 
 function doErrorOutput (res, err) {
 	res.writeHead(500, {'Content-Type': 'text/html'});
-    res.write(err.message);
+  res.write(err.message);
 	res.end();
 }

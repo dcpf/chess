@@ -9,7 +9,7 @@ var validator = require('validator');
 var reCaptchaHandler = require('./reCaptchaHandler');
 var emailHandler = require('./emailHandler');
 
-var KEY_CHARS = '123456789';
+const KEY_CHARS = '123456789';
 
 //
 // public functions
@@ -18,7 +18,7 @@ var KEY_CHARS = '123456789';
 function createGame (ip, postData) {
 
 	var deferred = q.defer();
-    
+
     reCaptchaHandler.validateCaptcha(ip, postData.captchaChallenge, postData.captchaResponse)
         .then(function() {
 
@@ -45,51 +45,50 @@ function createGame (ip, postData) {
 }
 
 function enterGame (postData) {
-    var gameID = gameIdFactory.getGameID(postData.gameID);
+	var gameID = gameIdFactory.getGameID(postData.gameID);
 	return _enterExistingGame(gameID);
 }
 
 function saveMove (postData) {
-    
+
     var deferred = q.defer();
     var gameID = gameIdFactory.getGameID(postData.gameID);
-    
+
     gameDao.getGameObject(gameID.id)
         .then(function (gameObj) {
 
-            var opponentEmail = '';
-
             if (_playerCanMove(gameObj, gameID.key)) {
 
-                var move = postData.move;
+                let move = postData.move;
                 gameObj.moveHistory.push(move);
 
                 gameDao.saveGame(gameID.id, gameObj)
                     .then(function () {
-                        console.log('Updated game ' + gameID.id + ' with move ' + move);
-                        if (gameObj.moveHistory.length == 1) {
-                            opponentEmail = gameObj.B.email;
-                            emailHandler.sendInviteEmail(gameObj.W.email, gameObj.B.email, gameIdFactory.getGameID(gameID.id, gameObj.B.key), move);
-                        } else {
-                            var obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
-                            opponentEmail = obj.email;
-                            emailHandler.sendMoveNotificationEmail(obj.email, gameIdFactory.getGameID(gameID.id, obj.key), move);
-                        }
-                        deferred.resolve({status: 'ok', opponentEmail: opponentEmail});
+                      console.log('Updated game ' + gameID.id + ' with move ' + move);
+											var opponentEmail = '';
+                      if (gameObj.moveHistory.length == 1) {
+                          opponentEmail = gameObj.B.email;
+                          emailHandler.sendInviteEmail(gameObj.W.email, gameObj.B.email, gameIdFactory.getGameID(gameID.id, gameObj.B.key), move);
+                      } else {
+                          let obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
+                          opponentEmail = obj.email;
+                          emailHandler.sendMoveNotificationEmail(obj.email, gameIdFactory.getGameID(gameID.id, obj.key), move);
+                      }
+                      deferred.resolve({status: 'ok', opponentEmail: opponentEmail});
                     })
                     .fail(function (err) {
                         deferred.reject(err);
                     });
-            
+
             }
-        
+
         })
         .fail(function (err) {
             deferred.reject(err);
         });
-    
+
     return deferred.promise;
-    
+
 }
 
 function updateUserPrefs (postData) {
@@ -117,7 +116,7 @@ exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 * Generate the chessVars, config, and user objects needed by the client.
 */
 function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
-    
+
 	// vars needed for the game
 	var chessVars = {
 		gameID: gameID.compositeID,
@@ -150,7 +149,7 @@ function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
             user: JSON.stringify(user)
         };
     });
-    
+
 }
 
 /**
@@ -202,7 +201,7 @@ function _enterExistingGame (gameID) {
 
 function _generateKey () {
 	var s = '';
-    for (var i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
         s += KEY_CHARS.charAt(Math.floor(Math.random() * KEY_CHARS.length));
     }
     return s;

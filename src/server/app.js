@@ -59,7 +59,7 @@ function initConfig () {
   var argMap = {};
   process.argv.forEach(function (val, index, array) {
     if (val.indexOf('=') > 0) {
-      var array = val.split('=');
+      let array = val.split('=');
       argMap[array[0]] = array[1];
     }
   });
@@ -69,7 +69,7 @@ function initConfig () {
 	var config = {};
 	try {
 		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
-        console.log('Initialized config file: ' + configFile);
+    console.log('Initialized config file: ' + configFile);
 	} catch (err) {
 		console.warn('No config file found at: ' + configFile + '. Starting with no configuration.');
 	}

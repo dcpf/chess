@@ -23,8 +23,8 @@ exports.validateCaptcha = function (ip, captchaChallenge, captchaResponse) {
                 if (err) {
                     deferred.reject(err);
                 } else {
-                    var responseArray = body.split('\n');
-                    var success = responseArray[0];
+                    let responseArray = body.split('\n');
+                    let success = responseArray[0];
                     //var msg = responseArray[1];
                     if (success === 'true') {
                         deferred.resolve();

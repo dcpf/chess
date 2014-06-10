@@ -11,23 +11,23 @@
 *
 */
 
-var MONGO_DB_REGEXP = /0+([^0]+)$/;
+const MONGO_DB_REGEXP = /0+([^0]+)$/;
 
 exports.getGameID = function (id, key) {
-    
+
     var obj = {};
-    
+
     if (key) {
         obj.key = key;
         obj.id = id;
         obj.compositeID = _obfuscateGameID(id) + '-' + key;
     } else {
-        var parts = id.split('-');
+        let parts = id.split('-');
         obj.key = parts[2];
         obj.id = _deobfuscateGameID(parts[0], parts[1]);
         obj.compositeID = id;
     }
-    
+
     return obj;
 };
 
