@@ -23,6 +23,7 @@
     "uinexpress": "0.0.5"
   },
   "scripts": {
+    "start": "node --harmony src/server/app.js port=8080",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
