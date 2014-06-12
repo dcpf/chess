@@ -11,7 +11,7 @@ initConfig();
 
 // express and middleware
 var express = require('express');
-var morgan  = require('morgan');
+var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var cookieParser = require('cookie-parser');

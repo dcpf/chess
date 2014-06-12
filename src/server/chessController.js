@@ -45,7 +45,14 @@ function createGame (ip, postData) {
 }
 
 function enterGame (postData) {
-	var gameID = gameIdFactory.getGameID(postData.gameID);
+	var gameID;
+	try {
+		gameID = gameIdFactory.getGameID(postData.gameID);
+	} catch (err) {
+		var deferred = q.defer();
+		deferred.reject(err);
+		return deferred.promise;
+	}
 	return _enterExistingGame(gameID);
 }
 

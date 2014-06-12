@@ -22,10 +22,14 @@ exports.getGameID = function (id, key) {
         obj.id = id;
         obj.compositeID = _obfuscateGameID(id) + '-' + key;
     } else {
-        let parts = id.split('-');
-        obj.key = parts[2];
-        obj.id = _deobfuscateGameID(parts[0], parts[1]);
-        obj.compositeID = id;
+      try {
+          let parts = id.split('-');
+          obj.key = parts[2];
+          obj.id = _deobfuscateGameID(parts[0], parts[1]);
+          obj.compositeID = id;
+      } catch (err) {
+        throw(new Error("Invalid game ID: " + id));
+      }
     }
 
     return obj;
