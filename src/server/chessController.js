@@ -203,7 +203,15 @@ function _enterExistingGame (gameID) {
         var perspective = _getPerspective(gameObj, gameID.key);
         var canMove = _playerCanMove(gameObj, gameID.key);
         return _buildEnterGameAttrMap(gameObj, gameID, perspective, canMove, null);
-    });
+		}).fail (function (err) {
+			// FIXME: Use a custom error object instead of detecting the err message.
+			if (err.message.indexOf('Invalid Game ID') === 0) {
+				err.message = 'Invalid Game ID: ' + gameID.compositeID;
+			}
+			var deferred = q.defer();
+			deferred.reject(err);
+			return deferred.promise;
+		});
 }
 
 function _generateKey () {
