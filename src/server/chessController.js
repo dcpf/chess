@@ -49,7 +49,7 @@ function enterGame (postData) {
 	try {
 		gameID = gameIdFactory.getGameID(postData.gameID);
 	} catch (err) {
-		var deferred = q.defer();
+		let deferred = q.defer();
 		deferred.reject(err);
 		return deferred.promise;
 	}
