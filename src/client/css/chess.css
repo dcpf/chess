@@ -55,6 +55,13 @@ h3 {
   width: 180px;
 }
 
+#loadingCaptchaText {
+  color: #999;
+  font-style: italic;
+  line-height: 123px; /* 123px is the height of the captcha table once it's rendered */
+  text-align: center;
+}
+
 /* Make the labels inside a disabled fieldset appear to be disabled as well */
 fieldset[disabled="disabled"] label {
   opacity: .3;
