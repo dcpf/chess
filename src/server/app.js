@@ -38,6 +38,8 @@ app.use(cookieParser());
 app.use(session({secret: 'jellyJam'}));
 app.use(compression());
 
+app.disable('x-powered-by');
+
 // routes
 app.get('/', routes.index);
 app.post('/createGame', routes.createGame);
