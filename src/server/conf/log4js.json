@@ -4,7 +4,8 @@
       "category": "server",
       "type": "dateFile",
       "filename": "logs/server.log",
-      "pattern": "-yyyy-MM-dd"
+      "pattern": "-yyyy-MM-dd",
+      "alwaysIncludePattern": true
     }
   ]
 }
