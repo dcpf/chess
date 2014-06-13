@@ -2,6 +2,7 @@
 
 var mongojs = require("mongojs");
 var q = require('q');
+var customErrors = require('../error/customErrors');
 
 var databaseUrl = GLOBAL.CONFIG.db.databaseUrl;
 var db = mongojs(databaseUrl, ['games']);
@@ -18,7 +19,7 @@ var getGameObject = function (gameID) {
         id = mongojs.ObjectId(gameID);
     } catch (err) {
         // If ObjectId() throws an error, it means the gameID is invalid
-        deferred.reject(new Error('Invalid Game ID: ' + gameID));
+        deferred.reject(new customErrors.InvalidGameIdError());
         return deferred.promise;
     }
 
@@ -26,7 +27,7 @@ var getGameObject = function (gameID) {
         if (err) {
             deferred.reject(err);
         } else if (!game) {
-            deferred.reject(new Error('Invalid Game ID: ' + gameID));
+            deferred.reject(new customErrors.InvalidGameIdError());
         } else {
             deferred.resolve(game.gameObj);
         }

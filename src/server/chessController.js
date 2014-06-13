@@ -8,6 +8,7 @@ var userPrefsDao = require('./dao/mongoUserPrefsDAO');
 var validator = require('validator');
 var reCaptchaHandler = require('./reCaptchaHandler');
 var emailHandler = require('./emailHandler');
+var customErrors = require('./error/customErrors');
 
 const KEY_CHARS = '123456789';
 
@@ -204,8 +205,7 @@ function _enterExistingGame (gameID) {
         var canMove = _playerCanMove(gameObj, gameID.key);
         return _buildEnterGameAttrMap(gameObj, gameID, perspective, canMove, null);
 		}).fail (function (err) {
-			// FIXME: Use a custom error object instead of detecting the err message.
-			if (err.message.indexOf('Invalid Game ID') === 0) {
+			if (err instanceof customErrors.InvalidGameIdError) {
 				err.message = 'Invalid Game ID: ' + gameID.compositeID;
 			}
 			var deferred = q.defer();
