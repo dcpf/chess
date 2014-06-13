@@ -55,6 +55,10 @@ h3 {
   width: 180px;
 }
 
+#newGameForm, #existingGameForm {
+  padding-left: 20px;
+}
+
 #loadingCaptchaText {
   color: #999;
   font-style: italic;
