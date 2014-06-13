@@ -35,6 +35,9 @@ chess.AppContext = {
         appContext.enterGameView = new chess.EnterGameView({
             eventHandler: appContext.eventHandler
         });
+        appContext.forgotGameIdDialogView = new chess.ForgotGameIdDialogView({
+            eventHandler: appContext.eventHandler
+        });
         appContext.boardView = new chess.BoardView({
             board: appContext.board,
             eventHandler: appContext.eventHandler,
@@ -76,7 +79,7 @@ chess.AppContext = {
 
         this._appContext = appContext;
         return this._appContext;
-        
+
     }
 
 };

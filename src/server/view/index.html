@@ -34,7 +34,7 @@
           <fieldset disabled="disabled">
             <label for="gameID" style="white-space: nowrap">Game ID</label>
             <input type="text" id="gameID">
-            <!--div><a href="#">Forgot your game ID?</a></div-->
+            <div><a href="#" id="forgotGameIdLink">Forgot your game ID?</a></div>
           </fieldset>
         </div>
         <div><hr></div>
@@ -104,6 +104,18 @@
 </body>
 
 <!-- dialogs -->
+
+<div id="forgotGameIdDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>&nbsp;</h3>
+  </div>
+    <div class="modal-body" style="padding: 0 20px 15px 20px">
+        <p>Please enter your email address and click Submit</p>
+        <p><input type="email" id="forgotGameIdEmail" maxlength="50"></p>
+        <button type="button" class="btn btn-primary" id="forgotGameIdButton">Submit</button>
+    </div>
+</div>
 
 <div id="progressDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-body">

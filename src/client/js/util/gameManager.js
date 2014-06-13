@@ -88,6 +88,23 @@ chess.GameManager = function (attrs) {
             deferred.always(function() {
                 $("#progressDialog").modal('hide');
             });
+        },
+
+        /**
+        * Find game IDs by the provided email address
+        */
+        findGameIdsByEmail: function (email) {
+            var self = this;
+            $("#progressDialog").modal();
+            $.post('/findGameIdsByEmail', {
+                email: email
+            })
+            .done(function(res) {
+                self.eventHandler.trigger(self.eventHandler.messageNames.FOUND_GAME_IDS_BY_EMAIL, res);
+            })
+            .always(function() {
+                $("#progressDialog").modal('hide');
+            });
         }
 
     };
@@ -99,6 +116,7 @@ chess.GameManager = function (attrs) {
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.CREATE_GAME, obj.createGame);
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.ENTER_GAME, obj.enterGame);
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.SAVE_MOVE, obj.saveMove);
+    obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.FIND_GAME_IDS_BY_EMAIL, obj.findGameIdsByEmail);
 
     return obj;
 

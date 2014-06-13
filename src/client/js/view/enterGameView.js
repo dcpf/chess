@@ -35,6 +35,11 @@ chess.EnterGameView = Backbone.View.extend({
           self.$('#existingGameForm #gameID').focus();
         });
 
+        // assign click handler to the 'forgot game ID' link
+        self.$('#forgotGameIdLink').click(function() {
+          self.eventHandler.trigger(self.eventHandler.messageNames.FORGOT_GAME_ID_LINK_CLICKED);
+        });
+
         // assign the click handler to the submit button
         self.$('#enterGameSubmitButton').click(function() {
             var action = self.$("input[type='radio'][name='newOrExisting']:checked").val();
@@ -53,8 +58,7 @@ chess.EnterGameView = Backbone.View.extend({
                 params.gameID = self.$('#gameID').val().trim();
                 self.eventHandler.trigger(self.eventHandler.messageNames.ENTER_GAME, params);
             }
-
-		    });
+        });
 
     },
 

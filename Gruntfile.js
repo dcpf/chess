@@ -87,6 +87,7 @@ module.exports = function(grunt) {
                     'src/client/js/collection/moveHistory.js',
                     // load views
                     'src/client/js/view/enterGameView.js',
+                    'src/client/js/view/forgotGameIdDialogView.js',
                     'src/client/js/view/playGameView.js',
                     'src/client/js/view/optionsMenuView.js',
                     'src/client/js/view/boardView.js',
