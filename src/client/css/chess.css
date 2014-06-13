@@ -66,8 +66,8 @@ h3 {
   text-align: center;
 }
 
-/* Make the labels inside a disabled fieldset appear to be disabled as well */
-fieldset[disabled="disabled"] label {
+/* Make all elements inside a disabled fieldset appear to be disabled as well */
+fieldset[disabled="disabled"] > * {
   opacity: .3;
 }
 

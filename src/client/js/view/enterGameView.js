@@ -26,13 +26,11 @@ chess.EnterGameView = Backbone.View.extend({
         // assign click handlers to the radio buttons
         self.$('#newGameRadio').click(function() {
           self.$('#newGameForm fieldset').removeAttr('disabled');
-          self.$('#captcha').css('opacity', '1');
           self.$('#existingGameForm fieldset').attr('disabled', 'disabled');
           self.$('#newGameForm #player1Email').focus();
         });
         self.$('#existingGameRadio').click(function() {
           self.$('#newGameForm fieldset').attr('disabled', 'disabled');
-          self.$('#captcha').css('opacity', '.25');
           self.$('#existingGameForm fieldset').removeAttr('disabled');
           self.$('#existingGameForm #gameID').focus();
         });
