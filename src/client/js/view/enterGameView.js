@@ -23,15 +23,18 @@ chess.EnterGameView = Backbone.View.extend({
             self._createCaptcha(self);
         }
 
-        // assign focus handlers to the text input fields
-        self.$('#player1Email').focus(function() {
-            self._selectRadioButton(0);
+        // assign click handlers to the radio buttons
+        self.$('#newGameRadio').click(function() {
+          self.$('#newGameForm fieldset').removeAttr('disabled');
+          self.$('#captcha').css('opacity', '1');
+          self.$('#existingGameForm fieldset').attr('disabled', 'disabled');
+          self.$('#newGameForm #player1Email').focus();
         });
-        self.$('#player2Email').focus(function() {
-            self._selectRadioButton(0);
-        });
-        self.$('#gameID').focus(function() {
-            self._selectRadioButton(1);
+        self.$('#existingGameRadio').click(function() {
+          self.$('#newGameForm fieldset').attr('disabled', 'disabled');
+          self.$('#captcha').css('opacity', '.25');
+          self.$('#existingGameForm fieldset').removeAttr('disabled');
+          self.$('#existingGameForm #gameID').focus();
         });
 
         // assign the click handler to the submit button
@@ -53,7 +56,7 @@ chess.EnterGameView = Backbone.View.extend({
                 self.eventHandler.trigger(self.eventHandler.messageNames.ENTER_GAME, params);
             }
 
-		});
+		    });
 
     },
 
@@ -63,16 +66,9 @@ chess.EnterGameView = Backbone.View.extend({
 
     show: function (errorMsg) {
         this.$el.show();
+        this.$('#newGameForm #player1Email').focus();
         if (errorMsg) {
             this.eventHandler.trigger(this.eventHandler.messageNames.ERROR, errorMsg);
-        }
-    },
-
-    _selectRadioButton: function (num) {
-        num = parseInt(num, 10);
-        if ((num === 0 && !this.$('#gameID').val().trim()) ||
-            (num === 1 && !this.$('#player1Email').val().trim() && !this.$('#player2Email').val().trim())) {
-            this.$('input[name="newOrExisting"]')[num].click();
         }
     },
 

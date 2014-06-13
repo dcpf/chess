@@ -2,6 +2,9 @@
 
 /* Bootstrap over-rides begin */
 
+hr {
+  border-top-color: #999;
+}
 legend {
     border: 0;
     line-height: 20px;
@@ -38,12 +41,23 @@ h3 {
 }
 
 #enterGameTable {
-    margin-left: auto;
-    margin-right: auto;
+  border: 1px solid #999;
+  border-radius: 25px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  width: 500px;
 }
 
-#enterGameTable td {
-    padding-right: 10px;
+#enterGameTable label {
+  display: inline-block;
+  margin-right: 10px;
+  width: 180px;
+}
+
+/* Make the labels inside a disabled fieldset appear to be disabled as well */
+fieldset[disabled="disabled"] label {
+  opacity: .3;
 }
 
 input[type="radio"], input[type="checkbox"] {

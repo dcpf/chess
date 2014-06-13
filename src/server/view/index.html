@@ -15,43 +15,32 @@
 
     <!-- Create/enter view -->
     <div id="enterGameView" style="display: none">
-        <form>
-            <h3>Welcome to Dave's Chess-By-Email</h3>
-            <hr/>
-            <table id="enterGameTable">
-                <tr>
-                    <td colspan="2"><input type="radio" name="newOrExisting" value="N" checked>New Game</td>
-                </tr>
-                <tr>
-                    <td>Your Email Address</td>
-                    <td><input type="email" id="player1Email" maxlength="50"></td>
-                </tr>
-                <tr>
-                    <td>Opponent's Email Address</td>
-                    <td><input type="email" id="player2Email" maxlength="50"></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><div id="captcha"></div></td>
-                </tr>
-                <tr><td colspan="2"><hr></td></tr>
-                <tr>
-                    <td colspan="2"><input type="radio" name="newOrExisting" value="E">Continue Existing Game</td>
-                </tr>
-                <tr>
-                    <td>Game ID</td>
-                    <td><input type="text" id="gameID"></td>
-                </tr>
-                <!--tr>
-                    <td colspan="2"><a href="forgot_passcode.pl">Forgot Your Pass Code?</a></td>
-                </tr-->
-                <tr>
-                    <td colspan="2" align="center" style="padding-top: 40px">
-                        <input type="button" value="Submit" id="enterGameSubmitButton">&nbsp;
-                        <input type="reset" value="Clear">
-                    </td>
-                </tr>
-            </table>
-        </form>
+      <h3>Welcome to Dave's Chess-By-Email</h3>
+      <hr/>
+      <div id="enterGameTable">
+        <input type="radio" name="newOrExisting" id="newGameRadio" value="N" checked><label for="newGameRadio" style="font-weight: bold">New Game</label>
+        <div id="newGameForm">
+          <fieldset>
+            <label for="player1Email" style="white-space: nowrap">Your Email Address</label>
+            <input type="email" id="player1Email" maxlength="50">
+            <label for="player2Email" style="white-space: nowrap">Opponent's Email Address</label>
+            <input type="email" id="player2Email" maxlength="50">
+          </fieldset>
+          <div id="captcha"></div>
+        </div>
+        <div><hr></div>
+        <input type="radio" name="newOrExisting" id="existingGameRadio" value="E"><label for="existingGameRadio" style="font-weight: bold">Continue Existing Game</label>
+        <div id="existingGameForm">
+          <fieldset disabled="disabled">
+            <label for="gameID" style="white-space: nowrap">Game ID</label>
+            <input type="text" id="gameID">
+          </fieldset>
+        </div>
+        <div align="center" style="padding-top: 20px">
+          <button type="button" class="btn btn-primary" id="enterGameSubmitButton">Submit</button>
+          <button type="reset" class="btn">Clear</button>
+        </div>
+      </div>
     </div>
 
     <!-- Play game view-->
