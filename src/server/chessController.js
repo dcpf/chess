@@ -200,26 +200,26 @@ function _createGame (player1Email, player2Email) {
 }
 
 function _enterExistingGame (gameID) {
-    return gameDao.getGameObject(gameID.id).then(function (gameObj) {
-        var perspective = _getPerspective(gameObj, gameID.key);
-        var canMove = _playerCanMove(gameObj, gameID.key);
-        return _buildEnterGameAttrMap(gameObj, gameID, perspective, canMove, null);
-		}).fail (function (err) {
-			if (err instanceof customErrors.InvalidGameIdError) {
-				err.message = 'Invalid Game ID: ' + gameID.compositeID;
-			}
-			var deferred = q.defer();
-			deferred.reject(err);
-			return deferred.promise;
-		});
+	var deferred = q.defer();
+	gameDao.getGameObject(gameID.id).then(function (gameObj) {
+		var perspective = _getPerspective(gameObj, gameID.key);
+		var canMove = _playerCanMove(gameObj, gameID.key);
+		deferred.resolve(_buildEnterGameAttrMap(gameObj, gameID, perspective, canMove, null));
+	}).fail (function (err) {
+		if (err instanceof customErrors.InvalidGameIdError) {
+			err.message = 'Invalid Game ID: ' + gameID.compositeID;
+		}
+		deferred.reject(err);
+	});
+	return deferred.promise;
 }
 
 function _generateKey () {
 	var s = '';
-    for (let i = 0; i < 5; i++) {
-        s += KEY_CHARS.charAt(Math.floor(Math.random() * KEY_CHARS.length));
-    }
-    return s;
+	for (let i = 0; i < 5; i++) {
+		s += KEY_CHARS.charAt(Math.floor(Math.random() * KEY_CHARS.length));
+	}
+	return s;
 }
 
 function _getPerspective (gameObj, key) {
