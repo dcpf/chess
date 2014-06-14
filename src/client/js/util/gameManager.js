@@ -14,32 +14,32 @@ chess.GameManager = function (attrs) {
         createGame: function (params) {
             var self = this;
             $("#progressDialog").modal();
-            var deferred = $.post('/createGame', params);
-            deferred.done(function(res) {
+            $.post('/createGame', params)
+              .done(function(res) {
                 self.startGame(res);
                 self.eventHandler.trigger(self.eventHandler.messageNames.GAME_CREATED);
-            });
-            deferred.fail(function(jqXHR) {
+              })
+              .fail(function(jqXHR) {
                 self.eventHandler.trigger(self.eventHandler.messageNames.CREATE_GAME_ERROR, jqXHR.responseText);
-            });
-            deferred.always(function() {
+              })
+              .always(function() {
                 $("#progressDialog").modal('hide');
-            });
+              });
         },
 
         enterGame: function (params) {
             var self = this;
             $("#progressDialog").modal();
-            var deferred = $.post('/enterGame', params);
-            deferred.done(function(res) {
+            $.post('/enterGame', params)
+              .done(function(res) {
                 self.startGame(res);
-            });
-            deferred.fail(function(jqXHR) {
+              })
+              .fail(function(jqXHR) {
                 self.eventHandler.trigger(self.eventHandler.messageNames.ENTER_GAME_ERROR, jqXHR.responseText);
-            });
-            deferred.always(function() {
+              })
+              .always(function() {
                 $("#progressDialog").modal('hide');
-            });
+              });
         },
 
         startGame: function (attrs) {
@@ -78,16 +78,16 @@ chess.GameManager = function (attrs) {
         saveMove: function (notation) {
             var self = this;
             $("#progressDialog").modal();
-            var deferred = $.post('/saveMove', {
+            $.post('/saveMove', {
                 gameID: chess.vars.gameID,
                 move: notation
-            });
-            deferred.done(function(res) {
+            })
+              .done(function(res) {
                 self.eventHandler.trigger(self.eventHandler.messageNames.MOVE_SAVED, res);
-            });
-            deferred.always(function() {
+              })
+              .always(function() {
                 $("#progressDialog").modal('hide');
-            });
+              });
         },
 
         /**
