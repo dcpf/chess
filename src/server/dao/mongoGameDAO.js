@@ -23,13 +23,15 @@ var getGameObject = function (gameID) {
         return deferred.promise;
     }
 
-    db.games.findOne({_id: id}, function (err, game) {
+    db.games.findOne({_id: id}, function (err, record) {
         if (err) {
-            deferred.reject(err);
-        } else if (!game) {
-            deferred.reject(new customErrors.InvalidGameIdError());
+          deferred.reject(err);
+        } else if (!record) {
+          deferred.reject(new customErrors.InvalidGameIdError());
         } else {
-            deferred.resolve(game.gameObj);
+          // Set the id field in the game object for convenience
+          record.gameObj.id = gameID;
+          deferred.resolve(record.gameObj);
         }
     });
 
@@ -57,6 +59,45 @@ var createGame = function (gameObj) {
    return saveGame(null, gameObj);
 };
 
+/**
+* Find games by email address
+*/
+var findGamesByEmail = function (email) {
+
+    var deferred = q.defer();
+
+    db.games.find(
+      { $or: [
+          {'gameObj.W.email': email},
+          {'gameObj.B.email': email}
+        ]
+      },
+      function (err, records) {
+        if (err) {
+          deferred.reject(err);
+        } else {
+          let gamesArray = [];
+          if (records) {
+            let numRecords = records.length,
+                record = null,
+                gameObj = null;
+            for (let i = 0; i < numRecords; i++) {
+              record = records[i];
+              gameObj = record.gameObj;
+              // Set the id field in the game object for convenience
+              gameObj.id = record._id.toHexString();
+              gamesArray.push(gameObj);
+            }
+          }
+          deferred.resolve(gamesArray);
+        }
+    });
+
+    return deferred.promise;
+
+};
+
 exports.getGameObject = getGameObject;
 exports.saveGame = saveGame;
 exports.createGame = createGame;
+exports.findGamesByEmail = findGamesByEmail;

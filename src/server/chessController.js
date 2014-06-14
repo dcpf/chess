@@ -25,7 +25,7 @@ function createGame (ip, postData) {
 
             console.log('captcha validation passed');
 
-            // get emails and validate tham
+            // get emails and validate them
             var player1Email = postData.player1Email;
             var player2Email = postData.player2Email;
             try {
@@ -110,11 +110,45 @@ function buildDefaultEnterGameAttrMap (error) {
 	return _buildEnterGameAttrMap({}, '', '', false, error);
 }
 
+function findGamesByEmail (email) {
+
+	// Lower-case the email address to make sure our queries work
+	email = email.toLowerCase();
+	var deferred = q.defer();
+
+	gameDao.findGamesByEmail(email)
+		.then(function (games) {
+			let gameIDs = [];
+			if (games) {
+				let numGames = games.length,
+						gameObj = null,
+						gameID = null;
+				for (let i = 0; i < numGames; i++) {
+					gameObj = games[i];
+					if (gameObj.W.email === email) {
+						gameID = gameIdFactory.getGameID(gameObj.id, gameObj.W.key);
+					} else if (gameObj.B.email === email) {
+						gameID = gameIdFactory.getGameID(gameObj.id, gameObj.B.key);
+					}
+					gameIDs.push(gameID.compositeID);
+				}
+				deferred.resolve(gameIDs);
+			}
+		})
+		.fail (function (err) {
+			deferred.reject(err);
+		});
+
+	return deferred.promise;
+
+}
+
 exports.createGame = createGame;
 exports.enterGame = enterGame;
 exports.saveMove = saveMove;
 exports.updateUserPrefs = updateUserPrefs;
 exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
+exports.findGamesByEmail = findGamesByEmail;
 
 //
 // private functions
@@ -178,14 +212,14 @@ function _createGame (player1Email, player2Email) {
         blackKey = _generateKey();
     }
 
-    // Build the game object
+    // Build the game object, normalizing the email address to lower-case.
     var gameObj = {
         W: {
-            email: player1Email,
+            email: player1Email.toLowerCase(),
             key: whiteKey
         },
         B: {
-            email: player2Email,
+            email: player2Email.toLowerCase(),
             key: blackKey
         }
     };
