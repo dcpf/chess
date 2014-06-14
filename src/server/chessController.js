@@ -2,7 +2,7 @@
 
 var fs = require('fs');
 var q = require('q');
-var gameIdFactory = require('./model/gameIdFactory');
+var gameIdFactory = require('./model/mongoGameIdFactory');
 var gameDao = require('./dao/mongoGameDAO');
 var userPrefsDao = require('./dao/mongoUserPrefsDAO');
 var validator = require('validator');
