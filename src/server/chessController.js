@@ -118,9 +118,9 @@ function findGamesByEmail (email) {
 
 	gameDao.findGamesByEmail(email)
 		.then(function (games) {
-			let gameIDs = [];
 			if (games) {
-				let numGames = games.length,
+				let gameIDs = [],
+						numGames = games.length,
 						gameObj = null,
 						gameID = null;
 				for (let i = 0; i < numGames; i++) {
@@ -133,7 +133,9 @@ function findGamesByEmail (email) {
 					gameIDs.push(gameID);
 				}
 				emailHandler.sendForgotGameIdEmail(email, gameIDs);
-				deferred.resolve(gameIDs);
+				deferred.resolve({status: 'ok', email: email});
+			} else {
+				deferred.resolve({status: 'no games found', email: email});
 			}
 		})
 		.fail (function (err) {

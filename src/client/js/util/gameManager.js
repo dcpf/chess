@@ -97,13 +97,18 @@ chess.GameManager = function (attrs) {
             var self = this;
             $("#progressDialog").modal();
             $.post('/findGameIdsByEmail', {
-                email: email
+              email: email
             })
             .done(function(res) {
+              if (res.status === 'no games found') {
+                self.eventHandler.trigger(self.eventHandler.messageNames.FOUND_NO_GAME_IDS_BY_EMAIL, res);
+              } else {
+                // assume it was success
                 self.eventHandler.trigger(self.eventHandler.messageNames.FOUND_GAME_IDS_BY_EMAIL, res);
+              }
             })
             .always(function() {
-                $("#progressDialog").modal('hide');
+              $("#progressDialog").modal('hide');
             });
         }
 

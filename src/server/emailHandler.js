@@ -83,24 +83,24 @@ exports.sendForgotGameIdEmail = function (email, gameIDs) {
   var numGameIDs = gameIDs.length,
       gameID,
       url,
-      gameURLs = [],
+      gameArray = [],
       i;
 
   for (i = 0; i < numGameIDs; i++) {
     gameID = gameIDs[i];
     url = _buildGameUrl(gameID);
-    gameURLs.push(url);
+    gameArray.push({id: gameID.compositeID, url: url});
   }
 
   var html = templateHandler.processTemplate(emailSrcDir + 'forgotGameIdEmail.html', {
     email: email,
-    gameURLs: gameURLs
+    gameArray: gameArray
   });
 
   mailTransport.sendMail({
     from: emailServiceConfig.fromAddress,
     to: email,
-    subject: 'Chess Games for ' + email,
+    subject: 'Chess games for ' + email,
     html: html
   });
 

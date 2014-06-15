@@ -32,6 +32,7 @@ chess.EventHandler.prototype.messageNames = {
 	FORGOT_GAME_ID_LINK_CLICKED: 'forgotGameIdLinkClicked',
 	FIND_GAME_IDS_BY_EMAIL: 'findGameIdsByEmail',
 	FOUND_GAME_IDS_BY_EMAIL: 'foundGameIdsByEmail',
+	FOUND_NO_GAME_IDS_BY_EMAIL: 'foundNoGameIdsByEmail',
 	UPDATED_LEGAL_MOVES: 'updatedLegalMoves',
 	RENDER_CONFIRM_MOVE_DIALOG: 'renderConfirmMoveDialog',
 	MOVE_CONFIRMED: 'moveConfirmed',

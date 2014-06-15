@@ -13,9 +13,11 @@ chess.ForgotGameIdDialogView = Backbone.View.extend({
 
         this.eventHandler = this.options.eventHandler;
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FORGOT_GAME_ID_LINK_CLICKED, this._renderDialog);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.FOUND_GAME_IDS_BY_EMAIL, this._renderSuccess);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.FOUND_NO_GAME_IDS_BY_EMAIL, this._renderNoGamesFound);
 
         var self = this;
-        self.$('#forgotGameIdButton').click(function() {
+        self.$('#forgotGameIdSubmitButton').click(function() {
           var email = self.$("#forgotGameIdEmail").val();
           self.eventHandler.trigger(self.eventHandler.messageNames.FIND_GAME_IDS_BY_EMAIL, email);
         });
@@ -24,6 +26,22 @@ chess.ForgotGameIdDialogView = Backbone.View.extend({
 
     _renderDialog: function () {
         this.$el.modal();
+        this.$('#forgotGameIdForm').show();
+        this.$('#forgotGameIdSuccess').hide();
+        this.$('#forgotGameIdNoGamesFound').hide();
+    },
+
+    _renderSuccess: function (res) {
+        this.$('#forgotGameIdForm').hide();
+        this.$('#forgotGameIdSuccess').show();
+        this.$('.forgotGameIdEmail').text(res.email);
+    },
+
+    _renderNoGamesFound: function (res) {
+        this.$('#forgotGameIdForm').show();
+        this.$('#forgotGameIdSuccess').hide();
+        this.$('#forgotGameIdNoGamesFound').show();
+        this.$('.forgotGameIdEmail').text(res.email);
     }
 
 });
