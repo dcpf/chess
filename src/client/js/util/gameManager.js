@@ -93,18 +93,18 @@ chess.GameManager = function (attrs) {
         /**
         * Find game IDs by the provided email address
         */
-        findGameIdsByEmail: function (email) {
+        findGamesByEmail: function (email) {
             var self = this;
             $("#progressDialog").modal();
-            $.post('/findGameIdsByEmail', {
+            $.post('/findGamesByEmail', {
               email: email
             })
             .done(function(res) {
               if (res.status === 'no games found') {
-                self.eventHandler.trigger(self.eventHandler.messageNames.FOUND_NO_GAME_IDS_BY_EMAIL, res);
+                self.eventHandler.trigger(self.eventHandler.messageNames.FOUND_NO_GAMES_BY_EMAIL, res);
               } else {
                 // assume it was success
-                self.eventHandler.trigger(self.eventHandler.messageNames.FOUND_GAME_IDS_BY_EMAIL, res);
+                self.eventHandler.trigger(self.eventHandler.messageNames.FOUND_GAMES_BY_EMAIL, res);
               }
             })
             .always(function() {
@@ -121,7 +121,7 @@ chess.GameManager = function (attrs) {
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.CREATE_GAME, obj.createGame);
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.ENTER_GAME, obj.enterGame);
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.SAVE_MOVE, obj.saveMove);
-    obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.FIND_GAME_IDS_BY_EMAIL, obj.findGameIdsByEmail);
+    obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.FIND_GAMES_BY_EMAIL, obj.findGamesByEmail);
 
     return obj;
 

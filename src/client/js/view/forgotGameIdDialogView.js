@@ -13,13 +13,13 @@ chess.ForgotGameIdDialogView = Backbone.View.extend({
 
         this.eventHandler = this.options.eventHandler;
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FORGOT_GAME_ID_LINK_CLICKED, this._renderDialog);
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.FOUND_GAME_IDS_BY_EMAIL, this._renderSuccess);
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.FOUND_NO_GAME_IDS_BY_EMAIL, this._renderNoGamesFound);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.FOUND_GAMES_BY_EMAIL, this._renderSuccess);
+        this.listenTo(this.eventHandler, this.eventHandler.messageNames.FOUND_NO_GAMES_BY_EMAIL, this._renderNoGamesFound);
 
         var self = this;
         self.$('#forgotGameIdSubmitButton').click(function() {
           var email = self.$("#forgotGameIdEmail").val();
-          self.eventHandler.trigger(self.eventHandler.messageNames.FIND_GAME_IDS_BY_EMAIL, email);
+          self.eventHandler.trigger(self.eventHandler.messageNames.FIND_GAMES_BY_EMAIL, email);
         });
 
     },

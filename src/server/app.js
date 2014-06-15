@@ -42,7 +42,7 @@ app.disable('x-powered-by');
 
 // routes
 app.get('/', routes.index);
-app.post('/findGameIdsByEmail', routes.findGameIdsByEmail);
+app.post('/findGamesByEmail', routes.findGamesByEmail);
 app.post('/createGame', routes.createGame);
 app.post('/enterGame', routes.enterGame);
 app.post('/saveMove', routes.saveMove);

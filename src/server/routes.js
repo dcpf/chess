@@ -46,8 +46,8 @@ exports.index = function (req, res) {
     }
 };
 
-exports.findGameIdsByEmail = function (req, res) {
-  logRequest(req, 'findGameIdsByEmail');
+exports.findGamesByEmail = function (req, res) {
+  logRequest(req, 'findGamesByEmail');
   var params = getParams(req)
   chessController.findGamesByEmail(params.email)
     .then(function (obj) {
