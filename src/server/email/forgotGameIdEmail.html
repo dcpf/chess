@@ -1,0 +1,5 @@
+<p>The following chess games were found for the email address <%= email %>:</p>
+
+<ul>
+  <% _.each(gameURLs, function(gameURL) { %> <li><%= gameURL %></li> <% }); %>
+</ul>

@@ -32,7 +32,7 @@ exports.sendGameCreationEmail = function (player1Email, player2Email, gameID) {
 	});
 
 	console.log('Sent game creation email to ' + player1Email + ' with gameID: ' + gameID.compositeID);
-	
+
 };
 
 exports.sendInviteEmail = function (player1Email, player2Email, gameID, move) {
@@ -52,7 +52,7 @@ exports.sendInviteEmail = function (player1Email, player2Email, gameID, move) {
 	});
 
 	console.log('Sent game invitation email to ' + player2Email + ' with gameID: ' + gameID.compositeID);
-	
+
 };
 
 exports.sendMoveNotificationEmail = function (playerEmail, gameID, move) {
@@ -71,7 +71,41 @@ exports.sendMoveNotificationEmail = function (playerEmail, gameID, move) {
 	});
 
 	console.log('Sent move notification email to ' + playerEmail);
-	
+
+};
+
+/**
+* @param String email
+* @param Array gameID objects
+*/
+exports.sendForgotGameIdEmail = function (email, gameIDs) {
+
+  var numGameIDs = gameIDs.length,
+      gameID,
+      url,
+      gameURLs = [],
+      i;
+
+  for (i = 0; i < numGameIDs; i++) {
+    gameID = gameIDs[i];
+    url = _buildGameUrl(gameID);
+    gameURLs.push(url);
+  }
+
+  var html = templateHandler.processTemplate(emailSrcDir + 'forgotGameIdEmail.html', {
+    email: email,
+    gameURLs: gameURLs
+  });
+
+  mailTransport.sendMail({
+    from: emailServiceConfig.fromAddress,
+    to: email,
+    subject: 'Chess Games for ' + email,
+    html: html
+  });
+
+  console.log('Sent forgot gameID email to ' + email);
+
 };
 
 function _buildGameUrl (gameID) {

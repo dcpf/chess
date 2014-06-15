@@ -130,8 +130,9 @@ function findGamesByEmail (email) {
 					} else if (gameObj.B.email === email) {
 						gameID = gameIdFactory.getGameID(gameObj.id, gameObj.B.key);
 					}
-					gameIDs.push(gameID.compositeID);
+					gameIDs.push(gameID);
 				}
+				emailHandler.sendForgotGameIdEmail(email, gameIDs);
 				deferred.resolve(gameIDs);
 			}
 		})
