@@ -20,28 +20,19 @@ chess.EnterGameView = Backbone.View.extend({
         // initalize the captcha
         if (chess.config.recaptcha.enabled) {
             document.write('<script src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"><\/script>');
-            self._createCaptcha(self);
+            this._createCaptcha(self);
         }
 
         // assign click handlers to the radio buttons
-        self.$('#newGameRadio').click(function() {
-          self.$('#newGameForm fieldset').removeAttr('disabled');
-          self.$('#existingGameForm fieldset').attr('disabled', 'disabled');
-          self.$('#newGameForm #player1Email').focus();
+        this.$('#newGameRadio').click(function() {
+          self._enableNewGameForm();
         });
-        self.$('#existingGameRadio').click(function() {
-          self.$('#newGameForm fieldset').attr('disabled', 'disabled');
-          self.$('#existingGameForm fieldset').removeAttr('disabled');
-          self.$('#existingGameForm #gameID').focus();
-        });
-
-        // assign click handler to the 'forgot game ID' link
-        self.$('#forgotGameIdLink').click(function() {
-          self.eventHandler.trigger(self.eventHandler.messageNames.FORGOT_GAME_ID_LINK_CLICKED);
+        this.$('#existingGameRadio').click(function() {
+          self._enableEnterGameForm();
         });
 
         // assign the click handler to the submit button
-        self.$('#enterGameSubmitButton').click(function() {
+        this.$('#enterGameSubmitButton').click(function() {
             var action = self.$("input[type='radio'][name='newOrExisting']:checked").val();
             var params = {action: action};
             if (action === 'N') {
@@ -68,7 +59,7 @@ chess.EnterGameView = Backbone.View.extend({
 
     show: function (errorMsg) {
         this.$el.show();
-        this.$('#newGameForm #player1Email').focus();
+        this._enableNewGameForm(this);
         if (errorMsg) {
             this.eventHandler.trigger(this.eventHandler.messageNames.ERROR, errorMsg);
         }
@@ -91,6 +82,31 @@ chess.EnterGameView = Backbone.View.extend({
                 }
             );
         }
+    },
+
+    /**
+    * Enables the "new game" form and disables the "enter game" form
+    */
+    _enableNewGameForm: function () {
+      this.$('#newGameForm fieldset').removeAttr('disabled');
+      this.$('#existingGameForm fieldset').attr('disabled', 'disabled');
+      this.$('#forgotGameIdLink').addClass('disabledLink');
+      this.$('#forgotGameIdLink').off('click');
+      this.$('#newGameForm #player1Email').focus();
+    },
+
+    /**
+    * Enables the "enter game" form and disables the "new game" form
+    */
+    _enableEnterGameForm: function () {
+      var self = this;
+      this.$('#newGameForm fieldset').attr('disabled', 'disabled');
+      this.$('#existingGameForm fieldset').removeAttr('disabled');
+      this.$('#forgotGameIdLink').removeClass('disabledLink');
+      this.$('#forgotGameIdLink').click(function() {
+        self.eventHandler.trigger(self.eventHandler.messageNames.FORGOT_GAME_ID_LINK_CLICKED);
+      });
+      this.$('#existingGameForm #gameID').focus();
     },
 
     _createGameError: function (errMsg) {

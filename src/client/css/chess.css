@@ -36,6 +36,11 @@ legend {
 
 /* enter game form begin */
 
+.disabledLink:link, .disabledLink:visited, .disabledLink:hover, .disabledLink:active {
+  cursor: text;
+  text-decoration: none;
+}
+
 h3 {
     text-align: center;
 }
