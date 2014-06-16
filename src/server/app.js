@@ -67,7 +67,7 @@ function initConfig () {
 
   // Get the passed-in args
   var argMap = {};
-  process.argv.forEach(function (val, index, array) {
+  process.argv.forEach(function (val) {
     if (val.indexOf('=') > 0) {
       let array = val.split('=');
       argMap[array[0]] = array[1];
