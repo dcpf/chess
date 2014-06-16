@@ -39,20 +39,37 @@ var getGameObject = function (gameID) {
 
 };
 
+/**
+* @param String gameID
+* @param Object gameObj
+*/
 var saveGame = function (gameID, gameObj) {
-  var deferred = q.defer();
-  var id = (gameID) ? mongojs.ObjectId(gameID) : null;
+
+  var deferred = q.defer(),
+      id = null;
+
+  gameObj.modifyDate = new Date();
+  if (gameID) {
+    // If the ID was passed in, it's an existing game
+    id = mongojs.ObjectId(gameID);
+  } else {
+    // Else, it's a new game
+    gameObj.createDate = gameObj.modifyDate;
+  }
+
 	db.games.save({_id: id, gameObj: gameObj}, function (err, savedObj) {
-        if (err) {
-            deferred.reject(err);
-        } else if (!savedObj) {
-            deferred.reject(new Error('Game ' + gameID + ' not saved'));
-        } else {
-            gameID = gameID || savedObj._id.toHexString();
-            deferred.resolve(gameID);
-        }
-    });
-    return deferred.promise;
+    if (err) {
+      deferred.reject(err);
+    } else if (!savedObj) {
+      deferred.reject(new Error('Game ' + gameID + ' not saved'));
+    } else {
+      gameID = gameID || savedObj._id.toHexString();
+      deferred.resolve(gameID);
+    }
+  });
+
+  return deferred.promise;
+
 };
 
 var createGame = function (gameObj) {
