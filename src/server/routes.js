@@ -48,7 +48,7 @@ exports.index = function (req, res) {
 
 exports.findGamesByEmail = function (req, res) {
   logRequest(req, 'findGamesByEmail');
-  var params = getParams(req)
+  var params = getParams(req);
   chessController.findGamesByEmail(params.email)
     .then(function (obj) {
       doJsonOutput(res, obj);
