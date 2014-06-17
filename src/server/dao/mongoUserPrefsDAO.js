@@ -7,15 +7,23 @@ var databaseUrl = GLOBAL.CONFIG.db.databaseUrl;
 var db = mongojs(databaseUrl, ['userPrefs']);
 
 var setUserPref = function (email, name, value) {
-    
+
     var deferred = q.defer();
     getUserPrefs(email)
         .then(function (userPrefs) {
             userPrefs.prefs = userPrefs.prefs || {};
-            value = _valueConverter(value);
             var id = userPrefs._id || null;
-            userPrefs.prefs[name] = value;
-            db.userPrefs.save({_id: id, email: email, prefs: userPrefs.prefs}, function (err, savedObj) {
+            var modifyDate = new Date();
+            var createDate = userPrefs.createDate || modifyDate;
+            userPrefs.prefs[name] = _valueConverter(value);;
+            var obj = {
+              _id: id,
+              createDate: createDate,
+              modifyDate: modifyDate,
+              email: email,
+              prefs: userPrefs.prefs
+            };
+            db.userPrefs.save(obj, function (err, savedObj) {
                 if (err) {
                     deferred.reject(err);
                 } else if (!savedObj) {
@@ -29,9 +37,9 @@ var setUserPref = function (email, name, value) {
         .fail(function (err) {
             deferred.reject(err);
         });
-    
+
     return deferred.promise;
-    
+
 };
 
 var getUserPrefs = function (email) {
