@@ -116,20 +116,7 @@ var findGamesByEmail = function (email) {
         if (err) {
           deferred.reject(err);
         } else {
-          let gamesArray = [];
-          if (records) {
-            let numRecords = records.length,
-                record = null,
-                gameObj = null;
-            for (let i = 0; i < numRecords; i++) {
-              record = records[i];
-              gameObj = record.gameObj;
-              // Set the id field in the game object for convenience
-              gameObj.id = record._id.toHexString();
-              gamesArray.push(gameObj);
-            }
-          }
-          deferred.resolve(gamesArray);
+          deferred.resolve(records);
         }
     });
 

@@ -1,5 +1,16 @@
 <p>The following chess games were found for the email address <%= email %>:</p>
 
-<ul>
-  <% _.each(gameArray, function(game) { %> <li><a href="<%= game.url %>"><%= game.id %></a></li> <% }); %>
-</ul>
+<table border="1" cellspacing="1" cellpadding="5">
+  <tr>
+    <th>Game Link</th>
+    <th>Date Created</th>
+    <th>Last Move</th>
+  </tr>
+  <% _.each(gameArray, function(game) { %>
+    <tr>
+      <td><a href="<%= game.url %>"><%= game.id %></a></td>
+      <td><%= game.createDate %></td>
+      <td><%= game.modifyDate %></td>
+    </tr>
+  <% }); %>
+</table>

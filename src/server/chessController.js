@@ -117,22 +117,30 @@ function findGamesByEmail (email) {
 	var deferred = q.defer();
 
 	gameDao.findGamesByEmail(email)
-		.then(function (games) {
-			if (games) {
-				let gameIDs = [],
-						numGames = games.length,
-						gameObj = null,
-						gameID = null;
+		.then(function (records) {
+			if (records) {
+				let games = [],
+					numGames = records.length,
+					record = null,
+					gameObj = null,
+					gameID = null;
 				for (let i = 0; i < numGames; i++) {
-					gameObj = games[i];
+					record = records[i];
+					gameObj = record.gameObj;
 					if (gameObj.W.email === email) {
-						gameID = gameIdFactory.getGameID(gameObj.id, gameObj.W.key);
+						gameID = gameIdFactory.getGameID(record._id.toHexString(), gameObj.W.key);
 					} else if (gameObj.B.email === email) {
-						gameID = gameIdFactory.getGameID(gameObj.id, gameObj.B.key);
+						gameID = gameIdFactory.getGameID(record._id.toHexString(), gameObj.B.key);
 					}
-					gameIDs.push(gameID);
+					games.push(
+						{
+							gameID: gameID,
+							createDate: record.createDate,
+							modifyDate: record.modifyDate
+						}
+					);
 				}
-				emailHandler.sendForgotGameIdEmail(email, gameIDs);
+				emailHandler.sendForgotGameIdEmail(email, games);
 				deferred.resolve({status: 'ok', email: email});
 			} else {
 				deferred.resolve({status: 'no games found', email: email});

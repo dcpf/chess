@@ -76,20 +76,27 @@ exports.sendMoveNotificationEmail = function (playerEmail, gameID, move) {
 
 /**
 * @param String email
-* @param Array gameID objects
+* @param Array of game objects
 */
-exports.sendForgotGameIdEmail = function (email, gameIDs) {
+exports.sendForgotGameIdEmail = function (email, games) {
 
-  var numGameIDs = gameIDs.length,
+  var numGames = games.length,
+      game,
       gameID,
-      url,
       gameArray = [],
       i;
 
-  for (i = 0; i < numGameIDs; i++) {
-    gameID = gameIDs[i];
-    url = _buildGameUrl(gameID);
-    gameArray.push({id: gameID.compositeID, url: url});
+  for (i = 0; i < numGames; i++) {
+    game = games[i];
+    gameID = game.gameID;
+    gameArray.push(
+      {
+        id: gameID.compositeID,
+        createDate: game.createDate,
+        modifyDate: game.modifyDate,
+        url: _buildGameUrl(gameID)
+      }
+    );
   }
 
   var html = templateHandler.processTemplate(emailSrcDir + 'forgotGameIdEmail.html', {
