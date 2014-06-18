@@ -70,7 +70,7 @@ function saveMove (postData) {
                 let move = postData.move;
                 gameObj.moveHistory.push(move);
 
-                gameDao.saveGame(gameID.id, gameObj)
+                gameDao.updateMoveHistory(gameID.id, gameObj.moveHistory)
                     .then(function () {
                       console.log('Updated game ' + gameID.id + ' with move ' + move);
 											var opponentEmail = '';

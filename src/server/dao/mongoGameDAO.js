@@ -29,8 +29,6 @@ var getGameObject = function (gameID) {
         } else if (!record) {
           deferred.reject(new customErrors.InvalidGameIdError());
         } else {
-          // Set the id field in the game object for convenience
-          record.gameObj.id = gameID;
           deferred.resolve(record.gameObj);
         }
     });
@@ -41,39 +39,64 @@ var getGameObject = function (gameID) {
 
 /**
 * @param String gameID
-* @param Object gameObj
+* @param Array moveHistory
 */
-var saveGame = function (gameID, gameObj) {
+var updateMoveHistory = function (gameID, moveHistory) {
 
-  var deferred = q.defer(),
-      id = null;
+  var deferred = q.defer();
 
-  gameObj.modifyDate = new Date();
-  if (gameID) {
-    // If the ID was passed in, it's an existing game
-    id = mongojs.ObjectId(gameID);
-  } else {
-    // Else, it's a new game
-    gameObj.createDate = gameObj.modifyDate;
-  }
-
-	db.games.save({_id: id, gameObj: gameObj}, function (err, savedObj) {
-    if (err) {
-      deferred.reject(err);
-    } else if (!savedObj) {
-      deferred.reject(new Error('Game ' + gameID + ' not saved'));
-    } else {
-      gameID = gameID || savedObj._id.toHexString();
-      deferred.resolve(gameID);
-    }
+  db.games.update(
+    // query
+    { _id: mongojs.ObjectId(gameID) },
+    // update fields
+    {
+      $set: {
+        modifyDate: new Date(),
+        "gameObj.moveHistory": moveHistory
+      }
+    },
+    // options
+    {},
+    // callback
+    function (err, savedObj) {
+      if (err) {
+        deferred.reject(err);
+      } else if (!savedObj) {
+        deferred.reject(new Error('Game ' + gameID + ' not saved'));
+      } else {
+        deferred.resolve(gameID);
+      }
   });
 
   return deferred.promise;
 
 };
 
+/**
+* @param Object gameObj
+*/
 var createGame = function (gameObj) {
-   return saveGame(null, gameObj);
+
+   var deferred = q.defer();
+   var obj = {
+     _id: null,
+     createDate: new Date(),
+     modifyDate: new Date(),
+     gameObj: gameObj
+   };
+
+   db.games.insert(obj, function (err, savedObj) {
+     if (err) {
+       deferred.reject(err);
+     } else if (!savedObj) {
+       deferred.reject(new Error('Game ' + gameID + ' not saved'));
+     } else {
+       deferred.resolve(savedObj._id.toHexString());
+     }
+   });
+
+   return deferred.promise;
+
 };
 
 /**
@@ -115,6 +138,6 @@ var findGamesByEmail = function (email) {
 };
 
 exports.getGameObject = getGameObject;
-exports.saveGame = saveGame;
+exports.updateMoveHistory = updateMoveHistory;
 exports.createGame = createGame;
 exports.findGamesByEmail = findGamesByEmail;

@@ -155,7 +155,8 @@ function doJsonOutput (res, obj) {
 }
 
 function doErrorOutput (res, err) {
-	res.writeHead(500, {'Content-Type': 'text/html'});
+  console.error(err);
+  res.writeHead(500, {'Content-Type': 'text/html'});
   res.write(err.message);
 	res.end();
 }

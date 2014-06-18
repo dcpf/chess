@@ -25,12 +25,15 @@ function getAllGames () {
       if (err) {
         console.log(err);
       } else {
-        console.log(records);
+        let numRecords = records.length;
+        for (let i = 0; i < numRecords; i++) {
+          console.log(records[i]);
+        }
       }
   });
 };
 
-function removeAllGames () {
+function deleteAllGames () {
   db.games.remove();
 };
 
@@ -40,6 +43,6 @@ if (f === 'getGameById') {
   getGameById(process.argv[3]);
 } else if (f === 'getAllGames') {
   getAllGames();
-} else if (f === 'removeAllGames') {
-  removeAllGames();
+} else if (f === 'deleteAllGames') {
+  deleteAllGames();
 }
