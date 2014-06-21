@@ -22,9 +22,9 @@
         <div id="newGameForm">
           <fieldset>
             <label for="player1Email" style="white-space: nowrap">Your Email Address</label>
-            <input type="email" id="player1Email" maxlength="50">
+            <input type="email" id="player1Email" maxlength="50" required>
             <label for="player2Email" style="white-space: nowrap">Opponent's Email Address</label>
-            <input type="email" id="player2Email" maxlength="50">
+            <input type="email" id="player2Email" maxlength="50" required>
             <div id="captcha"><div id="loadingCaptchaText">Loading Captcha ...</div></div>
           </fieldset>
         </div>
@@ -33,7 +33,7 @@
         <div id="existingGameForm">
           <fieldset>
             <label for="gameID" style="white-space: nowrap">Game ID</label>
-            <input type="text" id="gameID">
+            <input type="text" id="gameID" required>
             <div><a href="#" id="forgotGameIdLink">Forgot your game ID?</a></div>
           </fieldset>
         </div>
@@ -113,7 +113,7 @@
     <div class="modal-body" style="padding: 10px 20px 15px 20px">
       <div id="forgotGameIdForm">
         <p>Please enter your email address and click Submit</p>
-        <p><input type="email" id="forgotGameIdEmail" maxlength="50"></p>
+        <p><input type="email" id="forgotGameIdEmail" maxlength="50" required></p>
         <p id="forgotGameIdNoGamesFound" style="display: none; color: red">
           No games were found for the email address <span class="forgotGameIdEmail"></span>
         </p>
