@@ -27,7 +27,6 @@ chess.ForgotGameIdDialogView = Backbone.View.extend({
     _renderDialog: function () {
         this.$el.modal();
         this.$('#forgotGameIdForm').show();
-        this.$('#forgotGameIdForm #forgotGameIdEmail').focus();
         this.$('#forgotGameIdSuccess').hide();
         this.$('#forgotGameIdNoGamesFound').hide();
     },
