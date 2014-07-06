@@ -19,7 +19,8 @@
     "compression": "~1.0.6",
     "errorhandler": "~1.0.2",
     "mongojs": "~0.10.0",
-    "uinexpress": "0.0.5"
+    "uinexpress": "0.0.5",
+    "forever": "~0.11.1"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
@@ -30,7 +31,7 @@
     "grunt-contrib-clean": "~0.5.0"
   },
   "scripts": {
-    "start": "node --harmony src/server/app.js port=8080",
+    "start": "node src/server/app.js port=8080",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
