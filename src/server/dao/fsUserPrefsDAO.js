@@ -6,7 +6,8 @@
 
 var fs = require('fs');
 
-const DATA_DIR = '.user_prefs/';
+// TODO: Use const with ES6
+var DATA_DIR = '.user_prefs/';
 
 // Create the user prefs dir if it doesn't alreay exist
 if (!fs.existsSync(DATA_DIR)) {
@@ -26,9 +27,11 @@ var setUserPref = function (email, name, value) {
 var getUserPrefs = function (email) {
 	var userPrefs = {};
 	if (email) {
-		let file = DATA_DIR + email;
+		// TODO: Use let with ES6
+		var file = DATA_DIR + email;
 		if (fs.existsSync(file)) {
-			let jsonStr = fs.readFileSync(file, {encoding: 'utf8'});
+			// TODO: Use let with ES6
+			var jsonStr = fs.readFileSync(file, {encoding: 'utf8'});
 			userPrefs = JSON.parse(jsonStr);
 		}
 	}

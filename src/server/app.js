@@ -69,7 +69,8 @@ function initConfig () {
   var argMap = {};
   process.argv.forEach(function (val) {
     if (val.indexOf('=') > 0) {
-      let array = val.split('=');
+      // TODO: Use let with ES6
+      var array = val.split('=');
       argMap[array[0]] = array[1];
     }
   });

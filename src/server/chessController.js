@@ -10,7 +10,8 @@ var reCaptchaHandler = require('./reCaptchaHandler');
 var emailHandler = require('./emailHandler');
 var customErrors = require('./error/customErrors');
 
-const KEY_CHARS = '123456789';
+// TODO: Use const with ES6
+var KEY_CHARS = '123456789';
 
 //
 // public functions
@@ -50,7 +51,8 @@ function enterGame (postData) {
 	try {
 		gameID = gameIdFactory.getGameID(postData.gameID);
 	} catch (err) {
-		let deferred = q.defer();
+		// TODO: Use let with ES6
+		var deferred = q.defer();
 		deferred.reject(err);
 		return deferred.promise;
 	}
@@ -67,7 +69,8 @@ function saveMove (postData) {
 
             if (_playerCanMove(gameObj, gameID.key)) {
 
-                let move = postData.move;
+                // TODO: Use let with ES6
+                var move = postData.move;
                 gameObj.moveHistory.push(move);
 
                 gameDao.updateMoveHistory(gameID.id, gameObj.moveHistory)
@@ -78,7 +81,8 @@ function saveMove (postData) {
                           opponentEmail = gameObj.B.email;
                           emailHandler.sendInviteEmail(gameObj.W.email, gameObj.B.email, gameIdFactory.getGameID(gameID.id, gameObj.B.key), move);
                       } else {
-                          let obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
+													// TODO: Use let with ES6
+                          var obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
                           opponentEmail = obj.email;
                           emailHandler.sendMoveNotificationEmail(obj.email, gameIdFactory.getGameID(gameID.id, obj.key), move);
                       }
@@ -119,12 +123,14 @@ function findGamesByEmail (email) {
 	gameDao.findGamesByEmail(email)
 		.then(function (records) {
 			if (records) {
-				let games = [],
+				// TODO: Use let with ES6
+				var games = [],
 					numGames = records.length,
 					record = null,
 					gameObj = null,
 					gameID = null;
-				for (let i = 0; i < numGames; i++) {
+				// TODO: Use let with ES6
+				for (var i = 0; i < numGames; i++) {
 					record = records[i];
 					gameObj = record.gameObj;
 					if (gameObj.W.email === email) {
@@ -261,7 +267,8 @@ function _enterExistingGame (gameID) {
 
 function _generateKey () {
 	var s = '';
-	for (let i = 0; i < 5; i++) {
+	// TODO: Use let with ES6
+	for (var i = 0; i < 5; i++) {
 		s += KEY_CHARS.charAt(Math.floor(Math.random() * KEY_CHARS.length));
 	}
 	return s;

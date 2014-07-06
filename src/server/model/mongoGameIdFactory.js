@@ -11,7 +11,8 @@
 *
 */
 
-const MONGO_DB_REGEXP = /0+([^0]+)$/;
+// TODO: Use const with ES6
+var MONGO_DB_REGEXP = /0+([^0]+)$/;
 
 exports.getGameID = function (id, key) {
 
@@ -23,7 +24,8 @@ exports.getGameID = function (id, key) {
         obj.compositeID = _obfuscateGameID(id) + '-' + key;
     } else {
       try {
-          let parts = id.split('-');
+          // TODO: Use let with ES6
+          var parts = id.split('-');
           obj.key = parts[2];
           obj.id = _deobfuscateGameID(parts[0], parts[1]);
           obj.compositeID = id;
