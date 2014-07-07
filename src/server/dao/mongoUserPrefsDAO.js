@@ -15,7 +15,7 @@ var setUserPref = function (email, name, value) {
             var id = userPrefs._id || null;
             var modifyDate = new Date();
             var createDate = userPrefs.createDate || modifyDate;
-            userPrefs.prefs[name] = _valueConverter(value);;
+            userPrefs.prefs[name] = _valueConverter(value);
             var obj = {
               _id: id,
               createDate: createDate,

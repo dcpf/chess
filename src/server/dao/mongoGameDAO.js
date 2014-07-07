@@ -89,7 +89,7 @@ var createGame = function (gameObj) {
      if (err) {
        deferred.reject(err);
      } else if (!savedObj) {
-       deferred.reject(new Error('Game ' + gameID + ' not saved'));
+       deferred.reject(new Error('Error creating game'));
      } else {
        deferred.resolve(savedObj._id.toHexString());
      }

@@ -116,16 +116,24 @@ function buildDefaultEnterGameAttrMap (error) {
 
 function findGamesByEmail (email) {
 
+	var deferred = q.defer();
+
+	try {
+		_validateEmailAddress(email);
+	} catch (err) {
+		deferred.reject(err);
+		return deferred.promise;
+	}
+
 	// Lower-case the email address to make sure our queries work
 	email = email.toLowerCase();
-	var deferred = q.defer();
 
 	gameDao.findGamesByEmail(email)
 		.then(function (records) {
-			if (records) {
+			var numGames = records ? records.length : 0;
+			if (numGames) {
 				// TODO: Use let with ES6
 				var games = [],
-					numGames = records.length,
 					record = null,
 					gameObj = null,
 					gameID = null;
@@ -149,7 +157,7 @@ function findGamesByEmail (email) {
 				emailHandler.sendForgotGameIdEmail(email, games);
 				deferred.resolve({status: 'ok', email: email});
 			} else {
-				deferred.resolve({status: 'no games found', email: email});
+				deferred.reject(new Error('No games found for email ' + email));
 			}
 		})
 		.fail (function (err) {

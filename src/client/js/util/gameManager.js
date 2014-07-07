@@ -100,12 +100,10 @@ chess.GameManager = function (attrs) {
               email: email
             })
             .done(function(res) {
-              if (res.status === 'no games found') {
-                self.eventHandler.trigger(self.eventHandler.messageNames.FOUND_NO_GAMES_BY_EMAIL, res);
-              } else {
-                // assume it was success
-                self.eventHandler.trigger(self.eventHandler.messageNames.FOUND_GAMES_BY_EMAIL, res);
-              }
+              self.eventHandler.trigger(self.eventHandler.messageNames.FOUND_GAMES_BY_EMAIL, res);
+            })
+            .fail(function(jqXHR) {
+              self.eventHandler.trigger(self.eventHandler.messageNames.FIND_GAMES_BY_EMAIL_ERROR, jqXHR.responseText);
             })
             .always(function() {
               $("#progressDialog").modal('hide');

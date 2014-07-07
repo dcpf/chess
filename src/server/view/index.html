@@ -113,12 +113,12 @@
     <div class="modal-body" style="padding: 10px 20px 15px 20px">
       <div id="forgotGameIdForm">
         <p>Please enter your email address and click Submit</p>
-        <p><input type="email" id="forgotGameIdEmail" maxlength="50" required autofocus></p>
-        <p id="forgotGameIdNoGamesFound" style="display: none; color: red">
-          No games were found for the email address <span class="forgotGameIdEmail"></span>
+        <div><input type="email" id="forgotGameIdEmail" maxlength="50" required autofocus></div>
+        <p id="forgotGameIdError" style="display: none; color: red"></p>
+        <p>
+          <button type="button" class="btn btn-primary" id="forgotGameIdSubmitButton" style="margin-right: 10px">Submit</button>
+          <button type="button" class="btn" data-dismiss="modal">Close</button>
         </p>
-        <button type="button" class="btn btn-primary" id="forgotGameIdSubmitButton" style="margin-right: 10px">Submit</button>
-        <button type="button" class="btn" data-dismiss="modal">Close</button>
       </div>
       <div id="forgotGameIdSuccess" style="display: none">
         <p>An email with your game IDs has been sent to <span class="forgotGameIdEmail"></span></p>
