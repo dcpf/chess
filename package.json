@@ -8,7 +8,7 @@
     "request": "~2.27.0",
     "log4js": "~0.6.15",
     "validator": "~3.16.1",
-    "underscore": "~1.5.2",
+    "underscore": "~1.6.0",
     "q": "~0.9.7",
     "express": "~4.4.2",
     "morgan": "~1.1.1",
