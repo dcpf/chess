@@ -31,8 +31,8 @@ app.engine('html', require('uinexpress').__express);
 app.set('view engine', 'html');
 
 app.use(morgan());
-app.use(bodyParser());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride());
 app.use(cookieParser());
 app.use(session({secret: 'jellyJam'}));
