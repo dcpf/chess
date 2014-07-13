@@ -223,7 +223,9 @@ function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
 * Validate an email address. Throws an error if validation fails.
 */
 function _validateEmailAddress (email) {
-	validator.check(email, 'Invalid email address: ' + email).len(6, 64).isEmail();
+	if (!validator.isEmail(email)) {
+		throw new Error('Invalid email address: ' + email);
+	}
 }
 
 function _createGame (player1Email, player2Email) {
