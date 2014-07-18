@@ -1,6 +1,4 @@
 {
-    "domain": "127.0.0.1",
-    "port": "8080",
     "emailService": {
         "serviceName": "Gmail",
         "fromAddress": "dpfchess@gmail.com",
