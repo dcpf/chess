@@ -1,1 +1,1 @@
-web: node src/server/app.js domain=http://chess-by-email.herokuapp.com
+web: node src/server/app.js domain=chess-by-email.herokuapp.com
