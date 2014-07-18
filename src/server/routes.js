@@ -12,7 +12,6 @@ exports.index = function (req, res) {
     if (params.gameID) {
 
         // GET enterGame request where gameID is passed as a URL param
-        logRequest(req, 'enterGame');
         chessController.enterGame(getParams(req))
             .then(function (obj) {
                 renderIndex(obj, res);
@@ -33,7 +32,6 @@ exports.index = function (req, res) {
     } else {
 
         // default request for index.html
-        logRequest(req, 'index.html');
         chessController.buildDefaultEnterGameAttrMap()
             .then(function (obj) {
                 renderIndex(obj, res);
@@ -47,7 +45,6 @@ exports.index = function (req, res) {
 };
 
 exports.findGamesByEmail = function (req, res) {
-  logRequest(req, 'findGamesByEmail');
   var params = getParams(req);
   chessController.findGamesByEmail(params.email)
     .then(function (obj) {
@@ -60,8 +57,7 @@ exports.findGamesByEmail = function (req, res) {
 
 // POST createGame request
 exports.createGame = function (req, res) {
-  logRequest(req, 'createGame');
-	var ip = req.connection.remoteAddress;
+  var ip = req.connection.remoteAddress;
 	chessController.createGame(ip, getParams(req))
         .then(function (obj) {
             doJsonOutput(res, obj);
@@ -73,8 +69,7 @@ exports.createGame = function (req, res) {
 
 // POST enterGame request
 exports.enterGame = function (req, res) {
-  logRequest(req, 'enterGame');
-	chessController.enterGame(getParams(req))
+  chessController.enterGame(getParams(req))
         .then(function (obj) {
             doJsonOutput(res, obj);
         })
@@ -85,7 +80,6 @@ exports.enterGame = function (req, res) {
 
 // POST saveMove request
 exports.saveMove = function (req, res) {
-    logRequest(req, 'saveMove');
     chessController.saveMove(getParams(req))
         .then(function (obj) {
             doJsonOutput(res, obj);
@@ -97,7 +91,6 @@ exports.saveMove = function (req, res) {
 
 // POST updateUserPrefs request
 exports.updateUserPrefs = function (req, res) {
-    logRequest(req, 'updateUserPrefs');
     chessController.updateUserPrefs(getParams(req))
         .then(function (obj) {
             doJsonOutput(res, obj);
@@ -127,10 +120,6 @@ function getParams (req) {
 
 function logClientError (req, params) {
     console.log('Client error: ' + JSON.stringify(params) + '; User agent: ' + req.headers['user-agent']);
-}
-
-function logRequest (req, path) {
-    console.log('Request: ' + req.method + '; Path: ' + path + '; User agent: ' + req.headers['user-agent']);
 }
 
 function renderIndex (obj, res) {

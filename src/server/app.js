@@ -40,11 +40,17 @@ app.use(morgan());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride());
-// cookieParser should be above session
+// cookieParser should be before session
 app.use(cookieParser());
-app.use(session({secret: 'jellyJam'}));
+app.use(session({resave: true, saveUninitialized: true, secret: 'jellyJam'}));
 
 app.disable('x-powered-by');
+
+// log all requests
+app.use(function (req, res, next) {
+    console.log('Request: ' + req.method + '; Path: ' + req.url + '; User agent: ' + req.headers['user-agent']);
+    next();
+});
 
 // routes
 app.get('/', routes.index);
