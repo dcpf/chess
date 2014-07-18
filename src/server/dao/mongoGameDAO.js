@@ -4,7 +4,7 @@ var mongojs = require("mongojs");
 var q = require('q');
 var customErrors = require('../error/customErrors');
 
-var databaseUrl = GLOBAL.CONFIG.db.databaseUrl;
+var databaseUrl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || GLOBAL.CONFIG.db.databaseUrl;
 var db = mongojs(databaseUrl, ['games']);
 
 /**
