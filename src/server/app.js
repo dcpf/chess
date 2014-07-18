@@ -30,13 +30,19 @@ app.set('views', path.join(__dirname, 'view'));
 app.engine('html', require('uinexpress').__express);
 app.set('view engine', 'html');
 
+// Must be before express.static!!!
+app.use(compression());
+
+// ../../webapp is where grunt copies the static files to
+app.use('/webapp', express.static(path.join(__dirname, '../../webapp'), { maxAge: 31536000000 }));
+
 app.use(morgan());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride());
+// cookieParser should be above session
 app.use(cookieParser());
 app.use(session({secret: 'jellyJam'}));
-app.use(compression());
 
 app.disable('x-powered-by');
 
@@ -48,9 +54,6 @@ app.post('/enterGame', routes.enterGame);
 app.post('/saveMove', routes.saveMove);
 app.post('/updateUserPrefs', routes.updateUserPrefs);
 app.post('/logClientError', routes.logClientError);
-
-// ../../webapp is where grunt copies the static files to
-app.use('/webapp', express.static(path.join(__dirname, '../../webapp'), { maxAge: 31536000000 }));
 
 // development only
 if ('development' == app.get('env')) {
