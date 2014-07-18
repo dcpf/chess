@@ -6,6 +6,9 @@
       "filename": "logs/server.log",
       "pattern": "-yyyy-MM-dd",
       "alwaysIncludePattern": true
+    },
+    {
+      "type": "console"
     }
   ]
 }

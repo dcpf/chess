@@ -11,7 +11,7 @@ initConfig();
 
 // express and middleware
 var express = require('express');
-var morgan = require('morgan');
+//var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var cookieParser = require('cookie-parser');
@@ -36,7 +36,7 @@ app.use(compression());
 // ../../webapp is where grunt copies the static files to
 app.use('/webapp', express.static(path.join(__dirname, '../../webapp'), { maxAge: 31536000000 }));
 
-app.use(morgan());
+//app.use(morgan());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride());
@@ -48,7 +48,7 @@ app.disable('x-powered-by');
 
 // log all requests
 app.use(function (req, res, next) {
-    console.log('Request: ' + req.method + '; Path: ' + req.url + '; User agent: ' + req.headers['user-agent']);
+    console.log(req.method + ' ' + req.url + '; IP: ' + req.connection.remoteAddress + '; User-agent: ' + req.headers['user-agent']);
     next();
 });
 
