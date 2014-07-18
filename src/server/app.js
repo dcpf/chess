@@ -95,7 +95,9 @@ function initConfig () {
 	}
 	GLOBAL.CONFIG = config;
 
-	// Set the global appUrl object using the domain and port from the passed-in args.
-	GLOBAL.APP_URL = appUrl.constructUrl(argMap.domain, argMap.port);
+	// Get the domain and port from either the passed-in args or the env vars, and set the global appUrl object.
+	var domain = argMap.domain || process.env.DOMAIN;
+	var port = argMap.port || process.env.PORT;
+	GLOBAL.APP_URL = appUrl.constructUrl(domain, port);
 
 }
