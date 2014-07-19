@@ -93,7 +93,7 @@ exports.sendForgotGameIdEmail = function (email, games) {
       {
         id: gameID.compositeID,
         createDate: game.createDate,
-        modifyDate: game.modifyDate,
+        lastMoveDate: game.lastMoveDate,
         url: _buildGameUrl(gameID)
       }
     );

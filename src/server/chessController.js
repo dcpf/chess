@@ -136,7 +136,9 @@ function findGamesByEmail (email) {
 				var games = [],
 					record = null,
 					gameObj = null,
-					gameID = null;
+					gameID = null,
+					createDate = null,
+					lastMoveDate = null;
 				// TODO: Use let with ES6
 				for (var i = 0; i < numGames; i++) {
 					record = records[i];
@@ -146,11 +148,13 @@ function findGamesByEmail (email) {
 					} else if (gameObj.B.email === email) {
 						gameID = gameIdFactory.getGameID(record._id.toHexString(), gameObj.B.key);
 					}
+					createDate = record.createDate;
+					lastMoveDate = gameObj.moveHistory ? record.modifyDate : '';
 					games.push(
 						{
 							gameID: gameID,
-							createDate: record.createDate,
-							modifyDate: record.modifyDate
+							createDate: createDate,
+							lastMoveDate: lastMoveDate
 						}
 					);
 				}
