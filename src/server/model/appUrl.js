@@ -4,15 +4,15 @@
 
 'use strict';
 
-exports.constructUrl = function (domain, port) {
+exports.constructUrl = function (domain, port, usePortInLinks) {
 
 	this.domain = domain;
 	this.port = port;
 	this.url = 'http://' + domain;
-	if (port) {
+	if (usePortInLinks && port) {
 		this.url += ':' + port;
 	}
-	
+
 	return this;
 
 };
