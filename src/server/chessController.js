@@ -149,8 +149,8 @@ function findGamesByEmail (email) {
 					} else if (gameObj.B.email === email) {
 						gameID = gameIdFactory.getGameID(record._id.toHexString(), gameObj.B.key);
 					}
-					createDate = moment(record.createDate).format('MM/DD/YYYY hh:mm A');
-					lastMoveDate = gameObj.moveHistory ? moment(record.modifyDate).format('MM/DD/YYYY hh:mm A') : '';
+					createDate = _formatDate(record.createDate);
+					lastMoveDate = gameObj.moveHistory ? _formatDate(record.modifyDate) : '';
 					games.push(
 						{
 							gameID: gameID,
@@ -323,4 +323,13 @@ function _getCurrentUserEmail (gameObj, key) {
 		email = gameObj.B.email;
 	}
 	return email;
+}
+
+/**
+* Format the date as 07/19/2014 06:05 AM EDT 
+*/
+function _formatDate (date) {
+	// parse the time zone out of the date string
+	var tz = date.toString().split(' ').pop().replace(/[()]/g, '');
+	return moment(date).format('MM/DD/YYYY hh:mm A') + ' ' + tz;
 }
