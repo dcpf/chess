@@ -149,8 +149,8 @@ function findGamesByEmail (email) {
 					} else if (gameObj.B.email === email) {
 						gameID = gameIdFactory.getGameID(record._id.toHexString(), gameObj.B.key);
 					}
-					createDate = moment(record.createDate).format('MM/DD/YYYY hh:mm A ZZ');
-					lastMoveDate = gameObj.moveHistory ? moment(record.modifyDate).format('MM/DD/YYYY hh:mm A ZZ') : '';
+					createDate = moment(record.createDate).format('MM/DD/YYYY hh:mm A');
+					lastMoveDate = gameObj.moveHistory ? moment(record.modifyDate).format('MM/DD/YYYY hh:mm A') : '';
 					games.push(
 						{
 							gameID: gameID,
