@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var q = require('q');
+var moment = require('moment');
 var gameIdFactory = require('./model/mongoGameIdFactory');
 var gameDao = require('./dao/mongoGameDAO');
 var userPrefsDao = require('./dao/mongoUserPrefsDAO');
@@ -148,8 +149,8 @@ function findGamesByEmail (email) {
 					} else if (gameObj.B.email === email) {
 						gameID = gameIdFactory.getGameID(record._id.toHexString(), gameObj.B.key);
 					}
-					createDate = record.createDate;
-					lastMoveDate = gameObj.moveHistory ? record.modifyDate : '';
+					createDate = moment(record.createDate).format('MM/DD/YYYY hh:mm A ZZ');
+					lastMoveDate = gameObj.moveHistory ? moment(record.modifyDate).format('MM/DD/YYYY hh:mm A ZZ') : '';
 					games.push(
 						{
 							gameID: gameID,

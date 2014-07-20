@@ -107,10 +107,14 @@ var findGamesByEmail = function (email) {
     var deferred = q.defer();
 
     db.games.find(
-      { $or: [
-          {'gameObj.W.email': email},
-          {'gameObj.B.email': email}
-        ]
+      {
+        $query: {
+          $or: [
+            {'gameObj.W.email': email},
+            {'gameObj.B.email': email}
+          ]
+        },
+        $orderby: {'modifyDate': -1}
       },
       function (err, records) {
         if (err) {
