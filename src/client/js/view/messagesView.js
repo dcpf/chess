@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-chess.MessagesView = Backbone.View.extend({
+var MessagesView = Backbone.View.extend({
 
     el: '#messageContainer',
 

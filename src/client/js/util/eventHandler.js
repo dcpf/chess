@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-chess.EventHandler = function () {
+var EventHandler = function () {
 
 	// this is the object we'll return
 	var obj = {
@@ -21,7 +21,7 @@ chess.EventHandler = function () {
 /*
 * Static message names defined here so only one copy exists.
 */
-chess.EventHandler.prototype.messageNames = {
+EventHandler.prototype.messageNames = {
 	ERROR: 'error',
 	CREATE_GAME: 'createGame',
 	ENTER_GAME: 'enterGame',

@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-chess.EnterGameView = Backbone.View.extend({
+var EnterGameView = Backbone.View.extend({
 
     el: '#enterGameView',
 
@@ -18,7 +18,7 @@ chess.EnterGameView = Backbone.View.extend({
         var self = this;
 
         // initalize the captcha
-        if (chess.config.recaptcha.enabled) {
+        if (chessAttrs.config.recaptcha.enabled) {
             document.write('<script src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"><\/script>');
             this._createCaptcha(self);
         }
@@ -75,7 +75,7 @@ chess.EnterGameView = Backbone.View.extend({
             setTimeout(function(){self._createCaptcha(self);}, 100);
         } else {
             Recaptcha.create(
-                chess.config.recaptcha.publicKey,
+                chessAttrs.config.recaptcha.publicKey,
                 "captcha",
                 {
                     theme: "clean"

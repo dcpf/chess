@@ -3,9 +3,9 @@
 */
 
 /*
-* Child of chess.BoardView with the sole purpose of rendering the board in 'view only' mode in a dialog.
+* Child of BoardView with the sole purpose of rendering the board in 'view only' mode in a dialog.
 */
-chess.BoardSnapshotView = chess.BoardView.extend({
+var BoardSnapshotView = BoardView.extend({
 
     el: '#chessBoardSnapshotDialog',
 
@@ -60,7 +60,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
     */
     _render: function (index) {
 
-        this.board = new chess.Board();
+        this.board = new Board();
         this.board.notationConverter = this.notationConverter;
         var gameBoard = this._generateBoard();
         this.$('#chessBoardSnapshotContainer').html(gameBoard);
@@ -118,7 +118,7 @@ chess.BoardSnapshotView = chess.BoardView.extend({
 
     /*
     * Auto-moves the piece on the board for the move in the moveHistory collection specified by the passed-in index.
-    * It gets the move notation from the moveHistory collection, computes the direction and distance to move, and 
+    * It gets the move notation from the moveHistory collection, computes the direction and distance to move, and
     * calls movePiece() to actually move the piece.
     *
     * @param index - the index of the moveHistory collection from which to get the move

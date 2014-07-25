@@ -5,7 +5,7 @@
 /*
 * Represents the board, piece positions, and all logic regarding chess rules, legal moves, etc.
 */
-chess.Board = Backbone.Model.extend({
+var Board = Backbone.Model.extend({
 
     initialize: function (attrs) {
 
@@ -43,7 +43,7 @@ chess.Board = Backbone.Model.extend({
         var piece = null;
         var contents = this.boardArray[row][col];
         if (contents) {
-            piece = new chess.Piece({id: contents + row + col});
+            piece = new Piece({id: contents + row + col});
         }
         return piece;
     },
@@ -129,7 +129,7 @@ chess.Board = Backbone.Model.extend({
             if ((rightPiece && rightPiece.isPawn()) || (leftPiece && leftPiece.isPawn())) {
                 // Set the en-passant capturable coords
                 var enPassantCaptureCoords = '' + ((parseInt(fromRow, 10) + parseInt(toRow, 10))/2) + toCol;
-                this.enPassantCapture[enPassantCaptureCoords] = new chess.Piece({id: piece.qualifiedName + toRow + toCol});
+                this.enPassantCapture[enPassantCaptureCoords] = new Piece({id: piece.qualifiedName + toRow + toCol});
             }
         }
 
@@ -391,7 +391,7 @@ chess.Board = Backbone.Model.extend({
     * 1) We are in hypothetical mode
     *   or
     * 2) The king will not be in check after the move
-    * 
+    *
     */
     _updateLegalMovesMap: function (piece, toRow, toCol) {
         if (this._hypothetical || !this._isKingInCheck(piece, toRow, toCol)) {
@@ -456,7 +456,7 @@ chess.Board = Backbone.Model.extend({
     * Used to clone the current board state into a new object. Useful for analyzing future moves.
     */
     _clone: function () {
-        var clone = new chess.Board();
+        var clone = new Board();
         clone.currentPlayer = this.currentPlayer;
         clone.boardArray = [];
         for (var i in this.boardArray) {

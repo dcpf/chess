@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-chess.GameManager = function (attrs) {
+var GameManager = function (attrs) {
 
     var obj = {
 
@@ -46,16 +46,16 @@ chess.GameManager = function (attrs) {
 
             var self = this;
 
-            // If attrs were passed in, update chess.vars and chess.user
+            // If attrs were passed in, update chessAttrs.vars and chessAttrs.user
             if (attrs) {
                 // These are strings, so we need to convert them back into objects before assigning
-                chess.vars = JSON.parse(attrs.chessVars);
-                chess.user = JSON.parse(attrs.user);
+                chessAttrs.vars = JSON.parse(attrs.chessVars);
+                chessAttrs.user = JSON.parse(attrs.user);
             }
 
             // If there is an existing move history, use it to get the game into the current state
-            for (var i in chess.vars.initialMoveHistory) {
-                var notation = chess.vars.initialMoveHistory[i];
+            for (var i in chessAttrs.vars.initialMoveHistory) {
+                var notation = chessAttrs.vars.initialMoveHistory[i];
                 self.board.updateGameState(notation);
             }
 
@@ -63,10 +63,10 @@ chess.GameManager = function (attrs) {
             this.board.findAllLegalMoves();
 
             // make sure viewMode is set accordingly based on canMove
-            self.boardView.viewMode = !chess.vars.canMove;
+            self.boardView.viewMode = !chessAttrs.vars.canMove;
 
             // render the board
-            self.boardView.render(chess.vars.perspective);
+            self.boardView.render(chessAttrs.vars.perspective);
 
             self.eventHandler.trigger(self.eventHandler.messageNames.GAME_ENTERED);
 
@@ -79,7 +79,7 @@ chess.GameManager = function (attrs) {
             var self = this;
             $("#progressDialog").modal();
             $.post('/saveMove', {
-                gameID: chess.vars.gameID,
+                gameID: chessAttrs.vars.gameID,
                 move: notation
             })
               .done(function(res) {

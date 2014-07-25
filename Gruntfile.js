@@ -29,7 +29,7 @@ module.exports = function(grunt) {
                         $: true,
                         Recaptcha: true,
                         _: true,
-                        chess: true
+                        chessAttrs: true
                     }
                 },
                 src: ['src/client/**/*.js']
@@ -45,7 +45,7 @@ module.exports = function(grunt) {
                         $: true,
                         Recaptcha: true,
                         _: true,
-                        chess: true
+                        chessAttrs: true
                     }
                 },
                 src: ['webapp/chess.js']
@@ -72,7 +72,9 @@ module.exports = function(grunt) {
 
         concat: {
             options: {
-                banner: "'use strict';\n"
+              // wrap everything in a self-calling function and use strict
+              banner: "(function(){\n'use strict';\n",
+              footer: "})();"
             },
             dist: {
 
@@ -98,9 +100,10 @@ module.exports = function(grunt) {
                     'src/client/js/view/capturedPiecesView.js',
                     'src/client/js/view/moveHistoryView.js',
                     'src/client/js/view/messagesView.js',
-                    // lastly, load the gameManager and appContext
+                    // lastly, load the gameManager, appContext, and gameStarter
                     'src/client/js/util/gameManager.js',
-                    'src/client/js/util/appContext.js'],
+                    'src/client/js/util/appContext.js',
+                    'src/client/js/util/gameStarter.js'],
 
                 dest: 'webapp/chess.js'
 

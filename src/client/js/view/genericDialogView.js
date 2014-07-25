@@ -5,7 +5,7 @@
 /*
 * View controller for rendering misc dialogs
 */
-chess.GenericDialogView = Backbone.View.extend({
+var GenericDialogView = Backbone.View.extend({
 
     el: '#genericDialog',
 

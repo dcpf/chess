@@ -177,7 +177,7 @@ function log (msg) {
 
 // Create the chess object with config, game, and user variables. These are generated
 // on the server by chessController._buildEnterGameAttrMap().
-var chess = {
+var chessAttrs = {
     config: <%= config %>,
     vars: <%= chessVars %>,
     user: <%= user %>
@@ -190,20 +190,5 @@ var chess = {
 <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
 <script src="webapp/chess.js?ver=<%= runtimestamp %>"></script>
-
-<script>
-
-// Instantiate the appContext
-chess.appContext = chess.AppContext.getAppContext();
-
-// If the page has loaded with a gameID, start the game. This will occur when the gameID URL param is passed in: ?gameID=531d080566b22a611f-1-82197
-// Else, show the enterGame view.
-if (chess.vars.gameID && !chess.vars.error) {
-    chess.appContext.gameManager.startGame();
-} else {
-    chess.appContext.enterGameView.show(chess.vars.error);
-}
-
-</script>
 
 </html>

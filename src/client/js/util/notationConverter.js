@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-chess.NotationConverter = function () {
+var NotationConverter = function () {
 
     this.letters = ['a','b','c','d','e','f','g','h'];
     this.rowNums = [8,7,6,5,4,3,2,1];
@@ -32,26 +32,26 @@ chess.NotationConverter = function () {
             if (notation === 'O-O') {
                 // king-side castle
                 if (currentPlayer === 'W') {
-                    rook = new chess.Piece({id: currentPlayer + 'R77'});
-                    king = new chess.Piece({id: currentPlayer + 'K74'});
+                    rook = new Piece({id: currentPlayer + 'R77'});
+                    king = new Piece({id: currentPlayer + 'K74'});
                     rookMove = {piece: rook, toRow: 7, toCol: 5};
                     kingMove = {piece: king, toRow: 7, toCol: 6};
                 } else {
-                    rook = new chess.Piece({id: currentPlayer + 'R07'});
-                    king = new chess.Piece({id: currentPlayer + 'K04'});
+                    rook = new Piece({id: currentPlayer + 'R07'});
+                    king = new Piece({id: currentPlayer + 'K04'});
                     rookMove = {piece: rook, toRow: 0, toCol: 5};
                     kingMove = {piece: king, toRow: 0, toCol: 6};
                 }
             } else if (notation === 'O-O-O') {
                 // queen-side castle
                 if (currentPlayer === 'W') {
-                    rook = new chess.Piece({id: currentPlayer + 'R70'});
-                    king = new chess.Piece({id: currentPlayer + 'K74'});
+                    rook = new Piece({id: currentPlayer + 'R70'});
+                    king = new Piece({id: currentPlayer + 'K74'});
                     rookMove = {piece: rook, toRow: 7, toCol: 3};
                     kingMove = {piece: king, toRow: 7, toCol: 2};
                 } else {
-                    rook = new chess.Piece({id: currentPlayer + 'R00'});
-                    king = new chess.Piece({id: currentPlayer + 'K04'});
+                    rook = new Piece({id: currentPlayer + 'R00'});
+                    king = new Piece({id: currentPlayer + 'K04'});
                     rookMove = {piece: rook, toRow: 0, toCol: 3};
                     kingMove = {piece: king, toRow: 0, toCol: 2};
                 }
@@ -114,7 +114,7 @@ chess.NotationConverter = function () {
             }
         }
 
-        var piece = new chess.Piece({id: currentPlayer + pieceType + fromRow + fromCol});
+        var piece = new Piece({id: currentPlayer + pieceType + fromRow + fromCol});
         var move = {piece: piece, toRow: toRow, toCol: toCol, captureCoords: captureCoords};
         return [move];
 

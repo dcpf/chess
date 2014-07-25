@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
-chess.OptionsMenuView = Backbone.View.extend({
+var OptionsMenuView = Backbone.View.extend({
 
     el: '#optionsMenuContainer',
 
@@ -14,7 +14,7 @@ chess.OptionsMenuView = Backbone.View.extend({
         var self = this;
 
 		self.$('#optionsMenuIcon').click(function() {
-            if (chess.user.email) {
+            if (chessAttrs.user.email) {
                 // Only show legalMovesDisplay option if there's a valid user
                 self.$('#showLegalMovesValue').text(self._getShowLegalMovesDisplayValue());
                 self.$('#showLegalMovesOption').show();

@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-chess.PlayGameView = Backbone.View.extend({
+var PlayGameView = Backbone.View.extend({
 
     el: '#playGameView',
 
@@ -16,8 +16,8 @@ chess.PlayGameView = Backbone.View.extend({
     },
 
     show: function () {
-        this.$('#whiteEmail').html(chess.vars.whiteEmail);
-        this.$('#blackEmail').html(chess.vars.blackEmail);
+        this.$('#whiteEmail').html(chessAttrs.vars.whiteEmail);
+        this.$('#blackEmail').html(chessAttrs.vars.blackEmail);
         this.$('#optionsMenuContainer').show();
         this.$el.show();
     }

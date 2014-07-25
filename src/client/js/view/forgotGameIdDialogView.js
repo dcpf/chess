@@ -5,7 +5,7 @@
 /*
 * View controller for rendering the 'forgot game ID' dialog
 */
-chess.ForgotGameIdDialogView = Backbone.View.extend({
+var ForgotGameIdDialogView = Backbone.View.extend({
 
     el: '#forgotGameIdDialog',
 

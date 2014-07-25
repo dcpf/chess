@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-chess.MoveHistoryView = Backbone.View.extend({
+var MoveHistoryView = Backbone.View.extend({
 
     el: '#moveHistoryContainer',
 

@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-chess.CapturedPiecesView = Backbone.View.extend({
+var CapturedPiecesView = Backbone.View.extend({
 
     el: '#capturedPiecesContainer',
 

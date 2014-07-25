@@ -2,14 +2,14 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-chess.UserPrefs = Backbone.Model.extend({
+var UserPrefs = Backbone.Model.extend({
 
 	/**
 	* Returns true if showLegalMovesEnabled is either true or not set.
 	* Returns false if showLegalMovesEnabled is set to false.
 	*/
 	isShowLegalMovesEnabled: function () {
-		return chess.user.prefs.showLegalMovesEnabled !== false;
+		return chessAttrs.user.prefs.showLegalMovesEnabled !== false;
     },
 
     /**
@@ -17,13 +17,13 @@ chess.UserPrefs = Backbone.Model.extend({
     */
     toggleShowLegalMovesEnabled: function () {
         var bool = !this.isShowLegalMovesEnabled();
-		chess.user.prefs.showLegalMovesEnabled = bool;
+		chessAttrs.user.prefs.showLegalMovesEnabled = bool;
 		this._updateUserPrefs('showLegalMovesEnabled', bool);
     },
 
     _updateUserPrefs: function (name, value) {
         $.post('/updateUserPrefs', {
-            userEmail: chess.user.email,
+            userEmail: chessAttrs.user.email,
             name: name,
             value: value
         });

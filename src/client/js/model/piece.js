@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-chess.Piece = Backbone.Model.extend({
+var Piece = Backbone.Model.extend({
 
     initialize: function () {
         if (!this.id) {

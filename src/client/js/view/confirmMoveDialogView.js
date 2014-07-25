@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-chess.ConfirmMoveDialogView = Backbone.View.extend({
+var ConfirmMoveDialogView = Backbone.View.extend({
 
     el: '#confirmMoveDialog',
 

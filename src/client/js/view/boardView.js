@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-chess.BoardView = Backbone.View.extend({
+var BoardView = Backbone.View.extend({
 
     el: '#chessBoardContainer',
 
@@ -127,7 +127,7 @@ chess.BoardView = Backbone.View.extend({
     * @param perspective - Needed to draw the board in the correct perspective for the current viewer
     */
     _generateBoard: function (perspective) {
-    
+
         // Set the board coords based on the current player. For black, we want to turn the board upside down.
         var letters = _.clone(this.notationConverter.letters),
             dimStart = 0,
@@ -141,12 +141,12 @@ chess.BoardView = Backbone.View.extend({
         }
 
         var gameBoard = '<table id="chessBoard" border="1"><tr><td>&nbsp;</td>';
-    
+
         // Draw the top row of column letters
         for (var i in letters) {
             gameBoard += '<td>' + letters[i] + '</td>';
         }
-    
+
         gameBoard += '<td>&nbsp;</td></tr>';
 
         var bgcolor = 'fff';
@@ -160,16 +160,16 @@ chess.BoardView = Backbone.View.extend({
             }
             gameBoard += '<td>' + this.notationConverter.rowNums[row] + '</td></tr>';
         }
-    
+
         gameBoard += '<tr><td>&nbsp;</td>';
-    
+
         // Draw the bottom row of column letters
         for (i in letters) {
             gameBoard += '<td>' + letters[i] + '</td>';
         }
-    
+
         gameBoard += '<td>&nbsp;</td></tr></table>';
-    
+
         return gameBoard;
 
     },
@@ -234,7 +234,7 @@ chess.BoardView = Backbone.View.extend({
         toRow = parseInt(toRow, 10);
         toCol = parseInt(toCol, 10);
 
-        var piece = new chess.Piece({id: pieceId});
+        var piece = new Piece({id: pieceId});
         var pieceType = piece.type;
         var fromRow = piece.row;
         var fromCol = piece.column;
@@ -303,7 +303,7 @@ chess.BoardView = Backbone.View.extend({
         // Put the board into view-only mode, and set canMove to false.
         // It's no longer their turn, so they shouldn't be able to move.
         this.viewMode = true;
-        chess.vars.canMove = false;
+        chessAttrs.vars.canMove = false;
 
         // Update the board view
         this.updateBoard();
