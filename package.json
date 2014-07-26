@@ -33,8 +33,7 @@
     "validator": "~3.16.1"
   },
   "engines": {
-    "node": ">= 0.10.29",
-    "npm": ">= 1.4.14"
+    "node": "0.10.x"
   },
   "scripts": {
     "start": "node src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
