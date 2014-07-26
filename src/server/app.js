@@ -1,5 +1,14 @@
 'use strict';
 
+var cmndr = require('commander');
+
+cmndr
+  .option('-h, --hostName <hostName>', 'Specify the host name')
+  .option('-p, --port <port>', 'Specify the port')
+  .option('-u, --usePortInLinks', 'Include the port in the game URL in the emails')
+  .option('-c, --configFile <configFile>', 'Specify a config file to use')
+  .parse(process.argv);
+
 var fs = require('fs');
 var path = require('path');
 // instantiate the logger to reset all console logging functions to use log4js
@@ -74,18 +83,8 @@ console.log('Express server listening on ' + GLOBAL.APP_URL.url);
 
 function initConfig () {
 
-  // Get the passed-in args
-  var argMap = {};
-  process.argv.forEach(function (val) {
-    if (val.indexOf('=') > 0) {
-      // TODO: Use let with ES6
-      var array = val.split('=');
-      argMap[array[0]] = array[1];
-    }
-  });
-
 	// Read the config file and make the config object globally available
-	var configFile = argMap.configFile || path.join(__dirname, 'conf/config.json');
+	var configFile = cmndr.configFile || path.join(__dirname, 'conf/config.json');
 	var config = {};
 	try {
 		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
@@ -95,9 +94,9 @@ function initConfig () {
 	}
 	GLOBAL.CONFIG = config;
 
-  // Set the global appUrl object using the domain and port from either the passed-in args or the env vars.
-	var domain = argMap.domain || process.env.DOMAIN;
-	var port = argMap.port || process.env.PORT;
-  GLOBAL.APP_URL = appUrl.constructUrl(domain, port, argMap.usePortInLinks === 'true');
+  // Set the global appUrl object using the host name and port from either the passed-in args or the env vars.
+	var hostName = cmndr.hostName || process.env.DOMAIN;
+	var port = cmndr.port || process.env.PORT;
+  GLOBAL.APP_URL = appUrl.constructUrl(hostName, port, cmndr.usePortInLinks);
 
 }
