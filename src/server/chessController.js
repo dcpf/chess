@@ -31,8 +31,8 @@ function createGame (ip, postData) {
             var player1Email = postData.player1Email;
             var player2Email = postData.player2Email;
             try {
-                _validateEmailAddress(player1Email);
-                _validateEmailAddress(player2Email);
+                _validateEmailAddress(player1Email, "Email Address is required");
+                _validateEmailAddress(player2Email, "Opponent's Email Address is required");
                 deferred.resolve(_createGame(player1Email, player2Email));
             } catch (err) {
                 deferred.reject(err);
@@ -49,11 +49,14 @@ function createGame (ip, postData) {
 
 function enterGame (postData) {
 	var gameID;
+	var deferred = q.defer();
+	if (!postData.gameID.trim()) {
+		deferred.reject(new Error('Game ID is required'));
+		return deferred.promise;
+	}
 	try {
 		gameID = gameIdFactory.getGameID(postData.gameID);
 	} catch (err) {
-		// TODO: Use let with ES6
-		var deferred = q.defer();
 		deferred.reject(err);
 		return deferred.promise;
 	}
@@ -120,7 +123,7 @@ function findGamesByEmail (email) {
 	var deferred = q.defer();
 
 	try {
-		_validateEmailAddress(email);
+		_validateEmailAddress(email, "Email Address is required");
 	} catch (err) {
 		deferred.reject(err);
 		return deferred.promise;
@@ -226,8 +229,13 @@ function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
 
 /**
 * Validate an email address. Throws an error if validation fails.
+* @param String - Email address to validate
+* @param String - Err msg to render for a missing required value
 */
-function _validateEmailAddress (email) {
+function _validateEmailAddress (email, requiredMsg) {
+	if (!email.trim()) {
+		throw new Error(requiredMsg);
+	}
 	if (!validator.isEmail(email)) {
 		throw new Error('Invalid email address: ' + email);
 	}
@@ -326,7 +334,7 @@ function _getCurrentUserEmail (gameObj, key) {
 }
 
 /**
-* Format the date as 07/19/2014 06:05 AM EDT 
+* Format the date as 07/19/2014 06:05 AM EDT
 */
 function _formatDate (date) {
 	// parse the time zone out of the date string

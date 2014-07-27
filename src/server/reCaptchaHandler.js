@@ -7,6 +7,11 @@ exports.validateCaptcha = function (ip, captchaChallenge, captchaResponse) {
 
 	var deferred = q.defer();
 
+	if (!captchaResponse.trim()) {
+		deferred.reject(new Error('Captcha is required'));
+		return deferred.promise;
+	}
+
 	if (GLOBAL.CONFIG.recaptcha.enabled) {
 		request(
 			{
