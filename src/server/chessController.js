@@ -22,26 +22,26 @@ function createGame (ip, postData) {
 
 	var deferred = q.defer();
 
-    reCaptchaHandler.validateCaptcha(ip, postData.captchaChallenge, postData.captchaResponse)
-        .then(function() {
+	// get emails and validate them
+	var player1Email = postData.player1Email;
+	var player2Email = postData.player2Email;
+	try {
+		_validateEmailAddress(player1Email, "Email Address is required");
+		_validateEmailAddress(player2Email, "Opponent's Email Address is required");
+	} catch (err) {
+		deferred.reject(err);
+		return deferred.promise;
+	}
 
-            console.log('captcha validation passed');
-
-            // get emails and validate them
-            var player1Email = postData.player1Email;
-            var player2Email = postData.player2Email;
-            try {
-                _validateEmailAddress(player1Email, "Email Address is required");
-                _validateEmailAddress(player2Email, "Opponent's Email Address is required");
-                deferred.resolve(_createGame(player1Email, player2Email));
-            } catch (err) {
-                deferred.reject(err);
-            }
-
-        })
-        .fail(function(err){
-            deferred.reject(err);
-        });
+	// Email validation has passed. Now validate the captcha and create the game.
+  reCaptchaHandler.validateCaptcha(ip, postData.captchaChallenge, postData.captchaResponse)
+		.then(function() {
+      console.log('captcha validation passed');
+      deferred.resolve(_createGame(player1Email, player2Email));
+    })
+    .fail(function(err){
+      deferred.reject(err);
+    });
 
 	return deferred.promise;
 
