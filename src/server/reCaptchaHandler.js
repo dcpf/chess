@@ -33,6 +33,7 @@ exports.validateCaptcha = function (ip, captchaChallenge, captchaResponse) {
                     var success = responseArray[0];
                     //var msg = responseArray[1];
                     if (success === 'true') {
+												console.log('captcha validation passed');
                         deferred.resolve();
                     } else {
                         deferred.reject(new Error('Incorrect captcha. Please try again.'));
