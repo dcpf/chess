@@ -99,7 +99,9 @@ var Board = Backbone.Model.extend({
             this.boardArray[move.captureCoords.row][move.captureCoords.col] = '';
             // Add the captured piece to the capturedPieces collection
             if (this.capturedPieces) {
-                this.capturedPieces.add(capturedPiece);
+              // We can't store Piece objects in the collection, as there may be duplicates, and collections don't support duplicates.
+              // So we'll store objects with just the piece IDs.
+              this.capturedPieces.add({pieceId: capturedPiece.id});
             }
         }
 
