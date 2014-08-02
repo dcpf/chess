@@ -155,7 +155,7 @@ var BoardView = Backbone.View.extend({
             gameBoard += '<tr><td>' + this.notationConverter.rowNums[row] + '</td>';
             for (var col = dimStart; col >= 0 && col <= 7; col += dimIncrement) {
                 bgcolor = (bgcolor === 'ccc') ? 'fff' : 'ccc';
-                gameBoard += '<td id="sq' + row + col + '" style="background-color: #' + bgcolor + '"';
+                gameBoard += '<td id="sq' + row + col + '" bgcolor="#' + bgcolor + '"';
                 gameBoard += '></td>';
             }
             gameBoard += '<td>' + this.notationConverter.rowNums[row] + '</td></tr>';
