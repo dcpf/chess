@@ -51,6 +51,14 @@ var EnterGameView = Backbone.View.extend({
             }
         });
 
+        // assign the reset button click handler
+        this.$("button[type='reset']").click(function() {
+          self.$('#player1Email').val("");
+          self.$('#player2Email').val("");
+          self.$('#recaptcha_response_field').val("");
+          self.$('#gameID').val("");
+        });
+
     },
 
     hide: function () {
