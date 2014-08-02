@@ -8,7 +8,7 @@
     <meta name="author" content="David Piersol-Freedman 1998">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dave's Chess-By-Email</title>
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="webapp/chess.css?ver=<%= runtimestamp %>" />
 </head>
 <body style="padding: 20px">
@@ -21,10 +21,10 @@
         <input type="radio" name="newOrExisting" id="newGameRadio" value="N" checked><label for="newGameRadio" style="font-weight: bold">New Game</label>
         <div id="newGameForm">
           <fieldset>
-            <label for="player1Email" style="white-space: nowrap">Your Email Address</label>
-            <input type="email" id="player1Email" maxlength="50" required>
-            <label for="player2Email" style="white-space: nowrap">Opponent's Email Address</label>
-            <input type="email" id="player2Email" maxlength="50" required>
+            <label class="control-label" for="player1Email">Your Email Address</label>
+            <input type="email" class="form-control" id="player1Email" maxlength="50" required>
+            <label class="control-label" for="player2Email">Opponent's Email Address</label>
+            <input type="email" class="form-control" id="player2Email" maxlength="50" required>
             <div id="captcha"><div id="loadingCaptchaText">Loading Captcha ...</div></div>
           </fieldset>
         </div>
@@ -32,8 +32,8 @@
         <input type="radio" name="newOrExisting" id="existingGameRadio" value="E"><label for="existingGameRadio" style="font-weight: bold">Continue Existing Game</label>
         <div id="existingGameForm">
           <fieldset>
-            <label for="gameID" style="white-space: nowrap">Game ID</label>
-            <input type="text" id="gameID" required>
+            <label class="control-label" for="gameID">Game ID</label>
+            <input type="text" class="form-control" id="gameID" required>
             <div><a href="#" id="forgotGameIdLink">Forgot your game ID?</a></div>
           </fieldset>
         </div>
@@ -105,15 +105,15 @@
 
 <!-- dialogs -->
 
-<div id="forgotGameIdDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3 style="border-bottom: 1px solid #000; padding-bottom: 10px;">Forgot your game ID?</h3>
+<div id="forgotGameIdDialog" class="modal" role="dialog" aria-hidden="true" data-backdrop="static">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 style="border-bottom: 1px solid #000; padding-bottom: 10px;">Forgot your game ID?</h3>
   </div>
     <div class="modal-body" style="padding: 10px 20px 15px 20px">
       <div id="forgotGameIdForm">
         <p>Please enter your email address and click Submit</p>
-        <div><input type="email" id="forgotGameIdEmail" maxlength="50" required autofocus></div>
+        <p><input type="email" class="form-control" id="forgotGameIdEmail" maxlength="50" required autofocus></p>
         <p id="forgotGameIdError" style="display: none; color: red"></p>
         <p>
           <button type="button" class="btn btn-primary" id="forgotGameIdSubmitButton" style="margin-right: 10px">Submit</button>
@@ -127,20 +127,20 @@
     </div>
 </div>
 
-<div id="progressDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
+<div id="progressDialog" class="modal" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-body">
         <div id="spinner"></div>
     </div>
 </div>
 
-<div id="confirmMoveDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
+<div id="confirmMoveDialog" class="modal" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-body">
         <p>Please confirm your move</p>
         <div id="possibleMoves"></div>
     </div>
 </div>
 
-<div id="chessBoardSnapshotDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
+<div id="chessBoardSnapshotDialog" class="modal" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-body">
         <div style="text-align: right"><a href="#" class="closeIcon">Close</a></div>
         <div class="move"></div>
@@ -149,10 +149,10 @@
     <div id="tempPiecePlaceHolder"></div>
 </div>
 
-<div id="genericDialog" class="modal hide" role="dialog" aria-hidden="true" data-backdrop="static">
+<div id="genericDialog" class="modal" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>&nbsp;</h3>
+        <p style="margin-bottom: 20px">&nbsp;</p>
   </div>
     <div class="modal-body" style="padding: 0 20px 15px 20px">
         <p class="genericDialogText"></p>
@@ -188,7 +188,7 @@ var chessAttrs = {
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
-<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="webapp/chess.js?ver=<%= runtimestamp %>"></script>
 
 </html>
