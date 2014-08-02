@@ -251,7 +251,7 @@ img[draggable=true] {
   width: 32px;
 }
 #chessBoard td.moveableSquare {
-  background-color: #99FF99;
+  background-color: #99FF99 !important;
 }
 
 #capturedPiecesContainer {
