@@ -2,6 +2,9 @@
 
 /* Bootstrap over-rides begin */
 
+body {
+  padding: 20px;
+}
 hr {
   border-top-color: #999;
 }

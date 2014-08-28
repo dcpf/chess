@@ -29,7 +29,6 @@ var compression = require('compression');
 var errorHandler = require('errorhandler');
 
 var routes = require('./routes');
-var http = require('http');
 
 var app = express();
 
@@ -75,7 +74,7 @@ if ('development' == app.get('env')) {
   app.use(errorHandler());
 }
 
-http.createServer(app).listen(GLOBAL.APP_URL.port);
+app.listen(GLOBAL.APP_URL.port);
 
 console.log('Express server listening on ' + GLOBAL.APP_URL.url);
 
