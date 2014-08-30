@@ -175,12 +175,17 @@ function findGamesByEmail (email) {
 
 }
 
+function sendFeedback (data) {
+	emailHandler.sendFeedbackEmail(data);
+}
+
 exports.createGame = createGame;
 exports.enterGame = enterGame;
 exports.saveMove = saveMove;
 exports.updateUserPrefs = updateUserPrefs;
 exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 exports.findGamesByEmail = findGamesByEmail;
+exports.sendFeedback = sendFeedback;
 
 //
 // private functions

@@ -90,6 +90,20 @@ var GameManager = function (attrs) {
               });
         },
 
+        submitFeedback: function (feedback, email) {
+          var self = this;
+          $("#progressDialog").modal();
+          $.post('/feedback', {
+            feedback: feedback,
+            email: email,
+            gameID: chessAttrs.vars ? chessAttrs.vars.gameID : ''
+          })
+          .always(function() {
+            $("#progressDialog").modal('hide');
+            self.eventHandler.trigger(self.eventHandler.messageNames.FEEDBACK_SUCCESS);
+          });
+        },
+
         /**
         * Find game IDs by the provided email address
         */
@@ -119,6 +133,7 @@ var GameManager = function (attrs) {
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.CREATE_GAME, obj.createGame);
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.ENTER_GAME, obj.enterGame);
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.SAVE_MOVE, obj.saveMove);
+    obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.FEEDBACK_SUBMIT, obj.submitFeedback);
     obj.listenTo(obj.eventHandler, obj.eventHandler.messageNames.FIND_GAMES_BY_EMAIL, obj.findGamesByEmail);
 
     return obj;

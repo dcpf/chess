@@ -32,6 +32,9 @@ var AppContext = {
             capturedPieces: appContext.capturedPieces,
             moveHistory: appContext.moveHistory
         });
+        appContext.feedbackDialogView = new FeedbackDialogView({
+            eventHandler: appContext.eventHandler
+        });
         appContext.enterGameView = new EnterGameView({
             eventHandler: appContext.eventHandler
         });
@@ -60,7 +63,8 @@ var AppContext = {
 
         // These views just need to be instantiated - no need to assign to a variable
         new OptionsMenuView({
-            userPrefs: appContext.userPrefs
+          eventHandler: appContext.eventHandler,
+          userPrefs: appContext.userPrefs
         });
         new PlayGameView({
             eventHandler: appContext.eventHandler

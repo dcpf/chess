@@ -115,6 +115,23 @@ exports.sendForgotGameIdEmail = function (email, games) {
 
 };
 
+exports.sendFeedbackEmail = function (data) {
+
+  var html = templateHandler.processTemplate(emailSrcDir + 'feedback.html', {
+    data: data
+  });
+
+  mailTransport.sendMail({
+    from: emailServiceConfig.fromAddress,
+    to: emailServiceConfig.fromAddress,
+    subject: 'Chess Feedback',
+    html: html
+  });
+
+  console.log('Sent feedback email to ' + emailServiceConfig.fromAddress);
+
+};
+
 function _buildGameUrl (gameID) {
 	return GLOBAL.APP_URL.url + '?gameID=' + gameID.compositeID;
 }

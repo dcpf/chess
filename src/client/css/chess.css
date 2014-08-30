@@ -8,6 +8,16 @@ body {
 hr {
   border-top-color: #999;
 }
+label {
+  font-weight: normal;
+  margin-right: 10px;
+  text-align: left;
+  white-space: nowrap;
+}
+.form-control {
+  display: inline-block;
+  margin-bottom: 10px;
+}
 legend {
   border: 0;
   line-height: 20px;
@@ -67,16 +77,11 @@ h3 {
 }
 
 #enterGameTable label {
-  font-weight: normal;
-  margin-right: 10px;
-  white-space: nowrap;
   width: 180px;
 }
 
 #enterGameTable .form-control {
-  display: inline-block;
   max-width: 240px;
-  margin-bottom: 10px;
 }
 
 #newGameForm, #existingGameForm {
@@ -315,6 +320,14 @@ img[draggable=true] {
 
 #confirmMoveDialog #possibleMoves li {
   list-style-position: inside;
+}
+
+#feedbackForm label {
+  width: 60px;
+}
+
+#feedbackForm .form-control {
+  max-width: 300px;
 }
 
 /* dialog styles end */

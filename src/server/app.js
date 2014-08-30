@@ -67,6 +67,7 @@ app.post('/createGame', routes.createGame);
 app.post('/enterGame', routes.enterGame);
 app.post('/saveMove', routes.saveMove);
 app.post('/updateUserPrefs', routes.updateUserPrefs);
+app.post('/feedback', routes.sendFeedback);
 app.post('/logClientError', routes.logClientError);
 
 // development only

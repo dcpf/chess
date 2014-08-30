@@ -27,6 +27,7 @@ var ForgotGameIdDialogView = Backbone.View.extend({
     _renderDialog: function () {
         this.$el.modal();
         this.$('#forgotGameIdForm').show();
+        this.$('#forgotGameIdEmail').focus();
         this.$('#forgotGameIdSuccess').hide();
         this.$('#forgotGameIdError').hide();
     },

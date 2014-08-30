@@ -100,6 +100,13 @@ exports.updateUserPrefs = function (req, res) {
         });
 };
 
+exports.sendFeedback = function (req, res) {
+  var params = getParams(req);
+  params.userAgent = req.headers['user-agent'];
+  chessController.sendFeedback(params);
+  doJsonOutput(res, {});
+};
+
 // POST logClientError request
 exports.logClientError = function (req, res) {
     logClientError(req, getParams(req));

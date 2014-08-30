@@ -40,5 +40,8 @@ EventHandler.prototype.messageNames = {
 	MOVE_SAVED: 'moveSaved',
 	CANCEL_MOVE: 'cancelMove',
 	MOVE_HISTORY_LINK_CLICKED: 'moveHistoryLinkClicked',
-	REPLAY_GAME_LINK_CLICKED: 'replayGameLinkClicked'
+	REPLAY_GAME_LINK_CLICKED: 'replayGameLinkClicked',
+	FEEDBACK_LINK_CLICKED: 'feedbackLinkClicked',
+	FEEDBACK_SUBMIT: 'feedbackSubmit',
+	FEEDBACK_SUCCESS: 'feedbackSuccess'
 };
