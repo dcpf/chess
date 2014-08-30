@@ -4,8 +4,7 @@
 .c9revisions
 npm-debug.log
 node_modules
-logs/server*
-logs/mongodb.log
+logs/*
 build
 webapp
 *~
