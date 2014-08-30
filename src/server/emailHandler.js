@@ -117,6 +117,11 @@ exports.sendForgotGameIdEmail = function (email, games) {
 
 exports.sendFeedbackEmail = function (data) {
 
+  // limit feedback to 1000 chars
+  if (data.feedback && data.feedback.length > 1000) {
+    data.feedback = data.feedback.substring(0, 1000);
+  }
+
   var html = templateHandler.processTemplate(emailSrcDir + 'feedback.html', {
     data: data
   });
