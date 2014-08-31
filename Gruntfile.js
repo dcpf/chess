@@ -121,10 +121,18 @@ module.exports = function(grunt) {
             }
         },
 
+        cssmin: {
+          build: {
+            files: [{
+              src: 'src/client/css/chess.css',
+              dest: 'webapp/chess.css'
+            }]
+          }
+        },
+
         copy: {
-            main: {
+            images: {
                 files: [
-                    {src: ['src/client/css/chess.css'], dest: 'webapp/chess.css'},
                     {src: ['src/client/images/*'], dest: 'webapp/images/', flatten: true, expand: true}
                 ]
             }
@@ -136,9 +144,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
     grunt.registerTask('dev', ['clean', 'jshint:server', 'jshint:client', 'concat', 'jshint:client_concat', 'copy:main']);
-    grunt.registerTask('deploy', ['clean', 'jshint:server', 'jshint:client', 'concat', 'jshint:client_concat', 'uglify', 'copy:main']);
+    grunt.registerTask('deploy', ['clean', 'jshint:server', 'jshint:client', 'concat', 'jshint:client_concat', 'uglify', 'cssmin', 'copy:images']);
 
 };
