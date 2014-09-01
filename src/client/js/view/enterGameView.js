@@ -113,6 +113,7 @@ var EnterGameView = Backbone.View.extend({
       this.$('#forgotGameIdLink').removeClass('disabledLink');
       this.$('#forgotGameIdLink').click(function() {
         self.eventHandler.trigger(self.eventHandler.messageNames.FORGOT_GAME_ID_LINK_CLICKED);
+        return false;
       });
       this.$('#existingGameForm #gameID').focus();
     },
