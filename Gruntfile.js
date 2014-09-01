@@ -147,7 +147,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('dev', ['clean', 'jshint:server', 'jshint:client', 'concat', 'jshint:client_concat', 'copy:images']);
+    grunt.registerTask('dev', ['clean', 'jshint:server', 'jshint:client', 'concat', 'jshint:client_concat', 'cssmin', 'copy:images']);
     grunt.registerTask('deploy', ['clean', 'jshint:server', 'jshint:client', 'concat', 'jshint:client_concat', 'uglify', 'cssmin', 'copy:images']);
 
 };
