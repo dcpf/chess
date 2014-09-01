@@ -66,11 +66,20 @@ var EnterGameView = Backbone.View.extend({
     },
 
     show: function (errorMsg) {
+
         this.$el.show();
-        this._enableNewGameForm(this);
+
+        // Enable the correct form based on the selected radio button
+        if (this.$('#existingGameRadio').is(':checked')) {
+          this._enableEnterGameForm();
+        } else {
+          this._enableNewGameForm();
+        }
+
         if (errorMsg) {
             this.eventHandler.trigger(this.eventHandler.messageNames.ERROR, errorMsg);
         }
+
     },
 
     /*
