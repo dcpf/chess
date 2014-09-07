@@ -18,8 +18,8 @@ var ConfirmMoveDialogView = Backbone.View.extend({
         var i;
 
         for (i in moveNotations) {
-            var moveNotation = moveNotations[i];
-            var moveLink = $('<a>').attr({href: '#'}).append(moveNotation).click(function(){self._confirmMove(moveNotation); return false;});
+            var notation = moveNotations[i];
+            var moveLink = $('<a>').attr({href: '#'}).append(notation).click(self._generateConfirmMoveClickHandlerFunction(notation));
             possibleMoves.push(moveLink);
         }
 
@@ -34,6 +34,17 @@ var ConfirmMoveDialogView = Backbone.View.extend({
         this.$('#possibleMoves').html(ul);
         this.$el.modal();
 
+    },
+    
+    /*
+    * Generate the click handler function for a link in the 'confirm move' dialog 
+    */
+    _generateConfirmMoveClickHandlerFunction: function (notation) {
+        var self = this;
+        return function () {
+            self._confirmMove(notation);
+            return false;
+        };
     },
 
     /*
