@@ -301,9 +301,10 @@ img[draggable=true] {
   background: none;
   border: none;
   box-shadow: none;
-  height: 90px;
+  height: 200px;
+    width: 200px;
   left: 50%;
-  margin: -45px 0 0 -45px;
+  margin: -100px 0 0 -100px;
   position: absolute;
   top: 50%;
 }
@@ -340,13 +341,8 @@ img[draggable=true] {
   -ms-animation: spinner 1.5s infinite linear;
   -o-animation: spinner 1.5s infinite linear;
   animation: spinner 1.5s infinite linear;
-  background: #fff;
-  border: 13px dashed #ccc;
-  border-radius: 100%;
-  box-shadow: 0 0 0 12px #ccc;
-  height: 50px;
-  position: fixed;
-  width: 50px;
+    color: #fff;
+  font-size: 75px;
 }
 
 @-moz-keyframes spinner {

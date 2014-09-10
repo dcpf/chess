@@ -14,7 +14,8 @@ module.exports = function(grunt) {
                 options: {
                     node: true,
                     force: true,
-                    "-W104": true // 'let' is only available in JavaScript 1.7.
+                    "-W104": true, // 'let' is only available in JavaScript 1.7.
+                    ignores: 'src/server/server.js' // no longer used
                 },
                 src: ['src/server/**/*.js']
             },
