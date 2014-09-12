@@ -70,6 +70,21 @@ app.post('/updateUserPrefs', routes.updateUserPrefs);
 app.post('/feedback', routes.sendFeedback);
 app.post('/logClientError', routes.logClientError);
 
+// basic auth to protect admin URLs defined below
+app.use(function(req, res, next) {
+    if (req.headers.authorization === 'Basic ZHBmOnJ1NWgyMWx6') {
+        next();
+    } else {
+        res.statusCode = 401;
+        res.setHeader('WWW-Authenticate', 'Basic realm="chess_admin"');
+        res.end('Unauthorized');
+    }
+});
+
+// admin URLs
+var adminRoutes = require('./admin/routes');
+app.get('/admin', adminRoutes.index);
+
 // development only
 if ('development' == app.get('env')) {
   app.use(errorHandler());
