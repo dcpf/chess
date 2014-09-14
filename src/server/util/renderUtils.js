@@ -11,7 +11,7 @@ exports.getParams = function (req) {
         params = req.query;
     }
     return params;
-}
+};
 
 exports.renderFile = function (res, file, obj) {
     obj = obj || {};
@@ -27,17 +27,17 @@ exports.renderFile = function (res, file, obj) {
     });
     // render
     res.render(file, obj);
-}
+};
 
 exports.doJsonOutput = function (res, obj) {
 	res.writeHead(200, {'Content-Type': 'application/json'});
     res.write(JSON.stringify(obj));
 	res.end();
-}
+};
 
 exports.doErrorOutput = function (res, err) {
     console.error(err);
     res.writeHead(500, {'Content-Type': 'text/html'});
     res.write(err.message);
 	res.end();
-}
+};
