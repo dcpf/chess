@@ -84,6 +84,7 @@ app.use(function(req, res, next) {
 // admin URLs
 var adminRoutes = require('./admin/routes');
 app.get('/admin', adminRoutes.index);
+app.post('/admin/findGameById', adminRoutes.findGameById);
 
 // development only
 if ('development' == app.get('env')) {

@@ -1,26 +1,18 @@
 'use strict';
 
-// Timestamp of when the app was started. We use this for caching javascript and css files in the browser.
-var runtimestamp = new Date().getTime();
+var renderUtils = require('../util/renderUtils');
+var adminController = require('./adminController');
 
 exports.index = function (req, res) {
-    renderIndex(res);
+    renderUtils.renderFile(res, 'admin');
 };
 
-// private functions
-
-function renderIndex (res) {
-    var obj = {};
-    // add the runtimestamp for versioning css and javascript
-    obj.runtimestamp = runtimestamp;
-    // set layout to false
-    obj.layout = false;
-    // set no-cache headers
-    res.set({
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
+exports.findGameById = function (req, res) {
+    var params = renderUtils.getParams(req);
+    adminController.findGameById(params).then(function (obj) {
+        renderUtils.doJsonOutput(res, obj);
+    })
+    .fail(function (err) {
+        renderUtils.doErrorOutput(res, err);
     });
-    // render
-    res.render('admin', obj);
-}
+};
