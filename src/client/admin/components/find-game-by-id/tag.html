@@ -1,0 +1,24 @@
+<link rel="import" href="/webapp/polymer/polymer.html">
+<link rel="import" href="/webapp/polymer/core-ajax.html">
+<polymer-element name="find-game-by-id">
+<template>
+    <core-ajax id="xhr"
+               url="/admin/findGameById"
+               method="POST"
+               handleAs="json"
+               on-core-response="{{handleSuccess}}"
+               on-core-error="{{handleError}}">
+    </core-ajax>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/webapp/chess.css" />
+    <div>
+        <div>
+            <label class="control-label" for="gameID">Game ID</label>
+            <input class="form-control" id="gameID" style="width: 300px" on-keypress="{{submit}}" required>
+        </div>
+        <div id="findGameByIdError" style="display: none; color: red">{{errMsg}}</div>
+        <div id="findGameByIdSuccess" style="display: none; white-space: normal">{{gameObj}}</div>
+    </div>
+</template>
+<script src="/webapp/admin/components/find-game-by-id/tag.js"></script>
+</polymer-element>
