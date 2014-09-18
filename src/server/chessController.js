@@ -68,8 +68,10 @@ function saveMove (postData) {
     var gameID = gameIdFactory.getGameID(postData.gameID);
 
     gameDao.getGameObject(gameID.id)
-        .then(function (gameObj) {
-
+        .then(function (obj) {
+        
+            var gameObj = obj.gameObj;
+        
             if (_playerCanMove(gameObj, gameID.key)) {
 
                 // TODO: Use let with ES6
@@ -279,7 +281,8 @@ function _createGame (player1Email, player2Email) {
 
 function _enterExistingGame (gameID) {
 	var deferred = q.defer();
-	gameDao.getGameObject(gameID.id).then(function (gameObj) {
+	gameDao.getGameObject(gameID.id).then(function (obj) {
+        var gameObj = obj.gameObj;
 		var perspective = _getPerspective(gameObj, gameID.key);
 		var canMove = _playerCanMove(gameObj, gameID.key);
 		deferred.resolve(_buildEnterGameAttrMap(gameObj, gameID, perspective, canMove, null));

@@ -3,7 +3,7 @@
 Polymer({
     
     ready: function() {
-        this.response = '';
+        this.obj = {};
         this.errMsg = '';
     },
     
@@ -22,13 +22,18 @@ Polymer({
     handleSuccess: function (event, res) {
         this.$.errMsg.style.display = 'none';
         this.$.response.style.display = 'block';
-        this.response = res.response;
+        this.obj = res.response;
     },
     
     handleError: function (event, res) {
         this.$.response.style.display = 'none';
         this.errMsg = res.xhr.responseText;
         this.$.errMsg.style.display = 'block';
+    },
+    
+    editGame: function (event) {
+        event.preventDefault();
+        this.fire('edit-game', {obj: this.obj});
     }
     
 });

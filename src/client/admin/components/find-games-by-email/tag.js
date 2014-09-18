@@ -32,6 +32,7 @@ Polymer({
     },
     
     editGame: function (event) {
+        event.preventDefault();
         var gameID = event.target.text,
             numObjects = this.response.length,
             i = 0,
@@ -43,8 +44,6 @@ Polymer({
             }
         }
         this.fire('edit-game', {obj: obj});
-        event.stopPropagation();
-        event.preventDefault();
     }
     
 });

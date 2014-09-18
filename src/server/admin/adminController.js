@@ -18,8 +18,8 @@ function findGameById (postData) {
 		deferred.reject(err);
 		return deferred.promise;
 	}
-	gameDao.getGameObject(gameID.id).then(function (gameObj) {
-        deferred.resolve(gameObj);
+	gameDao.getGameObject(gameID.id).then(function (obj) {
+        deferred.resolve(obj);
     }).fail (function (err) {
         if (err instanceof customErrors.InvalidGameIdError) {
             err.message = 'Invalid Game ID: ' + gameID.compositeID;

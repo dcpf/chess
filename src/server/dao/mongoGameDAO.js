@@ -29,7 +29,7 @@ var getGameObject = function (gameID) {
         } else if (!record) {
           deferred.reject(new customErrors.InvalidGameIdError());
         } else {
-          deferred.resolve(record.gameObj);
+          deferred.resolve(record);
         }
     });
 
