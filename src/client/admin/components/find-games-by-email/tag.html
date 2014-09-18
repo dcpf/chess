@@ -17,7 +17,29 @@
             <input type="email" class="form-control" id="email" style="width: 300px" on-keypress="{{submit}}" required>
         </div>
         <div id="errMsg" style="display: none; color: red">{{errMsg}}</div>
-        <div id="response" style="display: none; white-space: normal">{{response}}</div>
+        <ul id="response" style="display: none; white-space: normal">
+            <template repeat="{{obj in response}}">
+                <li>{{obj._id}}
+                    <ul>
+                        <li>Created: {{obj.createDate}}</li>
+                        <li>Modified: {{obj.modifyDate}}</li>
+                        <li>White:
+                            <ul>
+                                <li><a href="/?gameID={{obj._id}}-{{obj.gameObj.W.key}}" target="_blank">{{obj._id}}-{{obj.gameObj.W.key}}</a></li>
+                                <li>{{obj.gameObj.W.email}}</li>
+                            </ul>
+                        </li>
+                        <li>Black:
+                            <ul>
+                                <li><a href="/?gameID={{obj._id}}-{{obj.gameObj.B.key}}" target="_blank">{{obj._id}}-{{obj.gameObj.B.key}}</a></li>
+                                <li>{{obj.gameObj.B.email}}</li>
+                            </ul>
+                        </li>
+                        <li>Move History: {{obj.gameObj.moveHistory}}</li>
+                    </ul>
+                </li>
+            </template>
+        </ul>
     </div>
 </template>
 <script src="/webapp/admin/components/find-games-by-email/tag.js"></script>
