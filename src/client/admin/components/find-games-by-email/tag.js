@@ -3,11 +3,16 @@
 Polymer({
     
     ready: function() {
-        this.response = '';
+        this.response = {};
         this.errMsg = '';
     },
     
-    init: function(){
+    init: function() {
+        this.response = {};
+        this.errMsg = '';
+        this.$.errMsg.style.display = 'none';
+        this.$.response.style.display = 'none';
+        this.$.email.value = '';
         this.$.email.focus();
     },
     

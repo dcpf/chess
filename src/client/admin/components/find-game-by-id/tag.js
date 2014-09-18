@@ -7,7 +7,12 @@ Polymer({
         this.errMsg = '';
     },
     
-    init: function(){
+    init: function() {
+        this.obj = {};
+        this.errMsg = '';
+        this.$.errMsg.style.display = 'none';
+        this.$.response.style.display = 'none';
+        this.$.gameID.value = '';
         this.$.gameID.focus();
     },
     
