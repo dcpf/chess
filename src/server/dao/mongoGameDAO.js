@@ -128,7 +128,51 @@ var findGamesByEmail = function (email) {
 
 };
 
+/**
+* This is for admin purposes only
+*/
+var editGame = function (obj) {
+
+    var deferred = q.defer();
+    
+    // If moveHistory has been modified, it will be a string, so convert it back to an array.
+    var moveHistory = obj.gameObj.moveHistory;
+    if (typeof moveHistory === 'string') {
+        moveHistory = moveHistory.split(',');
+    }
+    
+    db.games.update(
+        // query
+        { _id: mongojs.ObjectId(obj._id) },
+        // update fields
+        {
+            $set: {
+                modifyDate: new Date(),
+                "gameObj.moveHistory": moveHistory,
+                "gameObj.W.email": obj.gameObj.W.email,
+                "gameObj.B.email": obj.gameObj.B.email
+            }
+        },
+        // options
+        {},
+        // callback
+        function (err, savedObj) {
+            if (err) {
+                deferred.reject(err);
+            } else if (!savedObj) {
+                deferred.reject(new Error('Error saving game ' + obj._id));
+            } else {
+                console.log('Edited game ' + obj._id);
+                deferred.resolve({status: 'ok'});
+            }
+    });
+    
+    return deferred.promise;
+    
+};
+
 exports.getGameObject = getGameObject;
 exports.updateMoveHistory = updateMoveHistory;
 exports.createGame = createGame;
 exports.findGamesByEmail = findGamesByEmail;
+exports.editGame = editGame;

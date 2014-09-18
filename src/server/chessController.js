@@ -79,12 +79,12 @@ function saveMove (postData) {
                 gameDao.updateMoveHistory(gameID.id, gameObj.moveHistory)
                     .then(function () {
                       console.log('Updated game ' + gameID.id + ' with move ' + move);
-											var opponentEmail = '';
+                      var opponentEmail = '';
                       if (gameObj.moveHistory.length == 1) {
                           opponentEmail = gameObj.B.email;
                           emailHandler.sendInviteEmail(gameObj.W.email, gameObj.B.email, gameIdFactory.getGameID(gameID.id, gameObj.B.key), move);
                       } else {
-													// TODO: Use let with ES6
+                          // TODO: Use let with ES6
                           var obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
                           opponentEmail = obj.email;
                           emailHandler.sendMoveNotificationEmail(obj.email, gameIdFactory.getGameID(gameID.id, obj.key), move);

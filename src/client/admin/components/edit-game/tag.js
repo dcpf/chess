@@ -21,7 +21,7 @@ Polymer({
     handleSuccess: function (event, res) {
         this.$.errMsg.style.display = 'none';
         this.$.response.style.display = 'block';
-        this.response = res.response;
+        this.response = JSON.stringify(res.response);
     },
     
     handleError: function (event, res) {

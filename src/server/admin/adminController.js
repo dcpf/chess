@@ -46,7 +46,13 @@ function findGamesByEmail (postData) {
 
 function editGame (postData) {
     var deferred = q.defer();
-    deferred.resolve(postData.obj);
+    // postData.obj is a string, so we need to convert it into an object
+    var obj = JSON.parse(postData.obj);
+    gameDao.editGame(obj).then(function (obj) {
+        deferred.resolve(obj);
+    }).fail (function (err) {
+        deferred.reject(err);
+    });
     return deferred.promise;
 }
 
