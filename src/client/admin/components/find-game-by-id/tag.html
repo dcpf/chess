@@ -17,7 +17,21 @@
             <input class="form-control" id="gameID" style="width: 300px" on-keypress="{{submit}}" required>
         </div>
         <div id="errMsg" style="display: none; color: red">{{errMsg}}</div>
-        <div id="response" style="display: none; white-space: normal">{{response}}</div>
+        <ul id="response" style="display: none; white-space: normal">
+            <li>White:
+                <ul>
+                    <li>Key: {{response.W.key}}</li>
+                    <li>Email: {{response.W.email}}</li>
+                </ul>
+            </li>
+            <li>Black:
+                <ul>
+                    <li>Key: {{response.B.key}}</li>
+                    <li>Email: {{response.B.email}}</li>
+                </ul>
+            </li>
+            <li>Move History: {{response.moveHistory}}</li>
+        </ul>
     </div>
 </template>
 <script src="/webapp/admin/components/find-game-by-id/tag.js"></script>
