@@ -14,26 +14,36 @@
 </head>
 <body>
     <div style="white-space: nowrap">
-        <div style="display: inline-block; vertical-align: top; margin-right:100px">
+        <div id="componentLinks" style="display: inline-block; vertical-align: top; margin-right:100px">
             <ul>
                 <li><a href="#" id="findGameByIdLink">Find game by ID</a></li>
                 <li><a href="#" id="findGamesByEmailLink">Find games by email</a></li>
             </ul>
         </div>
-        <div style="display: inline-block">
+        <div id="components" style="display: inline-block">
             <find-game-by-id style="display:none; vertical-align: top"></find-game-by-id>
             <find-games-by-email style="display:none; vertical-align: top"></find-games-by-email>
         </div>
     </div>
 </body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script>
-document.getElementById('findGameByIdLink').onclick = function(){
-    document.querySelector('find-game-by-id').style.display = 'block';
+
+// Set some default behaviors for component links
+$('#componentLinks a').click(function(){
+    $('#componentLinks a').css('font-weight', 'normal');
+    $(this).css('font-weight', 'bold');
+    $('#components').children().hide();
     return false;
-};
-document.getElementById('findGamesByEmailLink').onclick = function(){
-    document.querySelector('find-games-by-email').style.display = 'block';
-    return false;
-};
+});
+
+$('#findGameByIdLink').click(function(){
+    $('find-game-by-id').show()
+});
+
+$('#findGamesByEmailLink').click(function(){
+    $('find-games-by-email').show();
+});
+
 </script>
 </html>
