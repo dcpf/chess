@@ -26,3 +26,13 @@ exports.findGamesByEmail = function (req, res) {
         renderUtils.doErrorOutput(res, err);
     });
 };
+
+exports.editGame = function (req, res) {
+    var params = renderUtils.getParams(req);
+    adminController.editGame(params).then(function (obj) {
+        renderUtils.doJsonOutput(res, obj);
+    })
+    .fail(function (err) {
+        renderUtils.doErrorOutput(res, err);
+    });
+};

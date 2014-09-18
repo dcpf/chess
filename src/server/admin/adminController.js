@@ -44,5 +44,12 @@ function findGamesByEmail (postData) {
     return deferred.promise;
 }
 
+function editGame (postData) {
+    var deferred = q.defer();
+    deferred.resolve(postData.obj);
+    return deferred.promise;
+}
+
 exports.findGameById = findGameById;
 exports.findGamesByEmail = findGamesByEmail;
+exports.editGame = editGame;

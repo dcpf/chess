@@ -19,7 +19,7 @@
         <div id="errMsg" style="display: none; color: red">{{errMsg}}</div>
         <ul id="response" style="display: none; white-space: normal">
             <template repeat="{{obj in response}}">
-                <li>{{obj._id}}
+                <li><a href="#" on-click="{{editGame}}">{{obj._id}}</a>
                     <ul>
                         <li>Created: {{obj.createDate}}</li>
                         <li>Modified: {{obj.modifyDate}}</li>

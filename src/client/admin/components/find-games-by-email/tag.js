@@ -29,6 +29,22 @@ Polymer({
         this.$.response.style.display = 'none';
         this.errMsg = res.xhr.responseText;
         this.$.errMsg.style.display = 'block';
+    },
+    
+    editGame: function (event) {
+        var gameID = event.target.text,
+            numObjects = this.response.length,
+            i = 0,
+            obj;
+        for (; i < numObjects; i++) {
+            obj = this.response[i];
+            if (obj._id === gameID) {
+                break;
+            }
+        }
+        this.fire('edit-game', {obj: obj});
+        event.stopPropagation();
+        event.preventDefault();
     }
     
 });

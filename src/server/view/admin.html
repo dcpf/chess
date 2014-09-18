@@ -11,6 +11,7 @@
     <script src="webapp/polymer/platform.js"></script>
     <link rel="import" href="/webapp/admin/components/find-game-by-id/tag.html?ver=<%= runtimestamp %>">
     <link rel="import" href="/webapp/admin/components/find-games-by-email/tag.html?ver=<%= runtimestamp %>">
+    <link rel="import" href="/webapp/admin/components/edit-game/tag.html?ver=<%= runtimestamp %>">
 </head>
 <body>
     <div style="white-space: nowrap">
@@ -23,6 +24,7 @@
         <div id="components" style="display: inline-block">
             <find-game-by-id style="display:none; vertical-align: top"></find-game-by-id>
             <find-games-by-email style="display:none; vertical-align: top"></find-games-by-email>
+            <edit-game style="display:none; vertical-align: top"></edit-game>
         </div>
     </div>
 </body>
@@ -47,6 +49,13 @@ $('#componentLinks a').click(function(){
     $elem[0].init();
     // return false to bypass default click behavior
     return false;
+});
+    
+document.addEventListener('edit-game', function(event) {
+    $('#components').children().hide();
+    var $elem = $('edit-game');
+    $elem.show();
+    $elem[0].init(event.detail.obj);
 });
 
 </script>
