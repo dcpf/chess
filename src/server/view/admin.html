@@ -38,11 +38,15 @@ $('#componentLinks a').click(function(){
 });
 
 $('#findGameByIdLink').click(function(){
-    $('find-game-by-id').show()
+    var $elem = $('find-game-by-id');
+    $elem.show();
+    $elem[0].init();
 });
 
 $('#findGamesByEmailLink').click(function(){
-    $('find-games-by-email').show();
+    var $elem = $('find-games-by-email');
+    $elem.show();
+    $elem[0].init();
 });
 
 </script>

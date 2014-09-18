@@ -7,6 +7,10 @@ Polymer({
         this.errMsg = '';
     },
     
+    init: function(){
+        this.$.email.focus();
+    },
+    
     submit: function(event, detail, sender) {
         if (event.keyCode === 13) {
             var xhr = this.$.xhr;
