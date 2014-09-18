@@ -1,0 +1,24 @@
+<link rel="import" href="/webapp/polymer/polymer.html">
+<link rel="import" href="/webapp/polymer/core-ajax.html">
+<polymer-element name="find-games-by-email">
+<template>
+    <core-ajax id="xhr"
+               url="/admin/findGamesByEmail"
+               method="POST"
+               handleAs="json"
+               on-core-response="{{handleSuccess}}"
+               on-core-error="{{handleError}}">
+    </core-ajax>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/webapp/chess.css" />
+    <div>
+        <div>
+            <label class="control-label" for="email">Email</label>
+            <input type="email" class="form-control" id="email" style="width: 300px" on-keypress="{{submit}}" required>
+        </div>
+        <div id="errMsg" style="display: none; color: red">{{errMsg}}</div>
+        <div id="response" style="display: none; white-space: normal">{{response}}</div>
+    </div>
+</template>
+<script src="/webapp/admin/components/find-games-by-email/tag.js"></script>
+</polymer-element>
