@@ -29,4 +29,20 @@ function findGameById (postData) {
 	return deferred.promise;
 }
 
+function findGamesByEmail (postData) {
+    var email = postData.email;
+    var deferred = q.defer();
+    if (!email.trim()) {
+        deferred.reject(new Error('Email is required'));
+        return deferred.promise;
+    }
+    gameDao.findGamesByEmail(email).then(function (games) {
+        deferred.resolve(games);
+    }).fail (function (err) {
+        deferred.reject(err);
+    });
+    return deferred.promise;
+}
+
 exports.findGameById = findGameById;
+exports.findGamesByEmail = findGamesByEmail;

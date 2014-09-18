@@ -85,6 +85,7 @@ app.use(function(req, res, next) {
 var adminRoutes = require('./admin/routes');
 app.get('/admin', adminRoutes.index);
 app.post('/admin/findGameById', adminRoutes.findGameById);
+app.post('/admin/findGamesByEmail', adminRoutes.findGamesByEmail);
 
 // development only
 if ('development' == app.get('env')) {

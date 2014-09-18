@@ -16,3 +16,13 @@ exports.findGameById = function (req, res) {
         renderUtils.doErrorOutput(res, err);
     });
 };
+
+exports.findGamesByEmail = function (req, res) {
+    var params = renderUtils.getParams(req);
+    adminController.findGamesByEmail(params).then(function (obj) {
+        renderUtils.doJsonOutput(res, obj);
+    })
+    .fail(function (err) {
+        renderUtils.doErrorOutput(res, err);
+    });
+};

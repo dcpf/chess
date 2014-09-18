@@ -4,28 +4,35 @@
 <head>
     <meta charset="utf-8" />
     <meta name="author" content="David Piersol-Freedman 1998">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>Dave's Chess-By-Email - admin</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="webapp/chess.css?ver=<%= runtimestamp %>" />
+    <link rel="stylesheet" href="webapp/chess.css?ver=<%= runtimestamp %>">
     <script src="webapp/polymer/platform.js"></script>
     <link rel="import" href="/webapp/admin/components/find-game-by-id/tag.html?ver=<%= runtimestamp %>">
+    <link rel="import" href="/webapp/admin/components/find-games-by-email/tag.html?ver=<%= runtimestamp %>">
 </head>
 <body>
     <div style="white-space: nowrap">
         <div style="display: inline-block; vertical-align: top; margin-right:100px">
             <ul>
                 <li><a href="#" id="findGameByIdLink">Find game by ID</a></li>
+                <li><a href="#" id="findGamesByEmailLink">Find games by email</a></li>
             </ul>
         </div>
         <div style="display: inline-block">
             <find-game-by-id style="display:none; vertical-align: top"></find-game-by-id>
+            <find-games-by-email style="display:none; vertical-align: top"></find-games-by-email>
         </div>
     </div>
 </body>
 <script>
 document.getElementById('findGameByIdLink').onclick = function(){
     document.querySelector('find-game-by-id').style.display = 'block';
+    return false;
+};
+document.getElementById('findGamesByEmailLink').onclick = function(){
+    document.querySelector('find-games-by-email').style.display = 'block';
     return false;
 };
 </script>

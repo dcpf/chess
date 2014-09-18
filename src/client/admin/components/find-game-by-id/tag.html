@@ -16,8 +16,8 @@
             <label class="control-label" for="gameID">Game ID</label>
             <input class="form-control" id="gameID" style="width: 300px" on-keypress="{{submit}}" required>
         </div>
-        <div id="findGameByIdError" style="display: none; color: red">{{errMsg}}</div>
-        <div id="findGameByIdSuccess" style="display: none; white-space: normal">{{gameObj}}</div>
+        <div id="errMsg" style="display: none; color: red">{{errMsg}}</div>
+        <div id="response" style="display: none; white-space: normal">{{response}}</div>
     </div>
 </template>
 <script src="/webapp/admin/components/find-game-by-id/tag.js"></script>

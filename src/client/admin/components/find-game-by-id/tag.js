@@ -3,7 +3,7 @@
 Polymer({
     
     ready: function() {
-        this.gameObj = '';
+        this.response = '';
         this.errMsg = '';
     },
     
@@ -16,15 +16,15 @@ Polymer({
     },
     
     handleSuccess: function (event, res) {
-        this.$.findGameByIdError.style.display = 'none';
-        this.$.findGameByIdSuccess.style.display = 'block';
-        this.gameObj = JSON.stringify(res.response);
+        this.$.errMsg.style.display = 'none';
+        this.$.response.style.display = 'block';
+        this.response = JSON.stringify(res.response);
     },
     
     handleError: function (event, res) {
-        this.$.findGameByIdSuccess.style.display = 'none';
+        this.$.response.style.display = 'none';
         this.errMsg = res.xhr.responseText;
-        this.$.findGameByIdError.style.display = 'block';
+        this.$.errMsg.style.display = 'block';
     }
     
 });
