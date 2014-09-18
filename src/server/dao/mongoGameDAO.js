@@ -162,7 +162,7 @@ var editGame = function (obj) {
             } else if (!savedObj) {
                 deferred.reject(new Error('Error saving game ' + obj._id));
             } else {
-                console.log('Edited game ' + obj._id);
+                console.log('Edited game: ' + JSON.stringify(obj));
                 deferred.resolve({status: 'ok'});
             }
     });
