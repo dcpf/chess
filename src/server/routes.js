@@ -1,10 +1,8 @@
 'use strict';
 
-var renderUtils = require('./util/renderUtils');
 var chessController = require('./chessController');
 
-exports.index = function (req, res) {
-
+exports.index = function (req, res, next) {
     var params = req.getParams();
 
     if (params.gameID) {
@@ -12,14 +10,16 @@ exports.index = function (req, res) {
         // GET enterGame request where gameID is passed as a URL param
         chessController.enterGame(params)
             .then(function (obj) {
-                renderIndex(obj, res);
+                renderIndex(obj, req);
+                next();
             })
             // If chessController.enterGame() failed, we'll render index.html with an err msg in the attr map.
             .fail(function (err) {
                 console.warn(err);
                 chessController.buildDefaultEnterGameAttrMap(err)
                     .then(function (obj) {
-                        renderIndex(obj, res);
+                        renderIndex(obj, req);
+                        next();
                     })
                     .fail(function (err) {
                         // what to do here?
@@ -32,7 +32,8 @@ exports.index = function (req, res) {
         // default request for index.html
         chessController.buildDefaultEnterGameAttrMap()
             .then(function (obj) {
-                renderIndex(obj, res);
+                renderIndex(obj, req);
+                next();
             })
             .fail(function (err) {
                 // what to do here?
@@ -40,6 +41,7 @@ exports.index = function (req, res) {
             });
 
     }
+    
 };
 
 exports.findGamesByEmail = function (req, res, next) {
@@ -91,6 +93,7 @@ function logClientError (req, params) {
     console.log('Client error: ' + JSON.stringify(params) + '; User agent: ' + req.headers['user-agent']);
 }
 
-function renderIndex (obj, res) {
-    renderUtils.renderFile(res, 'index', obj);
+function renderIndex (obj, req) {
+    req.responseProps.file = 'index';
+    req.responseProps.obj = obj;
 }

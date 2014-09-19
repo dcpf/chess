@@ -1,10 +1,10 @@
 'use strict';
 
-var renderUtils = require('../util/renderUtils');
 var adminController = require('./adminController');
 
-exports.index = function (req, res) {
-    renderUtils.renderFile(res, 'admin');
+exports.index = function (req, res, next) {
+    req.responseProps.file = 'admin';
+    next();
 };
 
 exports.findGameById = function (req, res, next) {

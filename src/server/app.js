@@ -30,6 +30,9 @@ var errorHandler = require('errorhandler');
 
 var routes = require('./routes');
 
+// Timestamp of when the app was started. We use this for caching javascript and css files in the browser.
+var runtimestamp = new Date().getTime();
+
 var app = express();
 
 // all environments
@@ -118,9 +121,16 @@ app.post('/admin/findGameById', adminRoutes.findGameById);
 app.post('/admin/findGamesByEmail', adminRoutes.findGamesByEmail);
 app.post('/admin/editGame', adminRoutes.editGame);
 
-// After handling the route, send the response.
+/**
+After handling the route, send the response. Based on what's in req.responseProps, we will do one of the following:
+- responseProps.promise: Handle the promise
+- responseProps.file: Render an HTML file
+- other: Send responseProps.obj to the client
+*/
 app.use(function(req, res, next) {
+    
     var responseProps = req.responseProps;
+    
     if (responseProps.promise) {
         responseProps.promise.then(function (obj) {
             res.status(200).send(obj);
@@ -128,6 +138,20 @@ app.use(function(req, res, next) {
             console.error(err);
             res.status(500).send(err.message);
         });
+    } else if (responseProps.file) {
+        var obj = responseProps.obj || {};
+        // add the runtimestamp for versioning css and javascript
+        obj.runtimestamp = runtimestamp;
+        // set layout to false
+        obj.layout = false;
+        // set no-cache headers
+        res.set({
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        });
+        // render
+        res.render(responseProps.file, obj);
     } else {
         responseProps.obj = responseProps.obj || {};
         res.status(200).send(responseProps.obj);
