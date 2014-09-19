@@ -30,14 +30,10 @@ exports.renderFile = function (res, file, obj) {
 };
 
 exports.doJsonOutput = function (res, obj) {
-	res.writeHead(200, {'Content-Type': 'application/json'});
-    res.write(JSON.stringify(obj));
-	res.end();
+    res.status(200).send(obj);
 };
 
 exports.doErrorOutput = function (res, err) {
     console.error(err);
-    res.writeHead(500, {'Content-Type': 'text/html'});
-    res.write(err.message);
-	res.end();
+    res.status(500).send(err.message);
 };
