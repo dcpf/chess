@@ -5,55 +5,42 @@ var gameIdFactory = require('../model/mongoGameIdFactory');
 var gameDao = require('../dao/mongoGameDAO');
 var customErrors = require('../error/customErrors');
 
-function findGameById (postData) {
-	var gameID;
+function findGameById (gameID) {
 	var deferred = q.defer();
-	if (!postData.gameID.trim()) {
+    var gameIdObj;
+	if (!gameID || !gameID.trim()) {
 		deferred.reject(new Error('Game ID is required'));
 		return deferred.promise;
 	}
 	try {
-		gameID = gameIdFactory.getGameID(postData.gameID);
+		gameIdObj = gameIdFactory.getGameID(gameID);
 	} catch (err) {
 		deferred.reject(err);
 		return deferred.promise;
 	}
-	gameDao.getGameObject(gameID.id).then(function (obj) {
+	gameDao.getGameObject(gameIdObj.id).then(function (obj) {
         deferred.resolve(obj);
     }).fail (function (err) {
         if (err instanceof customErrors.InvalidGameIdError) {
-            err.message = 'Invalid Game ID: ' + gameID.compositeID;
+            err.message = 'Invalid Game ID: ' + gameIdObj.compositeID;
         }
         deferred.reject(err);
     });
 	return deferred.promise;
 }
 
-function findGamesByEmail (postData) {
-    var email = postData.email;
+function findGamesByEmail (email) {
     var deferred = q.defer();
-    if (!email.trim()) {
+    if (!email || !email.trim()) {
         deferred.reject(new Error('Email is required'));
         return deferred.promise;
     }
-    gameDao.findGamesByEmail(email).then(function (games) {
-        deferred.resolve(games);
-    }).fail (function (err) {
-        deferred.reject(err);
-    });
-    return deferred.promise;
+    return gameDao.findGamesByEmail(email);
 }
 
-function editGame (postData) {
-    var deferred = q.defer();
-    // postData.obj is a string, so we need to convert it into an object
-    var obj = JSON.parse(postData.obj);
-    gameDao.editGame(obj).then(function (obj) {
-        deferred.resolve(obj);
-    }).fail (function (err) {
-        deferred.reject(err);
-    });
-    return deferred.promise;
+function editGame (obj) {
+    // obj is a string, so we need to convert it into an object
+    return gameDao.editGame(JSON.parse(obj));
 }
 
 exports.findGameById = findGameById;

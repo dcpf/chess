@@ -5,12 +5,12 @@ var chessController = require('./chessController');
 
 exports.index = function (req, res) {
 
-    var params = getParams(req);
+    var params = req.getParams();
 
     if (params.gameID) {
 
         // GET enterGame request where gameID is passed as a URL param
-        chessController.enterGame(getParams(req))
+        chessController.enterGame(params)
             .then(function (obj) {
                 renderIndex(obj, res);
             })
@@ -42,80 +42,50 @@ exports.index = function (req, res) {
     }
 };
 
-exports.findGamesByEmail = function (req, res) {
-  var params = getParams(req);
-  chessController.findGamesByEmail(params.email)
-    .then(function (obj) {
-      doJsonOutput(res, obj);
-    })
-    .fail(function (err) {
-      doErrorOutput(res, err);
-    });
+exports.findGamesByEmail = function (req, res, next) {
+    req.responseProps.promise = chessController.findGamesByEmail(req.getParam('email'));
+    next();
 };
 
 // POST createGame request
-exports.createGame = function (req, res) {
-  var ip = req.connection.remoteAddress;
-	chessController.createGame(ip, getParams(req))
-        .then(function (obj) {
-            doJsonOutput(res, obj);
-        })
-        .fail(function (err) {
-            doErrorOutput(res, err);
-        });
+exports.createGame = function (req, res, next) {
+    var ip = req.connection.remoteAddress;
+	req.responseProps.promise = chessController.createGame(ip, req.getParams());
+    next();
 };
 
 // POST enterGame request
-exports.enterGame = function (req, res) {
-  chessController.enterGame(getParams(req))
-        .then(function (obj) {
-            doJsonOutput(res, obj);
-        })
-        .fail(function (err) {
-            doErrorOutput(res, err);
-        });
+exports.enterGame = function (req, res, next) {
+    req.responseProps.promise = chessController.enterGame(req.getParams());
+    next();
 };
 
 // POST saveMove request
-exports.saveMove = function (req, res) {
-    chessController.saveMove(getParams(req))
-        .then(function (obj) {
-            doJsonOutput(res, obj);
-        })
-        .fail(function (err) {
-            doErrorOutput(res, err);
-        });
+exports.saveMove = function (req, res, next) {
+    req.responseProps.promise = chessController.saveMove(req.getParams());
+    next();
 };
 
 // POST updateUserPrefs request
-exports.updateUserPrefs = function (req, res) {
-    chessController.updateUserPrefs(getParams(req))
-        .then(function (obj) {
-            doJsonOutput(res, obj);
-        })
-        .fail(function (err) {
-            doErrorOutput(res, err);
-        });
+exports.updateUserPrefs = function (req, res, next) {
+    req.responseProps.promise = chessController.updateUserPrefs(req.getParams());
+    next();
 };
 
-exports.sendFeedback = function (req, res) {
-    var params = getParams(req);
+exports.sendFeedback = function (req, res, next) {
+    var params = req.getParams();
     params.userAgent = req.headers['user-agent'];
     chessController.sendFeedback(params);
-    doJsonOutput(res, {});
+    next();
 };
 
 // POST logClientError request
-exports.logClientError = function (req, res) {
-    logClientError(req, getParams(req));
-    doJsonOutput(res, {});
+exports.logClientError = function (req, res, next) {
+    logClientError(req, req.getParams());
+    next();
 };
 
 // private functions
-
-function getParams (req) {
-    return renderUtils.getParams(req);
-}
 
 function logClientError (req, params) {
     console.log('Client error: ' + JSON.stringify(params) + '; User agent: ' + req.headers['user-agent']);
@@ -123,12 +93,4 @@ function logClientError (req, params) {
 
 function renderIndex (obj, res) {
     renderUtils.renderFile(res, 'index', obj);
-}
-
-function doJsonOutput (res, obj) {
-    renderUtils.doJsonOutput(res, obj);
-}
-
-function doErrorOutput (res, err) {
-    renderUtils.doErrorOutput(res, err);
 }

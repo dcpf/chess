@@ -54,6 +54,36 @@ app.use(session({resave: true, saveUninitialized: true, secret: 'jellyJam'}));
 
 app.disable('x-powered-by');
 
+// set up some things we need for the app
+app.use(function (req, res, next) {
+    
+    /*
+    Create a responseProps object on the request object to hold app-specific response properties. Valid attrs are:
+    - responseProps.promise - Promise returned by the router/controller
+    - responseProps.obj - JSON object to be passed back to the client 
+    - responseProps.error - Error to be passed to client the client 
+    - responseProps.file - File to render
+    */
+    req.responseProps = {};
+    
+    // Get the passed in params (for either GET or POST), and make them available via req.getParam() and req.getParams()
+    var params = {};
+    if (req.method === 'POST') {
+        params = req.body;
+    } else if (req.method === 'GET') {
+        params = req.query;
+    }
+    req.getParam = function (name) {
+        return params[name];
+    };
+    req.getParams = function () {
+        return params;
+    };
+    
+    next();
+    
+});
+
 // log all requests
 app.use(function (req, res, next) {
     console.log(req.method + ' ' + req.url + '; IP: ' + req.connection.remoteAddress + '; User-agent: ' + req.headers['user-agent']);
@@ -88,10 +118,21 @@ app.post('/admin/findGameById', adminRoutes.findGameById);
 app.post('/admin/findGamesByEmail', adminRoutes.findGamesByEmail);
 app.post('/admin/editGame', adminRoutes.editGame);
 
-// development only
-if ('development' == app.get('env')) {
-  app.use(errorHandler());
-}
+// After handling the route, send the response.
+app.use(function(req, res, next) {
+    var responseProps = req.responseProps;
+    if (responseProps.promise) {
+        responseProps.promise.then(function (obj) {
+            res.status(200).send(obj);
+        }).fail(function (err) {
+            console.error(err);
+            res.status(500).send(err.message);
+        });
+    } else {
+        responseProps.obj = responseProps.obj || {};
+        res.status(200).send(responseProps.obj);
+    }
+});
 
 app.listen(GLOBAL.APP_URL.port);
 
