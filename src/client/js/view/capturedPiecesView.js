@@ -21,7 +21,7 @@ var CapturedPiecesView = Backbone.View.extend({
       var piece = new Piece({id: obj.get('pieceId')});
       var targetId = (piece.isBlack()) ? '#capturedBlackPieces' : '#capturedWhitePieces';
       var capturedPiecesElem = this.$(targetId);
-      capturedPiecesElem.append('<img src="webapp/images/' + piece.qualifiedName + '.gif" />');
+      capturedPiecesElem.append('<img src="/webapp/images/' + piece.qualifiedName + '.gif" />');
     }
 
 });

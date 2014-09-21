@@ -55,7 +55,7 @@ var BoardView = Backbone.View.extend({
     _buildPieceImageElem: function (piece) {
         var legalMoves = this.board.legalMovesMap[piece.id];
         var draggable = (!this.viewMode && legalMoves && legalMoves.length > 0) ? true : false;
-        var imgTag = '<img id="' + piece.id + '" src="webapp/images/' + piece.qualifiedName + '.gif" draggable="' + draggable + '"';
+        var imgTag = '<img id="' + piece.id + '" src="/webapp/images/' + piece.qualifiedName + '.gif" draggable="' + draggable + '"';
         imgTag += '/>';
         return imgTag;
     },
