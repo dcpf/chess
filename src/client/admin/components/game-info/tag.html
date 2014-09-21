@@ -1,0 +1,24 @@
+<polymer-element name="game-info" attributes="obj">
+<template>
+    <li><b>Edit:</b> <a href="#" on-click="{{editGame}}">{{obj._id}}</a>
+        <ul>
+            <li><b>Created:</b> {{obj.createDate}}</li>
+            <li><b>Modified:</b> {{obj.modifyDate}}</li>
+            <li><b>White:</b>
+                <ul>
+                    <li><b>Game:</b> <a href="/?gameID={{obj._id}}-{{obj.gameObj.W.key}}" target="_blank">{{obj._id}}-{{obj.gameObj.W.key}}</a></li>
+                    <li><b>Email:</b> {{obj.gameObj.W.email}}</li>
+                </ul>
+            </li>
+            <li><b>Black:</b>
+                <ul>
+                    <li><b>Game:</b> <a href="/?gameID={{obj._id}}-{{obj.gameObj.B.key}}" target="_blank">{{obj._id}}-{{obj.gameObj.B.key}}</a></li>
+                    <li><b>Email:</b> {{obj.gameObj.B.email}}</li>
+                </ul>
+            </li>
+            <li><b>Move History:</b> {{obj.gameObj.moveHistory}}</li>
+        </ul>
+    </li>
+</template>
+<script src="/webapp/admin/components/game-info/tag.js"></script>
+</polymer-element>

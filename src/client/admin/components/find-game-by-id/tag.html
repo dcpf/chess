@@ -1,5 +1,6 @@
 <link rel="import" href="/webapp/polymer/polymer.html">
 <link rel="import" href="/webapp/polymer/core-ajax.html">
+<link rel="import" href="/webapp/admin/components/game-info/tag.html">
 <polymer-element name="find-game-by-id">
 <template>
     <core-ajax id="xhr"
@@ -18,22 +19,7 @@
         </div>
         <div id="errMsg" style="display: none; color: red">{{errMsg}}</div>
         <ul id="response" style="display: none; white-space: normal">
-            <li>GameID: <a href="#" on-click="{{editGame}}">{{obj._id}}</a></li>
-            <li>Created: {{obj.createDate}}</li>
-            <li>Modified: {{obj.modifyDate}}</li>
-            <li>White:
-                <ul>
-                    <li>Key: {{obj.gameObj.W.key}}</li>
-                    <li>Email: {{obj.gameObj.W.email}}</li>
-                </ul>
-            </li>
-            <li>Black:
-                <ul>
-                    <li>Key: {{obj.gameObj.B.key}}</li>
-                    <li>Email: {{obj.gameObj.B.email}}</li>
-                </ul>
-            </li>
-            <li>Move History: {{obj.gameObj.moveHistory}}</li>
+            <game-info obj="{{obj}}"></game-info>
         </ul>
     </div>
 </template>

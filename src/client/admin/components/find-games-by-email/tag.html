@@ -1,5 +1,6 @@
 <link rel="import" href="/webapp/polymer/polymer.html">
 <link rel="import" href="/webapp/polymer/core-ajax.html">
+<link rel="import" href="/webapp/admin/components/game-info/tag.html">
 <polymer-element name="find-games-by-email">
 <template>
     <core-ajax id="xhr"
@@ -19,25 +20,7 @@
         <div id="errMsg" style="display: none; color: red">{{errMsg}}</div>
         <ul id="response" style="display: none; white-space: normal">
             <template repeat="{{obj in response}}">
-                <li><a href="#" on-click="{{editGame}}">{{obj._id}}</a>
-                    <ul>
-                        <li>Created: {{obj.createDate}}</li>
-                        <li>Modified: {{obj.modifyDate}}</li>
-                        <li>White:
-                            <ul>
-                                <li><a href="/?gameID={{obj._id}}-{{obj.gameObj.W.key}}" target="_blank">{{obj._id}}-{{obj.gameObj.W.key}}</a></li>
-                                <li>{{obj.gameObj.W.email}}</li>
-                            </ul>
-                        </li>
-                        <li>Black:
-                            <ul>
-                                <li><a href="/?gameID={{obj._id}}-{{obj.gameObj.B.key}}" target="_blank">{{obj._id}}-{{obj.gameObj.B.key}}</a></li>
-                                <li>{{obj.gameObj.B.email}}</li>
-                            </ul>
-                        </li>
-                        <li>Move History: {{obj.gameObj.moveHistory}}</li>
-                    </ul>
-                </li>
+                <game-info obj="{{obj}}"></game-info>
             </template>
         </ul>
     </div>
