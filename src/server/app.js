@@ -69,7 +69,7 @@ app.use(function (req, res, next) {
     */
     req.responseProps = {};
     
-    // Get the passed in params (for either GET or POST), and make them available via req.getParam() and req.getParams()
+    // Get the passed in params (for either GET, POST or route params), and make them available via req.getParam() and req.getParams()
     var params = {};
     if (req.method === 'POST') {
         params = req.body;
@@ -77,9 +77,15 @@ app.use(function (req, res, next) {
         params = req.query;
     }
     req.getParam = function (name) {
-        return params[name];
+        return params[name] || req.params[name];
     };
     req.getParams = function () {
+        // add everything from req.params to params
+        for (var name in req.params) {
+            if (!params[name]) {
+                params[name] = req.params[name];
+            }
+        }
         return params;
     };
     
@@ -95,6 +101,7 @@ app.use(function (req, res, next) {
 
 // routes
 app.get('/', routes.index);
+app.get('/play/:gameID', routes.index);
 app.post('/findGamesByEmail', routes.findGamesByEmail);
 app.post('/createGame', routes.createGame);
 app.post('/enterGame', routes.enterGame);
@@ -104,7 +111,7 @@ app.post('/feedback', routes.sendFeedback);
 app.post('/logClientError', routes.logClientError);
 
 // basic auth to protect admin URLs defined below
-app.use(function(req, res, next) {
+app.use('/admin', function(req, res, next) {
     if (req.headers.authorization === 'Basic ZHBmOnJ1NWgyMWx6') {
         next();
     } else {
@@ -121,13 +128,42 @@ app.post('/admin/findGameById', adminRoutes.findGameById);
 app.post('/admin/findGamesByEmail', adminRoutes.findGamesByEmail);
 app.post('/admin/editGame', adminRoutes.editGame);
 
+// Send the response
+app.use(sendResponse);
+
+app.listen(GLOBAL.APP_URL.port);
+
+console.log('Express server listening on ' + GLOBAL.APP_URL.url);
+
+// private functions
+
+function initConfig () {
+
+	// Read the config file and make the config object globally available
+	var configFile = cmndr.configFile || path.join(__dirname, 'conf/config.json');
+	var config = {};
+	try {
+		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
+    console.log('Initialized config file: ' + configFile);
+	} catch (err) {
+		console.warn('No config file found at: ' + configFile + '. Starting with no configuration.');
+	}
+	GLOBAL.CONFIG = config;
+
+  // Set the global appUrl object using the host name and port from either the passed-in args or the env vars.
+	var hostName = cmndr.hostName || process.env.DOMAIN;
+	var port = cmndr.port || process.env.PORT;
+  GLOBAL.APP_URL = appUrl.constructUrl(hostName, port, cmndr.usePortInLinks);
+
+}
+
 /**
 After handling the route, send the response. Based on what's in req.responseProps, we will do one of the following:
 - responseProps.promise: Handle the promise
 - responseProps.file: Render an HTML file
 - other: Send responseProps.obj to the client
 */
-app.use(function(req, res, next) {
+function sendResponse (req, res) {
     
     var responseProps = req.responseProps;
     
@@ -156,30 +192,5 @@ app.use(function(req, res, next) {
         responseProps.obj = responseProps.obj || {};
         res.status(200).send(responseProps.obj);
     }
-});
-
-app.listen(GLOBAL.APP_URL.port);
-
-console.log('Express server listening on ' + GLOBAL.APP_URL.url);
-
-// private functions
-
-function initConfig () {
-
-	// Read the config file and make the config object globally available
-	var configFile = cmndr.configFile || path.join(__dirname, 'conf/config.json');
-	var config = {};
-	try {
-		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
-    console.log('Initialized config file: ' + configFile);
-	} catch (err) {
-		console.warn('No config file found at: ' + configFile + '. Starting with no configuration.');
-	}
-	GLOBAL.CONFIG = config;
-
-  // Set the global appUrl object using the host name and port from either the passed-in args or the env vars.
-	var hostName = cmndr.hostName || process.env.DOMAIN;
-	var port = cmndr.port || process.env.PORT;
-  GLOBAL.APP_URL = appUrl.constructUrl(hostName, port, cmndr.usePortInLinks);
-
+    
 }

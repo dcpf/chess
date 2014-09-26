@@ -138,5 +138,5 @@ exports.sendFeedbackEmail = function (data) {
 };
 
 function _buildGameUrl (gameID) {
-	return GLOBAL.APP_URL.url + '?gameID=' + gameID.compositeID;
+	return GLOBAL.APP_URL.url + '/play/' + gameID.compositeID;
 }

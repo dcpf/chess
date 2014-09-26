@@ -3,6 +3,7 @@
 var chessController = require('./chessController');
 
 exports.index = function (req, res, next) {
+    
     var params = req.getParams();
 
     if (params.gameID) {
