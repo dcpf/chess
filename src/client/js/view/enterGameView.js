@@ -60,6 +60,13 @@ var EnterGameView = Backbone.View.extend({
           self.$('#recaptcha_response_field').val("");
           self.$('#gameID').val("");
         });
+        
+        // click submit when enter key is pressed
+        this.$el.keypress(function(event) {
+            if (event.keyCode === 13) {
+                self.$('#enterGameSubmitButton').click();
+            }
+        });
 
     },
 

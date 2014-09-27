@@ -18,7 +18,7 @@
       <h3>Welcome to Dave's Chess-By-Email</h3>
       <hr/>
       <div id="enterGameTable">
-        <input type="radio" name="newOrExisting" id="newGameRadio" value="N" checked><label for="newGameRadio" style="font-weight: bold">New Game</label>
+        <input type="radio" name="newOrExisting" id="newGameRadio" value="N" tabindex="-1" checked><label for="newGameRadio" style="font-weight: bold">New Game</label>
         <div id="newGameForm">
           <fieldset>
             <label class="control-label" for="player1Email">Your Email Address</label>
@@ -29,18 +29,18 @@
           </fieldset>
         </div>
         <div><hr></div>
-        <input type="radio" name="newOrExisting" id="existingGameRadio" value="E"><label for="existingGameRadio" style="font-weight: bold">Continue Existing Game</label>
+        <input type="radio" name="newOrExisting" id="existingGameRadio" value="E" tabindex="-1"><label for="existingGameRadio" style="font-weight: bold">Continue Existing Game</label>
         <div id="existingGameForm">
           <fieldset>
             <label class="control-label" for="gameID">Game ID</label>
             <input type="text" class="form-control" id="gameID" required>
-            <div><a href="#" id="forgotGameIdLink">Forgot your game ID?</a></div>
+            <div><a href="#" id="forgotGameIdLink" tabindex="-1">Forgot your game ID?</a></div>
           </fieldset>
         </div>
         <div><hr></div>
         <div style="text-align: center">
-          <button type="button" class="btn btn-primary" id="enterGameSubmitButton" style="margin-right: 10px">Submit</button>
-          <button type="reset" class="btn">Clear</button>
+          <button type="button" class="btn btn-primary" id="enterGameSubmitButton" style="margin-right: 10px" tabindex="-1">Submit</button>
+          <button type="reset" class="btn" tabindex="-1">Clear</button>
         </div>
       </div>
     </div>
