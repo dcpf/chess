@@ -19,7 +19,9 @@ var EnterGameView = Backbone.View.extend({
 
         // initalize the captcha
         if (chessAttrs.config.recaptcha.enabled) {
-            document.write('<script src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"><\/script>');
+            var elem = document.createElement("script");
+            elem.src = "http://www.google.com/recaptcha/api/js/recaptcha_ajax.js";
+            document.body.appendChild(elem);
             this._createCaptcha(self);
         }
 
