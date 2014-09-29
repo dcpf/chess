@@ -46,16 +46,16 @@ var GameManager = function (attrs) {
 
             var self = this;
 
-            // If attrs were passed in, update chessAttrs.vars and chessAttrs.user
+            // If attrs were passed in, update chessAttrs.gameState and chessAttrs.user
             if (attrs) {
                 // These are strings, so we need to convert them back into objects before assigning
-                chessAttrs.vars = JSON.parse(attrs.chessVars);
+                chessAttrs.gameState = JSON.parse(attrs.gameState);
                 chessAttrs.user = JSON.parse(attrs.user);
             }
 
             // If there is an existing move history, use it to get the game into the current state
-            for (var i in chessAttrs.vars.initialMoveHistory) {
-                var notation = chessAttrs.vars.initialMoveHistory[i];
+            for (var i in chessAttrs.gameState.initialMoveHistory) {
+                var notation = chessAttrs.gameState.initialMoveHistory[i];
                 self.board.updateGameState(notation);
             }
 
@@ -63,10 +63,10 @@ var GameManager = function (attrs) {
             this.board.findAllLegalMoves();
 
             // make sure viewMode is set accordingly based on canMove
-            self.boardView.viewMode = !chessAttrs.vars.canMove;
+            self.boardView.viewMode = !chessAttrs.gameState.canMove;
 
             // render the board
-            self.boardView.render(chessAttrs.vars.perspective);
+            self.boardView.render(chessAttrs.gameState.perspective);
 
             self.eventHandler.trigger(self.eventHandler.messageNames.GAME_ENTERED);
 
@@ -79,7 +79,7 @@ var GameManager = function (attrs) {
             var self = this;
             $("#progressDialog").modal();
             $.post('/saveMove', {
-                gameID: chessAttrs.vars.gameID,
+                gameID: chessAttrs.gameState.gameID,
                 move: notation
             })
               .done(function(res) {
@@ -96,7 +96,7 @@ var GameManager = function (attrs) {
           $.post('/feedback', {
             feedback: feedback,
             email: email,
-            gameID: chessAttrs.vars ? chessAttrs.vars.gameID : ''
+            gameID: chessAttrs.gameState ? chessAttrs.gameState.gameID : ''
           })
           .always(function() {
             $("#progressDialog").modal('hide');

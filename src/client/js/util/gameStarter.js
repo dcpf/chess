@@ -14,8 +14,8 @@ var appContext = AppContext.getAppContext();
 
  Else, show the enterGame view.
 */
-if (chessAttrs.vars.gameID && !chessAttrs.vars.error) {
+if (chessAttrs.gameState.gameID && !chessAttrs.gameState.error) {
   appContext.gameManager.startGame();
 } else {
-  appContext.enterGameView.show(chessAttrs.vars.error);
+  appContext.enterGameView.show(chessAttrs.gameState.error);
 }

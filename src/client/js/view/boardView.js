@@ -303,7 +303,7 @@ var BoardView = Backbone.View.extend({
         // Put the board into view-only mode, and set canMove to false.
         // It's no longer their turn, so they shouldn't be able to move.
         this.viewMode = true;
-        chessAttrs.vars.canMove = false;
+        chessAttrs.gameState.canMove = false;
 
         // Update the board view
         this.updateBoard();

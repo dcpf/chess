@@ -194,12 +194,12 @@ exports.sendFeedback = sendFeedback;
 //
 
 /**
-* Generate the chessVars, config, and user objects needed by the client.
+* Generate the gameState, config, and user objects needed by the client.
 */
 function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
 
 	// vars needed for the game
-	var chessVars = {
+	var gameState = {
 		gameID: gameID.compositeID,
 		initialMoveHistory: gameObj.moveHistory || [],
 		perspective: perspective,
@@ -225,7 +225,7 @@ function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
             prefs: userPrefs.prefs || {}
         };
         return {
-            chessVars: JSON.stringify(chessVars),
+            gameState: JSON.stringify(gameState),
             config: JSON.stringify(config),
             user: JSON.stringify(user)
         };

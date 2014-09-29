@@ -16,8 +16,8 @@ var PlayGameView = Backbone.View.extend({
     },
 
     show: function () {
-        this.$('#whiteEmail').html(chessAttrs.vars.whiteEmail);
-        this.$('#blackEmail').html(chessAttrs.vars.blackEmail);
+        this.$('#whiteEmail').html(chessAttrs.gameState.whiteEmail);
+        this.$('#blackEmail').html(chessAttrs.gameState.blackEmail);
         this.$('#optionsMenuContainer').show();
         this.$el.show();
     }
