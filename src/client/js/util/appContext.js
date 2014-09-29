@@ -23,7 +23,9 @@ var AppContext = {
         appContext.genericDialogView = new GenericDialogView({
             eventHandler: appContext.eventHandler
         });
-        appContext.userPrefs = new UserPrefs();
+        appContext.userPrefs = new UserPrefs({
+            user: chessAttrs.user
+        });
         appContext.capturedPieces = new CapturedPieces();
         appContext.moveHistory = new MoveHistory();
         appContext.board = new Board({
