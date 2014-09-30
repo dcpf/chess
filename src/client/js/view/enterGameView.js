@@ -9,6 +9,7 @@ var EnterGameView = Backbone.View.extend({
     initialize: function () {
 
         this.eventHandler = this.options.eventHandler;
+        this.config = this.options.config;
 
         // set up the listeners
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.GAME_ENTERED, this.hide);
@@ -18,7 +19,7 @@ var EnterGameView = Backbone.View.extend({
         var self = this;
 
         // initalize the captcha
-        if (chessAttrs.config.recaptcha.enabled) {
+        if (this.config.isCaptchaEnabled()) {
             var elem = document.createElement("script");
             elem.src = "http://www.google.com/recaptcha/api/js/recaptcha_ajax.js";
             document.body.appendChild(elem);
@@ -101,7 +102,7 @@ var EnterGameView = Backbone.View.extend({
             setTimeout(function(){self._createCaptcha(self);}, 100);
         } else {
             Recaptcha.create(
-                chessAttrs.config.recaptcha.publicKey,
+                this.config.getCaptchaPublicKey(),
                 "captcha",
                 {
                     theme: "clean"

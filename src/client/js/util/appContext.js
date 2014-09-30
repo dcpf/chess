@@ -23,6 +23,7 @@ var AppContext = {
         appContext.genericDialogView = new GenericDialogView({
             eventHandler: appContext.eventHandler
         });
+        appContext.config = new Config(chessAttrs.config);
         appContext.user = new User(chessAttrs.user);
         appContext.capturedPieces = new CapturedPieces();
         appContext.moveHistory = new MoveHistory();
@@ -37,7 +38,8 @@ var AppContext = {
             user: appContext.user
         });
         appContext.enterGameView = new EnterGameView({
-            eventHandler: appContext.eventHandler
+            eventHandler: appContext.eventHandler,
+            config: appContext.config
         });
         appContext.forgotGameIdDialogView = new ForgotGameIdDialogView({
             eventHandler: appContext.eventHandler
