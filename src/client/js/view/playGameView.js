@@ -9,6 +9,7 @@ var PlayGameView = Backbone.View.extend({
     initialize: function () {
 
 		this.eventHandler = this.options.eventHandler;
+        this.gameState = this.options.gameState;
 
 		// set up the listeners
 		this.listenTo(this.eventHandler, this.eventHandler.messageNames.GAME_ENTERED, this.show);
@@ -16,8 +17,8 @@ var PlayGameView = Backbone.View.extend({
     },
 
     show: function () {
-        this.$('#whiteEmail').html(chessAttrs.gameState.whiteEmail);
-        this.$('#blackEmail').html(chessAttrs.gameState.blackEmail);
+        this.$('#whiteEmail').html(this.gameState.getWhiteEmail());
+        this.$('#blackEmail').html(this.gameState.getBlackEmail());
         this.$('#optionsMenuContainer').show();
         this.$el.show();
     }

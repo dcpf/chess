@@ -20,11 +20,9 @@ var AppContext = {
 
         appContext.eventHandler = new EventHandler();
         appContext.notationConverter = new NotationConverter();
-        appContext.genericDialogView = new GenericDialogView({
-            eventHandler: appContext.eventHandler
-        });
         appContext.config = new Config(chessAttrs.config);
         appContext.user = new User(chessAttrs.user);
+        appContext.gameState = new GameState(chessAttrs.gameState);
         appContext.capturedPieces = new CapturedPieces();
         appContext.moveHistory = new MoveHistory();
         appContext.board = new Board({
@@ -32,6 +30,9 @@ var AppContext = {
             notationConverter: appContext.notationConverter,
             capturedPieces: appContext.capturedPieces,
             moveHistory: appContext.moveHistory
+        });
+        appContext.genericDialogView = new GenericDialogView({
+            eventHandler: appContext.eventHandler
         });
         appContext.feedbackDialogView = new FeedbackDialogView({
             eventHandler: appContext.eventHandler,
@@ -45,6 +46,7 @@ var AppContext = {
             eventHandler: appContext.eventHandler
         });
         appContext.boardView = new BoardView({
+            gameState: appContext.gameState,
             board: appContext.board,
             eventHandler: appContext.eventHandler,
             notationConverter: appContext.notationConverter,
@@ -60,6 +62,7 @@ var AppContext = {
         });
         appContext.gameManager = new GameManager({
             eventHandler: appContext.eventHandler,
+            gameState: appContext.gameState,
             user: appContext.user,
             board: appContext.board,
             boardView: appContext.boardView
@@ -71,7 +74,8 @@ var AppContext = {
           user: appContext.user
         });
         new PlayGameView({
-            eventHandler: appContext.eventHandler
+            eventHandler: appContext.eventHandler,
+            gameState: appContext.gameState,
         });
         new CapturedPiecesView({
             capturedPieces: appContext.capturedPieces

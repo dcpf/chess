@@ -29,8 +29,7 @@ module.exports = function(grunt) {
                         Backbone: true,
                         $: true,
                         Recaptcha: true,
-                        _: true,
-                        chessAttrs: true
+                        _: true
                     }
                 },
                 src: ['src/client/**/*.js']
@@ -45,8 +44,7 @@ module.exports = function(grunt) {
                         Backbone: true,
                         $: true,
                         Recaptcha: true,
-                        _: true,
-                        chessAttrs: true
+                        _: true
                     }
                 },
                 src: ['webapp/chess.js']
@@ -87,6 +85,7 @@ module.exports = function(grunt) {
                     'src/client/js/model/board.js',
                     'src/client/js/model/user.js',
                     'src/client/js/model/config.js',
+                    'src/client/js/model/gameState.js',
                     // load collections
                     'src/client/js/collection/capturedPieces.js',
                     'src/client/js/collection/moveHistory.js',

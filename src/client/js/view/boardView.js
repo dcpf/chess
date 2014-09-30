@@ -12,6 +12,7 @@ var BoardView = Backbone.View.extend({
     initialize: function () {
 
         // set the passed-in options
+        this.gameState = this.options.gameState;
         this.board = this.options.board;
         this.eventHandler = this.options.eventHandler;
         this.user = this.options.user;
@@ -303,7 +304,7 @@ var BoardView = Backbone.View.extend({
         // Put the board into view-only mode, and set canMove to false.
         // It's no longer their turn, so they shouldn't be able to move.
         this.viewMode = true;
-        chessAttrs.gameState.canMove = false;
+        this.gameState.setCanMove(false);
 
         // Update the board view
         this.updateBoard();
