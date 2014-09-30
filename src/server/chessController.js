@@ -201,7 +201,7 @@ function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
 	// vars needed for the game
 	var gameState = {
 		gameID: gameID.compositeID,
-		initialMoveHistory: gameObj.moveHistory || [],
+		moveHistory: gameObj.moveHistory || [],
 		perspective: perspective,
 		canMove: canMove,
 		whiteEmail: (gameObj.W) ? gameObj.W.email : '',

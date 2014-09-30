@@ -6,7 +6,7 @@
 Model is in the format:
 {
     "gameID": "53d8433807d785e9f2e0e062-43514",
-    "initialMoveHistory": [],
+    "moveHistory": [],
     "perspective": "B",
     "canMove": true,
     "whiteEmail": "dpf@theworld.com",
@@ -21,7 +21,7 @@ var GameState = Backbone.Model.extend({
     },
     
 	getMoveHistory: function () {
-		return this.get('initialMoveHistory');
+		return this.get('moveHistory');
     },
     
     getPerspective: function () {
