@@ -13,6 +13,7 @@ var FeedbackDialogView = Backbone.View.extend({
 
         var self = this;
         this.eventHandler = this.options.eventHandler;
+        this.user = this.options.user;
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FEEDBACK_LINK_CLICKED, this._renderDialog);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FEEDBACK_SUCCESS, this._renderSuccess);
 
@@ -32,7 +33,7 @@ var FeedbackDialogView = Backbone.View.extend({
         this.$('#feedbackSuccess').hide();
         this.$('#feedbackForm').show();
         if (!feedbackEmailField.val()) {
-          feedbackEmailField.val(chessAttrs.user ? chessAttrs.user.email : '');
+          feedbackEmailField.val(this.user ? this.user.getEmail() : '');
         }
         feedbackTextField.focus();
     },

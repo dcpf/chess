@@ -8,6 +8,7 @@ var GameManager = function (attrs) {
 
         // passed-in attrs
         eventHandler: attrs.eventHandler,
+        user: attrs.user,
         board: attrs.board,
         boardView: attrs.boardView,
 
@@ -46,11 +47,11 @@ var GameManager = function (attrs) {
 
             var self = this;
 
-            // If attrs were passed in, update chessAttrs.gameState and chessAttrs.user
+            // If attrs were passed in, update chessAttrs.gameState and user
             if (attrs) {
                 // These are strings, so we need to convert them back into objects before assigning
                 chessAttrs.gameState = JSON.parse(attrs.gameState);
-                chessAttrs.user = JSON.parse(attrs.user);
+                self.user.set(JSON.parse(attrs.user));
             }
 
             // If there is an existing move history, use it to get the game into the current state

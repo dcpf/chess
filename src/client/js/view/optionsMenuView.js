@@ -9,13 +9,13 @@ var OptionsMenuView = Backbone.View.extend({
   initialize: function () {
 
     this.eventHandler = this.options.eventHandler;
-    this.userPrefs = this.options.userPrefs;
+    this.user = this.options.user;
 
     var duration = 200,
       self = this;
 
 	  self.$('#optionsMenuIcon').click(function() {
-      if (chessAttrs.user.email) {
+      if (self.user.getEmail()) {
         // Only show legalMovesDisplay option if there's a valid user
         self.$('#showLegalMovesValue').text(self._getShowLegalMovesDisplayValue());
         self.$('#showLegalMovesOption').show();
@@ -27,7 +27,7 @@ var OptionsMenuView = Backbone.View.extend({
 
     self.$('#showLegalMovesOption a').click(function(event) {
       event.preventDefault();
-      self.userPrefs.toggleShowLegalMovesEnabled();
+      self.user.toggleShowLegalMovesEnabled();
       var showLegalMovesValueElement = self.$('#showLegalMovesValue');
       showLegalMovesValueElement.fadeOut(duration, function() {
         showLegalMovesValueElement.text(self._getShowLegalMovesDisplayValue());
@@ -46,7 +46,7 @@ var OptionsMenuView = Backbone.View.extend({
   },
 
   _getShowLegalMovesDisplayValue: function () {
-    return this.userPrefs.isShowLegalMovesEnabled() ? 'On' : 'Off';
+    return this.user.isShowLegalMovesEnabled() ? 'On' : 'Off';
   }
 
 });

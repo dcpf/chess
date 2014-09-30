@@ -23,9 +23,7 @@ var AppContext = {
         appContext.genericDialogView = new GenericDialogView({
             eventHandler: appContext.eventHandler
         });
-        appContext.userPrefs = new UserPrefs({
-            user: chessAttrs.user
-        });
+        appContext.user = new User(chessAttrs.user);
         appContext.capturedPieces = new CapturedPieces();
         appContext.moveHistory = new MoveHistory();
         appContext.board = new Board({
@@ -35,7 +33,8 @@ var AppContext = {
             moveHistory: appContext.moveHistory
         });
         appContext.feedbackDialogView = new FeedbackDialogView({
-            eventHandler: appContext.eventHandler
+            eventHandler: appContext.eventHandler,
+            user: appContext.user
         });
         appContext.enterGameView = new EnterGameView({
             eventHandler: appContext.eventHandler
@@ -47,7 +46,7 @@ var AppContext = {
             board: appContext.board,
             eventHandler: appContext.eventHandler,
             notationConverter: appContext.notationConverter,
-            userPrefs: appContext.userPrefs
+            user: appContext.user
         });
         appContext.boardSnapshotView = new BoardSnapshotView({
             eventHandler: appContext.eventHandler,
@@ -59,6 +58,7 @@ var AppContext = {
         });
         appContext.gameManager = new GameManager({
             eventHandler: appContext.eventHandler,
+            user: appContext.user,
             board: appContext.board,
             boardView: appContext.boardView
         });
@@ -66,7 +66,7 @@ var AppContext = {
         // These views just need to be instantiated - no need to assign to a variable
         new OptionsMenuView({
           eventHandler: appContext.eventHandler,
-          userPrefs: appContext.userPrefs
+          user: appContext.user
         });
         new PlayGameView({
             eventHandler: appContext.eventHandler

@@ -14,7 +14,7 @@ var BoardView = Backbone.View.extend({
         // set the passed-in options
         this.board = this.options.board;
         this.eventHandler = this.options.eventHandler;
-        this.userPrefs = this.options.userPrefs;
+        this.user = this.options.user;
         this.notationConverter = this.options.notationConverter;
 
         // set this to true for 'view-only' rendering
@@ -103,7 +103,7 @@ var BoardView = Backbone.View.extend({
     * Called from the UI when a piece is hovered over
     */
     showLegalMoves: function (event) {
-        if (this.userPrefs.isShowLegalMovesEnabled()) {
+        if (this.user.isShowLegalMovesEnabled()) {
             var legalMoves = this.board.legalMovesMap[event.target.id];
             if (legalMoves) {
                 for (var i in legalMoves) {
@@ -117,7 +117,7 @@ var BoardView = Backbone.View.extend({
     * Called from the UI when a piece on mouse out
     */
     hideLegalMoves: function () {
-        if (this.userPrefs.isShowLegalMovesEnabled()) {
+        if (this.user.isShowLegalMovesEnabled()) {
             this.$('td').removeClass('moveableSquare');
         }
     },

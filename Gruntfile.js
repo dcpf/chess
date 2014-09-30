@@ -85,7 +85,7 @@ module.exports = function(grunt) {
                     // load models
                     'src/client/js/model/piece.js',
                     'src/client/js/model/board.js',
-                    'src/client/js/model/userPrefs.js',
+                    'src/client/js/model/user.js',
                     // load collections
                     'src/client/js/collection/capturedPieces.js',
                     'src/client/js/collection/moveHistory.js',
