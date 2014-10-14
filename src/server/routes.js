@@ -96,5 +96,6 @@ function logClientError (req, params) {
 
 function renderIndex (obj, req) {
     req.responseProps.file = 'index';
-    req.responseProps.obj = obj;
+    // The index page only needs the config data
+    req.responseProps.obj = {config: JSON.stringify(obj.config)};
 }

@@ -206,12 +206,8 @@ function log (msg) {
     }
 }
 
-// Create the chess object with config, game, and user variables. These are generated
-// on the server by chessController._buildEnterGameAttrMap().
 var chessAttrs = {
-    config: <%= config %>,
-    gameState: <%= gameState %>,
-    user: <%= user %>
+    config: <%= config %>
 };
 
 </script>

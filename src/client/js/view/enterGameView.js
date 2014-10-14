@@ -37,9 +37,9 @@ var EnterGameView = Backbone.View.extend({
         // assign the click handler to the submit button
         this.$('#enterGameSubmitButton').click(function() {
             var action = self.$("input[type='radio'][name='newOrExisting']:checked").val();
-            var params = {action: action};
             if (action === 'N') {
                 // new
+                var params = {};
                 params.player1Email = self.$('#player1Email').val().trim();
                 params.player2Email = self.$('#player2Email').val().trim();
                 if (window.Recaptcha) {
@@ -49,8 +49,8 @@ var EnterGameView = Backbone.View.extend({
                 self.eventHandler.trigger(self.eventHandler.messageNames.CREATE_GAME, params);
             } else if (action === 'E') {
                 // existing
-                params.gameID = self.$('#gameID').val().trim();
-                self.eventHandler.trigger(self.eventHandler.messageNames.ENTER_GAME, params);
+                var gameID = self.$('#gameID').val().trim();
+                self.eventHandler.trigger(self.eventHandler.messageNames.ENTER_GAME, gameID, true);
             }
         });
 
@@ -75,7 +75,7 @@ var EnterGameView = Backbone.View.extend({
         this.$el.hide();
     },
 
-    show: function (errorMsg) {
+    render: function (errorMsg) {
 
         this.$el.show();
 

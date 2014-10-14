@@ -185,6 +185,7 @@ exports.createGame = createGame;
 exports.enterGame = enterGame;
 exports.saveMove = saveMove;
 exports.updateUserPrefs = updateUserPrefs;
+// TODO: this could be private
 exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 exports.findGamesByEmail = findGamesByEmail;
 exports.sendFeedback = sendFeedback;
@@ -225,9 +226,9 @@ function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
             prefs: userPrefs.prefs || {}
         };
         return {
-            gameState: JSON.stringify(gameState),
-            config: JSON.stringify(config),
-            user: JSON.stringify(user)
+            gameState: gameState,
+            config: config,
+            user: user
         };
     });
 

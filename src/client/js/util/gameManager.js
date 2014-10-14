@@ -8,17 +8,26 @@ var GameManager = function (attrs) {
 
         // passed-in attrs
         eventHandler: attrs.eventHandler,
-        gameState: attrs.gameState,
-        user: attrs.user,
-        board: attrs.board,
-        boardView: attrs.boardView,
+        appContext: attrs.appContext,
+        config: attrs.config,
+        
+        renderEnterScreen: function (errorMsg) {
+            var enterScreenContext = this.appContext.getEnterScreenContext(this.config);
+            enterScreenContext.render(errorMsg);
+            // Hide the game if it's already been rendered. Should we do this via an event?
+            var gameContext = this.appContext.getGameContext();
+            if (gameContext) {
+                gameContext.hide();
+            }
+        },
 
         createGame: function (params) {
             var self = this;
             $("#progressDialog").modal();
             $.post('/createGame', params)
               .done(function(res) {
-                self.startGame(res);
+                var gameContext = self.appContext.getGameContext(res.user, res.gameState);
+                gameContext.render(true);
                 self.eventHandler.trigger(self.eventHandler.messageNames.GAME_CREATED);
               })
               .fail(function(jqXHR) {
@@ -28,51 +37,28 @@ var GameManager = function (attrs) {
                 $("#progressDialog").modal('hide');
               });
         },
-
-        enterGame: function (params) {
+        
+        /**
+        * @param gameID
+        * @param doNavigate - pass in true to tell the router to update the URL
+        */
+        enterGame: function (gameID, doNavigate) {
             var self = this;
             $("#progressDialog").modal();
-            $.post('/enterGame', params)
-              .done(function(res) {
-                self.startGame(res);
-              })
-              .fail(function(jqXHR) {
+            $.post('/enterGame', {
+                gameID: gameID
+            })
+            .done(function(res) {
+                var gameContext = self.appContext.getGameContext(res.user, res.gameState);
+                gameContext.render(doNavigate);
+            })
+            .fail(function(jqXHR) {
                 self.eventHandler.trigger(self.eventHandler.messageNames.ENTER_GAME_ERROR, jqXHR.responseText);
-              })
-              .always(function() {
+                self.renderEnterScreen(jqXHR.responseText);
+            })
+            .always(function() {
                 $("#progressDialog").modal('hide');
-              });
-        },
-
-        startGame: function (attrs) {
-
-            var self = this;
-
-            // If attrs were passed in, update gameState and user
-            if (attrs) {
-                // These are strings, so we need to convert them back into objects before assigning
-                self.gameState.set(JSON.parse(attrs.gameState));
-                self.user.set(JSON.parse(attrs.user));
-            }
-
-            // If there is an existing move history, use it to get the game into the current state
-            var moveHistory = self.gameState.getMoveHistory();
-            for (var i in moveHistory) {
-                var notation = moveHistory[i];
-                self.board.updateGameState(notation);
-            }
-
-            // Update the legal moves
-            this.board.findAllLegalMoves();
-
-            // make sure viewMode is set accordingly based on canMove
-            self.boardView.viewMode = !self.gameState.canMove();
-
-            // render the board
-            self.boardView.render(self.gameState.getPerspective());
-
-            self.eventHandler.trigger(self.eventHandler.messageNames.GAME_ENTERED);
-
+            });
         },
 
         /**
@@ -81,30 +67,34 @@ var GameManager = function (attrs) {
         saveMove: function (notation) {
             var self = this;
             $("#progressDialog").modal();
+            var gameContext = self.appContext.getGameContext();
+            var gameID = gameContext.getGameID();
             $.post('/saveMove', {
-                gameID: self.gameState.getGameID(),
+                gameID: gameID,
                 move: notation
             })
-              .done(function(res) {
+            .done(function(res) {
                 self.eventHandler.trigger(self.eventHandler.messageNames.MOVE_SAVED, res);
-              })
-              .always(function() {
+            })
+            .always(function() {
                 $("#progressDialog").modal('hide');
-              });
+            });
         },
 
         submitFeedback: function (feedback, email) {
-          var self = this;
-          $("#progressDialog").modal();
-          $.post('/feedback', {
-            feedback: feedback,
-            email: email,
-            gameID: self.gameState ? self.gameState.getGameID() : ''
-          })
-          .always(function() {
-            $("#progressDialog").modal('hide');
-            self.eventHandler.trigger(self.eventHandler.messageNames.FEEDBACK_SUCCESS);
-          });
+            var self = this;
+            $("#progressDialog").modal();
+            var gameContext = self.appContext.getGameContext();
+            var gameID = gameContext ? gameContext.getGameID() : '';
+            $.post('/feedback', {
+                feedback: feedback,
+                email: email,
+                gameID: gameID
+            })
+            .always(function() {
+                $("#progressDialog").modal('hide');
+                self.eventHandler.trigger(self.eventHandler.messageNames.FEEDBACK_SUCCESS);
+            });
         },
 
         /**

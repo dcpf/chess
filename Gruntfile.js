@@ -102,10 +102,12 @@ module.exports = function(grunt) {
                     'src/client/js/view/capturedPiecesView.js',
                     'src/client/js/view/moveHistoryView.js',
                     'src/client/js/view/messagesView.js',
-                    // lastly, load the gameManager, appContext, and gameStarter
+                    // lastly, load the gameManager, appContext, router, and gameStarter
                     'src/client/js/util/gameManager.js',
                     'src/client/js/util/appContext.js',
-                    'src/client/js/util/gameStarter.js'],
+                    'src/client/js/util/router.js',
+                    'src/client/js/util/gameStarter.js'
+                ],
 
                 dest: 'webapp/chess.js'
 

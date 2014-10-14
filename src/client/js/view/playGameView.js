@@ -7,20 +7,21 @@ var PlayGameView = Backbone.View.extend({
     el: '#playGameView',
 
     initialize: function () {
-
-		this.eventHandler = this.options.eventHandler;
         this.gameState = this.options.gameState;
-
-		// set up the listeners
-		this.listenTo(this.eventHandler, this.eventHandler.messageNames.GAME_ENTERED, this.show);
-
     },
 
-    show: function () {
+    render: function () {
         this.$('#whiteEmail').html(this.gameState.getWhiteEmail());
         this.$('#blackEmail').html(this.gameState.getBlackEmail());
         this.$('#optionsMenuContainer').show();
         this.$el.show();
+    },
+    
+    hide: function () {
+        this.$('#whiteEmail').html('');
+        this.$('#blackEmail').html('');
+        this.$('#optionsMenuContainer').hide();
+        this.$el.hide();
     }
 
 });
