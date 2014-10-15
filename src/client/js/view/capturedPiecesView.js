@@ -4,11 +4,24 @@
 
 var CapturedPiecesView = Backbone.View.extend({
 
-    el: '#capturedPiecesContainer',
+    el: '#capturedPiecesView',
 
     initialize: function (attrs) {
+        
         this.capturedPieces = attrs.capturedPieces;
+        
         this.listenTo(this.capturedPieces, 'add', this._updateCapturedPieces);
+        
+        // Create the template
+        this.template = _.template(
+            $('#capturedPiecesTemplate').html()
+        );
+        
+        // Render the template
+        this.$el.html(
+            this.template()
+        );
+        
     },
 
     /*

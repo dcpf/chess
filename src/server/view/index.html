@@ -93,17 +93,21 @@
             <div id="messageContainer"></div>
             <!-- chess board -->
             <div id="chessBoardContainer"></div>
-            <fieldset id="capturedPiecesContainer">
-                <legend>Captured Pieces</legend>
-                <div id="capturedBlackPieces"></div>
-                <div id="capturedWhitePieces"></div>
-            </fieldset>
+            <div id="capturedPiecesView"></div>
         </div>
 
     </div>
 
 </body>
 
+<script type="text/template" id="capturedPiecesTemplate">
+<fieldset id="capturedPiecesContainer">
+    <legend>Captured Pieces</legend>
+    <div id="capturedBlackPieces"></div>
+    <div id="capturedWhitePieces"></div>
+</fieldset>
+</script>
+    
 <!-- dialogs -->
 
 <div id="forgotGameIdDialog" class="modal" role="dialog" aria-hidden="true" data-backdrop="static">
