@@ -4,7 +4,7 @@
 
 var CapturedPiecesView = Backbone.View.extend({
 
-    el: '#capturedPiecesView',
+    el: '#capturedPiecesContainer',
 
     initialize: function (attrs) {
         

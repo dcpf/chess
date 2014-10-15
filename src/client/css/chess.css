@@ -214,7 +214,7 @@ img[draggable=true] {
   overflow: hidden;
 }
 
-#moveHistoryView {
+#moveHistoryContainer {
   margin-right: 50px;
 }
 
@@ -262,13 +262,13 @@ img[draggable=true] {
   background-color: #99FF99 !important;
 }
 
-#capturedPiecesContainer {
+#capturedPiecesFieldset {
   border: 1px solid #000;
   height: 100px;
   width: 520px;
   padding: 5px 10px 10px 10px;
 }
-#capturedPiecesContainer div {
+#capturedPiecesFieldset div {
   height: 32px;
 }
 

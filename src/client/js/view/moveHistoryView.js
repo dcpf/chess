@@ -4,7 +4,7 @@
 
 var MoveHistoryView = Backbone.View.extend({
 
-    el: '#moveHistoryView',
+    el: '#moveHistoryContainer',
 
     events: {
         'click .moveHistoryLink': '_handleMoveHistoryLinkClick',
