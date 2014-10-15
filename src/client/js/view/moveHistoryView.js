@@ -4,7 +4,7 @@
 
 var MoveHistoryView = Backbone.View.extend({
 
-    el: '#moveHistoryContainer',
+    el: '#moveHistoryView',
 
     events: {
         'click .moveHistoryLink': '_handleMoveHistoryLinkClick',
@@ -19,6 +19,16 @@ var MoveHistoryView = Backbone.View.extend({
 
         // set up the listener
         this.listenTo(this.moveHistory, 'add', this._updateMoveHistory);
+        
+        // Create the template
+        this.template = _.template(
+            $('#moveHistoryTemplate').html()
+        );
+        
+        // Render the template
+        this.$el.html(
+            this.template()
+        );
 
     },
 
