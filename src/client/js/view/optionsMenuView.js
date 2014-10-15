@@ -4,49 +4,59 @@
 
 var OptionsMenuView = Backbone.View.extend({
 
-  el: '#optionsMenuContainer',
+    el: '#optionsMenuContainer',
 
-  initialize: function () {
+    initialize: function () {
 
-    this.eventHandler = this.options.eventHandler;
-    this.user = this.options.user;
+        this.eventHandler = this.options.eventHandler;
+        this.user = this.options.user;
+      
+        // Create the template
+        this.template = _.template(
+            $('#optionsMenuTemplate').html()
+        );
 
-    var duration = 200,
-      self = this;
+        // Render the template
+        this.$el.html(
+            this.template()
+        );
 
-	  self.$('#optionsMenuIcon').click(function() {
-      if (self.user.getEmail()) {
-        // Only show legalMovesDisplay option if there's a valid user
-        self.$('#showLegalMovesValue').text(self._getShowLegalMovesDisplayValue());
-        self.$('#showLegalMovesOption').show();
-      } else {
-        self.$('#showLegalMovesOption').hide();
-      }
-      self.$('#optionsMenu').toggle(duration);
-    });
+        var duration = 200,
+            self = this;
 
-    self.$('#showLegalMovesOption a').click(function(event) {
-      event.preventDefault();
-      self.user.toggleShowLegalMovesEnabled();
-      var showLegalMovesValueElement = self.$('#showLegalMovesValue');
-      showLegalMovesValueElement.fadeOut(duration, function() {
-        showLegalMovesValueElement.text(self._getShowLegalMovesDisplayValue());
-        showLegalMovesValueElement.fadeIn(duration, function() {
-          self.$('#optionsMenu').delay(duration).toggle(duration);
+        self.$('#optionsMenuIcon').click(function() {
+            if (self.user.getEmail()) {
+                // Only show legalMovesDisplay option if there's a valid user
+                self.$('#showLegalMovesValue').text(self._getShowLegalMovesDisplayValue());
+                self.$('#showLegalMovesOption').show();
+            } else {
+                self.$('#showLegalMovesOption').hide();
+            }
+            self.$('#optionsMenu').toggle(duration);
         });
-      });
-    });
 
-    self.$('#feedbackOption a').click(function(event) {
-      event.preventDefault();
-      self.$('#optionsMenu').toggle(duration);
-      self.eventHandler.trigger(self.eventHandler.messageNames.FEEDBACK_LINK_CLICKED);
-    });
+        self.$('#showLegalMovesOption a').click(function(event) {
+            event.preventDefault();
+            self.user.toggleShowLegalMovesEnabled();
+            var showLegalMovesValueElement = self.$('#showLegalMovesValue');
+            showLegalMovesValueElement.fadeOut(duration, function() {
+                showLegalMovesValueElement.text(self._getShowLegalMovesDisplayValue());
+                showLegalMovesValueElement.fadeIn(duration, function() {
+                    self.$('#optionsMenu').delay(duration).toggle(duration);
+                });
+            });
+        });
 
-  },
+        self.$('#feedbackOption a').click(function(event) {
+            event.preventDefault();
+            self.$('#optionsMenu').toggle(duration);
+            self.eventHandler.trigger(self.eventHandler.messageNames.FEEDBACK_LINK_CLICKED);
+        });
 
-  _getShowLegalMovesDisplayValue: function () {
-    return this.user.isShowLegalMovesEnabled() ? 'On' : 'Off';
-  }
+    },
+
+    _getShowLegalMovesDisplayValue: function () {
+        return this.user.isShowLegalMovesEnabled() ? 'On' : 'Off';
+    }
 
 });

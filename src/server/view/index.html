@@ -48,28 +48,10 @@
     <!-- Play game view-->
     <div id="playGameView">
 
-        <!-- options menu -->
-        <div id="optionsMenuContainer">
-
-            <div id="optionsMenuIcon" title="Options">
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-
-            <div id="optionsMenu">
-                <ul>
-                    <li id="showLegalMovesOption"><a href="#">Show legal moves:</a> <span id="showLegalMovesValue"></span></li>
-                    <li id="feedbackOption"><a href="#">Feedback</a></li>
-                    <li><a href="/">Start new game</a></li>
-                </ul>
-            </div>
-
-        </div>
+        <div id="optionsMenuContainer"></div>
 
         <div style="display: inline-block; vertical-align: top">
 
-            <!-- player info -->
             <div class="playerInfo">
                 <div><b>White:</b> <span id="whiteEmail"></span></div>
                 <div><b>Black:</b> <span id="blackEmail"></span></div>
@@ -89,6 +71,8 @@
 
 </body>
 
+<!-- Templates. Idealy, these would come from individual files. -->
+    
 <script type="text/template" id="moveHistoryTemplate">
 <div id="replayGameLink"><a href="#">Auto-Replay</a></div>
 <table id="moveHistoryTable">
@@ -107,7 +91,22 @@
     <div id="capturedWhitePieces"></div>
 </fieldset>
 </script>
-    
+
+<script type="text/template" id="optionsMenuTemplate">
+<div id="optionsMenuIcon" title="Options">
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+<div id="optionsMenu">
+    <ul>
+        <li id="showLegalMovesOption"><a href="#">Show legal moves:</a> <span id="showLegalMovesValue"></span></li>
+        <li id="feedbackOption"><a href="#">Feedback</a></li>
+        <li><a href="/">Start new game</a></li>
+    </ul>
+</div>
+</script>
+
 <!-- dialogs -->
 
 <div id="forgotGameIdDialog" class="modal" role="dialog" aria-hidden="true" data-backdrop="static">

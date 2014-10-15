@@ -214,7 +214,7 @@ img[draggable=true] {
   overflow: hidden;
 }
 
-#moveHistoryContainer {
+#moveHistoryView {
   margin-right: 50px;
 }
 
