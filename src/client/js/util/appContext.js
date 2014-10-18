@@ -90,13 +90,24 @@ var AppContext = function (configData) {
         
         /*
             Create a new gameContext only if:
-            1) gameContext has not been set
+            1) gameContext does not yet exist
             2) The passed-in gameState does not match the one in the gameContext
         */
         if (!gameContext || gameContext.gameState.getGameID() !== gameStateData.gameID) {
-        
+
+            if (gameContext) {
+                // Clean up the views so they can be properly re-instantiated
+                gameContext.capturedPiecesView.remove();
+                gameContext.moveHistoryView.remove();
+                gameContext.optionsMenuView.remove();
+            }
+
             // Instantiate all of the objects we need
-            var notationConverter = new NotationConverter();
+            
+            // This is a singleton
+            var notationConverter = gameContext ? gameContext.notationConverter : new NotationConverter();
+            
+            // The rest need to be instantiated anew
             var capturedPieces = new CapturedPieces();
             var moveHistory = new MoveHistory();
             var user = new User(userData);
@@ -127,24 +138,27 @@ var AppContext = function (configData) {
                 eventHandler: eventHandler
             });
             var optionsMenuView = new OptionsMenuView({
+                parent: $('#optionsMenuContainer'),
                 eventHandler: eventHandler,
                 user: user
             });
-            var playGameView = new PlayGameView({
-                gameState: gameState
-            });
             var capturedPiecesView = new CapturedPiecesView({
+                parent: $('#capturedPiecesContainer'),
                 capturedPieces: capturedPieces
             });
             var moveHistoryView = new MoveHistoryView({
+                parent: $('#moveHistoryContainer'),
                 eventHandler: eventHandler,
                 moveHistory: moveHistory
+            });
+            var playGameView = new PlayGameView({
+                gameState: gameState
             });
             var messagesView = new MessagesView({
                 eventHandler: eventHandler,
                 board: board
             });
-        
+
             gameContext = {
                 notationConverter: notationConverter,
                 capturedPieces: capturedPieces,
@@ -162,19 +176,19 @@ var AppContext = function (configData) {
                 moveHistoryView: moveHistoryView,
                 messagesView: messagesView
             };
-            
+
             // Perform some init functions
-            
+
             // If there is an existing move history, use it to get the game into the current state
             var moveHistoryArray = gameState.getMoveHistory();
             for (var i in moveHistoryArray) {
                 var notation = moveHistoryArray[i];
                 board.updateGameState(notation);
             }
-            
+
             // Update the legal moves
             board.findAllLegalMoves();
-            
+
             // make sure viewMode is set accordingly based on canMove
             boardView.viewMode = !gameState.canMove();
             

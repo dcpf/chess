@@ -115,7 +115,6 @@ input[type="radio"], input[type="checkbox"] {
 
 #optionsMenuContainer {
   background-color: transparent;
-  display: none;
   position: absolute;
   right: 10px;
   top: 10px;

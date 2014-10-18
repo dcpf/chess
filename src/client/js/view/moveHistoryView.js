@@ -4,8 +4,6 @@
 
 var MoveHistoryView = Backbone.View.extend({
 
-    el: '#moveHistoryContainer',
-
     events: {
         'click .moveHistoryLink': '_handleMoveHistoryLinkClick',
         'click #replayGameLink': '_handleReplayGameLinkClick'
@@ -14,21 +12,17 @@ var MoveHistoryView = Backbone.View.extend({
     initialize: function () {
 
         // set the passed-in options
+        var parent = this.options.parent;
         this.moveHistory = this.options.moveHistory;
         this.eventHandler = this.options.eventHandler;
 
         // set up the listener
         this.listenTo(this.moveHistory, 'add', this._updateMoveHistory);
         
-        // Create the template
-        this.template = _.template(
-            $('#moveHistoryTemplate').html()
-        );
-        
-        // Render the template
-        this.$el.html(
-            this.template()
-        );
+        // Create and attach the template
+        var template = _.template($('#moveHistoryTemplate').html());
+        this.$el.html(template());
+        parent.append(this.$el);
 
     },
 

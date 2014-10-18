@@ -4,22 +4,16 @@
 
 var OptionsMenuView = Backbone.View.extend({
 
-    el: '#optionsMenuContainer',
-
     initialize: function () {
 
+        var parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         this.user = this.options.user;
-      
-        // Create the template
-        this.template = _.template(
-            $('#optionsMenuTemplate').html()
-        );
-
-        // Render the template
-        this.$el.html(
-            this.template()
-        );
+        
+        // Create and attach the template
+        var template = _.template($('#optionsMenuTemplate').html());
+        this.$el.html(template());
+        parent.append(this.$el);
 
         var duration = 200,
             self = this;
