@@ -4,13 +4,15 @@
 
 var MessagesView = Backbone.View.extend({
 
-    el: '#messageContainer',
-
     initialize: function () {
 
         // set the passed-in options
+        var parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         this.board = this.options.board;
+
+        // This view has no template, so just attach the default el to the parent.
+        parent.append(this.$el);
 
         // set up the listener
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.UPDATED_LEGAL_MOVES, this._handleLegalMovesUpdate);
