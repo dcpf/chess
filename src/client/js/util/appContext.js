@@ -97,6 +97,7 @@ var AppContext = function (configData) {
 
             if (gameContext) {
                 // Clean up the views so they can be properly re-instantiated
+                gameContext.boardView.remove();
                 gameContext.capturedPiecesView.remove();
                 gameContext.moveHistoryView.remove();
                 gameContext.optionsMenuView.remove();
@@ -123,6 +124,7 @@ var AppContext = function (configData) {
                 user: user
             });
             var boardView = new BoardView({
+                parent: $('#chessBoardContainer'),
                 eventHandler: eventHandler,
                 gameState: gameState,
                 board: board,

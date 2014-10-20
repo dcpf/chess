@@ -4,19 +4,21 @@
 
 var BoardView = Backbone.View.extend({
 
-    el: '#chessBoardContainer',
-
     // Variable to track the piece being moved. Normally, we would use the dataTransfer object, but that does not appear to work properly.
     pieceInMotion: '',
 
     initialize: function () {
 
         // set the passed-in options
+        var parent = this.options.parent;
         this.gameState = this.options.gameState;
         this.board = this.options.board;
         this.eventHandler = this.options.eventHandler;
         this.user = this.options.user;
         this.notationConverter = this.options.notationConverter;
+        
+        // This view has no template, so just attach the default el to the parent.
+        parent.append(this.$el);
 
         // set this to true for 'view-only' rendering
         this.viewMode = false;
