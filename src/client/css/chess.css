@@ -206,7 +206,7 @@ img[draggable=true] {
   text-align: left;
 }
 
-.playerInfo {
+#playerInfoContainer {
   font-size: 12px;
   height: 50px;
   max-width: 275px;

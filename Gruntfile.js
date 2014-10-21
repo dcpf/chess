@@ -100,6 +100,7 @@ module.exports = function(grunt) {
                     'src/client/js/view/genericDialogView.js',
                     'src/client/js/view/confirmMoveDialogView.js',
                     'src/client/js/view/capturedPiecesView.js',
+                    'src/client/js/view/playerInfoView.js',
                     'src/client/js/view/moveHistoryView.js',
                     'src/client/js/view/messagesView.js',
                     // lastly, load the gameManager, appContext, router, and gameStarter
