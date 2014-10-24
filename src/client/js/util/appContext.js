@@ -99,6 +99,7 @@ var AppContext = function (configData) {
                 // Clean up the views so they can be properly re-instantiated
                 gameContext.boardView.remove();
                 gameContext.capturedPiecesView.remove();
+                gameContext.feedbackDialogView.remove();
                 gameContext.messagesView.remove();
                 gameContext.moveHistoryView.remove();
                 gameContext.optionsMenuView.remove();
