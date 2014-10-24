@@ -18,6 +18,7 @@ var BoardView = Backbone.View.extend({
         this.notationConverter = this.options.notationConverter;
         
         // This view has no template, so just attach the default el to the parent.
+        parent.empty();
         parent.append(this.$el);
 
         // set this to true for 'view-only' rendering

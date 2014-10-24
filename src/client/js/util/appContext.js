@@ -186,6 +186,7 @@ var AppContext = function (configData) {
                 capturedPiecesView: capturedPiecesView,
                 moveHistoryView: moveHistoryView,
                 messagesView: messagesView,
+                playerInfoView: playerInfoView,
                 playGameView: playGameView
             };
 

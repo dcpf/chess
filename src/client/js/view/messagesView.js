@@ -12,6 +12,7 @@ var MessagesView = Backbone.View.extend({
         this.board = this.options.board;
 
         // This view has no template, so just attach the default el to the parent.
+        parent.empty();
         parent.append(this.$el);
 
         // set up the listener

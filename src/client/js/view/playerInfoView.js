@@ -13,6 +13,7 @@ var PlayerInfoView = Backbone.View.extend({
         // Create and attach the template
         var template = _.template($('#playerInfoTemplate').html());
         this.$el.html(template());
+        parent.empty();
         parent.append(this.$el);
         
         this._render();

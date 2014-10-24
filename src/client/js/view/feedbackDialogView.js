@@ -19,6 +19,7 @@ var FeedbackDialogView = Backbone.View.extend({
         // Create and attach the template
         var template = _.template($('#feedbackDialogTemplate').html());
         this.$el.html(template());
+        this.parent.empty();
         this.parent.append(this.$el);
 
         this.$('#feedbackSubmitButton').click(function() {

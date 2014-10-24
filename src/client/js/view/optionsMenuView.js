@@ -13,6 +13,7 @@ var OptionsMenuView = Backbone.View.extend({
         // Create and attach the template
         var template = _.template($('#optionsMenuTemplate').html());
         this.$el.html(template());
+        parent.empty();
         parent.append(this.$el);
 
         var duration = 200,
