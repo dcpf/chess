@@ -1,11 +1,11 @@
 /*
-* Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
+* Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
 /*
 * View controller for rendering misc dialogs
 */
-var GenericDialogView = Backbone.View.extend({
+var GenericDialogView = View.extend({
 
     initialize: function () {
         
@@ -13,11 +13,7 @@ var GenericDialogView = Backbone.View.extend({
         this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         
-        // Create and attach the template
-        var template = _.template($('#genericDialogTemplate').html());
-        this.$el.html(template());
-        this.parent.empty();
-        this.parent.append(this.$el);
+        this.initTemplate('genericDialogTemplate');
         
         // set up the listeners
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.ERROR, this._renderErrorDialog);

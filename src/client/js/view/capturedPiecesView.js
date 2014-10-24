@@ -2,20 +2,16 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-var CapturedPiecesView = Backbone.View.extend({
+var CapturedPiecesView = View.extend({
 
     initialize: function () {
         
-        var parent = this.options.parent;
+        this.parent = this.options.parent;
         this.capturedPieces = this.options.capturedPieces;
         
         this.listenTo(this.capturedPieces, 'add', this._updateCapturedPieces);
         
-        // Create and attach the template
-        var template = _.template($('#capturedPiecesTemplate').html());
-        this.$el.html(template());
-        parent.empty();
-        parent.append(this.$el);
+        this.initTemplate('capturedPiecesTemplate');
         
     },
 

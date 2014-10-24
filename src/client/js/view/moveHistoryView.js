@@ -1,8 +1,8 @@
 /*
-* Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
+* Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
-var MoveHistoryView = Backbone.View.extend({
+var MoveHistoryView = View.extend({
 
     events: {
         'click .moveHistoryLink': '_handleMoveHistoryLinkClick',
@@ -12,18 +12,14 @@ var MoveHistoryView = Backbone.View.extend({
     initialize: function () {
 
         // set the passed-in options
-        var parent = this.options.parent;
+        this.parent = this.options.parent;
         this.moveHistory = this.options.moveHistory;
         this.eventHandler = this.options.eventHandler;
 
         // set up the listener
         this.listenTo(this.moveHistory, 'add', this._updateMoveHistory);
         
-        // Create and attach the template
-        var template = _.template($('#moveHistoryTemplate').html());
-        this.$el.html(template());
-        parent.empty();
-        parent.append(this.$el);
+        this.initTemplate('moveHistoryTemplate');
 
     },
 

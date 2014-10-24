@@ -15,11 +15,7 @@ var BoardSnapshotView = BoardView.extend({
         this.moveHistory = this.options.moveHistory;
         this.notationConverter = this.options.notationConverter;
         
-        // Create and attach the template
-        var template = _.template($('#chessBoardSnapshotDialogTemplate').html());
-        this.$el.html(template());
-        this.parent.empty();
-        this.parent.append(this.$el);
+        this.initTemplate('chessBoardSnapshotDialogTemplate');
 
         // set mode to view-only
         this.viewMode = true;

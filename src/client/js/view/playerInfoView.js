@@ -2,19 +2,15 @@
 * Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
-var PlayerInfoView = Backbone.View.extend({
+var PlayerInfoView = View.extend({
 
     initialize: function () {
         
         // set the passed-in options
-        var parent = this.options.parent;
+        this.parent = this.options.parent;
         this.gameState = this.options.gameState;
 
-        // Create and attach the template
-        var template = _.template($('#playerInfoTemplate').html());
-        this.$el.html(template());
-        parent.empty();
-        parent.append(this.$el);
+        this.initTemplate('playerInfoTemplate');
         
         this._render();
 

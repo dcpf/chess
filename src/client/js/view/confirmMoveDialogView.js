@@ -1,8 +1,8 @@
 /*
-* Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
+* Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
-var ConfirmMoveDialogView = Backbone.View.extend({
+var ConfirmMoveDialogView = View.extend({
 
     initialize: function () {
         
@@ -10,11 +10,7 @@ var ConfirmMoveDialogView = Backbone.View.extend({
         this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         
-        // Create and attach the template
-        var template = _.template($('#confirmMoveDialogTemplate').html());
-        this.$el.html(template());
-        this.parent.empty();
-        this.parent.append(this.$el);
+        this.initTemplate('confirmMoveDialogTemplate');
         
         // set up the listeners
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.RENDER_CONFIRM_MOVE_DIALOG, this._render);

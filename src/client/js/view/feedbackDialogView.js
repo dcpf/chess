@@ -5,7 +5,7 @@
 /*
 * View controller for rendering the feedback dialog
 */
-var FeedbackDialogView = Backbone.View.extend({
+var FeedbackDialogView = View.extend({
 
     initialize: function () {
 
@@ -16,11 +16,7 @@ var FeedbackDialogView = Backbone.View.extend({
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FEEDBACK_LINK_CLICKED, this._renderDialog);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FEEDBACK_SUCCESS, this._renderSuccess);
         
-        // Create and attach the template
-        var template = _.template($('#feedbackDialogTemplate').html());
-        this.$el.html(template());
-        this.parent.empty();
-        this.parent.append(this.$el);
+        this.initTemplate('feedbackDialogTemplate');
 
         this.$('#feedbackSubmitButton').click(function() {
           var feedback = self.$("#feedbackText").val();

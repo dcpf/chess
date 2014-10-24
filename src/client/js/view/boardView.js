@@ -1,8 +1,8 @@
 /*
-* Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
+* Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
-var BoardView = Backbone.View.extend({
+var BoardView = View.extend({
 
     // Variable to track the piece being moved. Normally, we would use the dataTransfer object, but that does not appear to work properly.
     pieceInMotion: '',
