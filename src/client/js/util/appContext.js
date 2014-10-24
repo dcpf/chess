@@ -103,6 +103,7 @@ var AppContext = function (configData) {
                 gameContext.moveHistoryView.remove();
                 gameContext.optionsMenuView.remove();
                 gameContext.playerInfoView.remove();
+                gameContext.playGameView.remove();
             }
 
             // Instantiate all of the objects we need
@@ -159,11 +160,13 @@ var AppContext = function (configData) {
                 eventHandler: eventHandler,
                 moveHistory: moveHistory
             });
-            var playGameView = new PlayGameView({});
             var messagesView = new MessagesView({
                 parent: $('#messageContainer'),
                 eventHandler: eventHandler,
                 board: board
+            });
+            var playGameView = new PlayGameView({
+                parent: $('#playGameView')
             });
 
             gameContext = {
@@ -178,10 +181,10 @@ var AppContext = function (configData) {
                 boardSnapshotView: boardSnapshotView,
                 confirmMoveDialogView: confirmMoveDialogView,
                 optionsMenuView: optionsMenuView,
-                playGameView: playGameView,
                 capturedPiecesView: capturedPiecesView,
                 moveHistoryView: moveHistoryView,
-                messagesView: messagesView
+                messagesView: messagesView,
+                playGameView: playGameView
             };
 
             // Perform some init functions

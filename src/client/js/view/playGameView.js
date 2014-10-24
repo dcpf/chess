@@ -4,14 +4,16 @@
 
 var PlayGameView = Backbone.View.extend({
 
-    el: '#playGameView',
+    initialize: function () {
+        this.parent = this.options.parent;
+    },
 
     render: function () {
-        this.$el.show();
+        this.parent.show();
     },
     
     hide: function () {
-        this.$el.hide();
+        this.parent.hide();
     }
 
 });
