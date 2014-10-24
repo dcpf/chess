@@ -97,6 +97,7 @@ var AppContext = function (configData) {
 
             if (gameContext) {
                 // Clean up the views so they can be properly re-instantiated
+                gameContext.boardSnapshotView.remove();
                 gameContext.boardView.remove();
                 gameContext.capturedPiecesView.remove();
                 gameContext.feedbackDialogView.remove();
@@ -137,6 +138,7 @@ var AppContext = function (configData) {
                 user: user
             });
             var boardSnapshotView = new BoardSnapshotView({
+                parent: $('#chessBoardSnapshotDialog'),
                 eventHandler: eventHandler,
                 notationConverter: notationConverter,
                 moveHistory: moveHistory

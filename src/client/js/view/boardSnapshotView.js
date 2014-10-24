@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
+* Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
 /*
@@ -7,14 +7,19 @@
 */
 var BoardSnapshotView = BoardView.extend({
 
-    el: '#chessBoardSnapshotDialog',
-
     initialize: function () {
 
         // set the passed-in options
+        this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         this.moveHistory = this.options.moveHistory;
         this.notationConverter = this.options.notationConverter;
+        
+        // Create and attach the template
+        var template = _.template($('#chessBoardSnapshotDialogTemplate').html());
+        this.$el.html(template());
+        this.parent.empty();
+        this.parent.append(this.$el);
 
         // set mode to view-only
         this.viewMode = true;
@@ -51,7 +56,7 @@ var BoardSnapshotView = BoardView.extend({
         // hide the dialog
         this.$('#chessBoardSnapshotContainer').html('');
         this.$('.modal-body .move').text('');
-        this.$el.modal('hide');
+        this.parent.modal('hide');
 
     },
 
@@ -64,7 +69,7 @@ var BoardSnapshotView = BoardView.extend({
         this.board.notationConverter = this.notationConverter;
         var gameBoard = this._generateBoard();
         this.$('#chessBoardSnapshotContainer').html(gameBoard);
-        this.$el.modal();
+        this.parent.modal();
         var moveHistoryObj, notation;
 
         // If index was passed in, loop through the moves in the move history, updating the board array.
