@@ -19,6 +19,7 @@ var AppContext = function (configData) {
         gameManager: gameManager
     });
     var genericDialogView = new GenericDialogView({
+        parent: $('#genericDialog'),
         eventHandler: eventHandler
     });
     
