@@ -7,17 +7,21 @@
 */
 var FeedbackDialogView = Backbone.View.extend({
 
-    el: '#feedbackDialog',
-
     initialize: function () {
 
         var self = this;
+        this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         this.user = this.options.user;
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FEEDBACK_LINK_CLICKED, this._renderDialog);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FEEDBACK_SUCCESS, this._renderSuccess);
+        
+        // Create and attach the template
+        var template = _.template($('#feedbackDialogTemplate').html());
+        this.$el.html(template());
+        this.parent.append(this.$el);
 
-        self.$('#feedbackSubmitButton').click(function() {
+        this.$('#feedbackSubmitButton').click(function() {
           var feedback = self.$("#feedbackText").val();
           var email = self.$("#feedbackEmail").val();
           self.eventHandler.trigger(self.eventHandler.messageNames.FEEDBACK_SUBMIT, feedback, email);
@@ -28,7 +32,7 @@ var FeedbackDialogView = Backbone.View.extend({
     _renderDialog: function () {
         var feedbackTextField = this.$('#feedbackText'),
           feedbackEmailField = this.$('#feedbackEmail');
-        this.$el.modal();
+        this.parent.modal();
         feedbackTextField.val('');
         this.$('#feedbackSuccess').hide();
         this.$('#feedbackForm').show();

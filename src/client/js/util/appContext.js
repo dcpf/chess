@@ -123,6 +123,7 @@ var AppContext = function (configData) {
                 moveHistory: moveHistory
             });
             var feedbackDialogView = new FeedbackDialogView({
+                parent: $('#feedbackDialog'),
                 eventHandler: eventHandler,
                 user: user
             });
