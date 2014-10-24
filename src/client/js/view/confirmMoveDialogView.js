@@ -4,10 +4,19 @@
 
 var ConfirmMoveDialogView = Backbone.View.extend({
 
-    el: '#confirmMoveDialog',
-
     initialize: function () {
+        
+        // set the passed-in options
+        this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
+        
+        // Create and attach the template
+        var template = _.template($('#confirmMoveDialogTemplate').html());
+        this.$el.html(template());
+        this.parent.empty();
+        this.parent.append(this.$el);
+        
+        // set up the listeners
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.RENDER_CONFIRM_MOVE_DIALOG, this._render);
     },
 
@@ -32,7 +41,7 @@ var ConfirmMoveDialogView = Backbone.View.extend({
 
         // Render the dialog
         this.$('#possibleMoves').html(ul);
-        this.$el.modal();
+        this.parent.modal();
 
     },
     
@@ -51,7 +60,7 @@ var ConfirmMoveDialogView = Backbone.View.extend({
     * Called from the confirm dialog
     */
     _confirmMove: function (notation) {
-        this.$el.modal('hide');
+        this.parent.modal('hide');
         this.eventHandler.trigger(this.eventHandler.messageNames.MOVE_CONFIRMED, notation);
     },
 
@@ -59,7 +68,7 @@ var ConfirmMoveDialogView = Backbone.View.extend({
     * Called from the confirm dialog
     */
     _cancelMove: function () {
-        this.$el.modal('hide');
+        this.parent.modal('hide');
         this.eventHandler.trigger(this.eventHandler.messageNames.CANCEL_MOVE);
     }
 

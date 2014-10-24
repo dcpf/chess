@@ -100,6 +100,7 @@ var AppContext = function (configData) {
                 gameContext.boardSnapshotView.remove();
                 gameContext.boardView.remove();
                 gameContext.capturedPiecesView.remove();
+                gameContext.confirmMoveDialogView.remove();
                 gameContext.feedbackDialogView.remove();
                 gameContext.messagesView.remove();
                 gameContext.moveHistoryView.remove();
@@ -144,6 +145,7 @@ var AppContext = function (configData) {
                 moveHistory: moveHistory
             });
             var confirmMoveDialogView = new ConfirmMoveDialogView({
+                parent: $('#confirmMoveDialog'),
                 eventHandler: eventHandler
             });
             var optionsMenuView = new OptionsMenuView({

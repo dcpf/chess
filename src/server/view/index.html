@@ -147,6 +147,13 @@
 <div id="tempPiecePlaceHolder"></div>
 </script>
 
+<script type="text/template" id="confirmMoveDialogTemplate">
+<div class="modal-body">
+    <p>Please confirm your move</p>
+    <div id="possibleMoves"></div>
+</div>
+</script>
+
 <!-- dialogs -->
 
 <div id="forgotGameIdDialog" class="modal" role="dialog" aria-hidden="true" data-backdrop="static">
@@ -177,12 +184,7 @@
     </div>
 </div>
 
-<div id="confirmMoveDialog" class="modal" role="dialog" aria-hidden="true" data-backdrop="static">
-    <div class="modal-body">
-        <p>Please confirm your move</p>
-        <div id="possibleMoves"></div>
-    </div>
-</div>
+<div id="confirmMoveDialog" class="modal" role="dialog" aria-hidden="true" data-backdrop="static"></div>
 
 <div id="chessBoardSnapshotDialog" class="modal" role="dialog" aria-hidden="true" data-backdrop="static"></div>
 
