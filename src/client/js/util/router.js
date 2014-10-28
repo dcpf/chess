@@ -5,8 +5,9 @@ var Router = Backbone.Router.extend({
     },
 
     routes: {
-        "": "enterScreen",
-        "play/:gameID": "play"
+        "play/:gameID": "play",
+        // everything else renders the enter screen
+        "*path": "enterScreen"
     },
 
     //
