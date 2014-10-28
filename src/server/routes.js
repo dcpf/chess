@@ -3,46 +3,8 @@
 var chessController = require('./chessController');
 
 exports.index = function (req, res, next) {
-    
-    var params = req.getParams();
-
-    if (params.gameID) {
-
-        // GET enterGame request where gameID is passed as a URL param
-        chessController.enterGame(params)
-            .then(function (obj) {
-                renderIndex(obj, req);
-                next();
-            })
-            // If chessController.enterGame() failed, we'll render index.html with an err msg in the attr map.
-            .fail(function (err) {
-                console.warn(err);
-                chessController.buildDefaultEnterGameAttrMap(err)
-                    .then(function (obj) {
-                        renderIndex(obj, req);
-                        next();
-                    })
-                    .fail(function (err) {
-                        // what to do here?
-                        //deferred.reject(err);
-                    });
-            });
-
-    } else {
-
-        // default request for index.html
-        chessController.buildDefaultEnterGameAttrMap()
-            .then(function (obj) {
-                renderIndex(obj, req);
-                next();
-            })
-            .fail(function (err) {
-                // what to do here?
-                //deferred.reject(err);
-            });
-
-    }
-    
+    renderIndex(req);
+    next();
 };
 
 exports.findGamesByEmail = function (req, res, next) {
@@ -94,8 +56,20 @@ function logClientError (req, params) {
     console.log('Client error: ' + JSON.stringify(params) + '; User agent: ' + req.headers['user-agent']);
 }
 
-function renderIndex (obj, req) {
+function renderIndex (req) {
     req.responseProps.file = 'index';
-    // The index page only needs the config data
-    req.responseProps.obj = {config: JSON.stringify(obj.config)};
+    // add the game config (as a string) needed by the client
+    req.responseProps.obj = {config: JSON.stringify(getGameConfig())};
+}
+
+/*
+* Build the game configuration.
+*/
+function getGameConfig () {
+    return {
+		recaptcha: {
+			enabled: GLOBAL.CONFIG.recaptcha.enabled,
+			publicKey: GLOBAL.CONFIG.recaptcha.publicKey
+		}
+	};
 }

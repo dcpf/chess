@@ -115,10 +115,6 @@ function updateUserPrefs (postData) {
 	return userPrefsDao.setUserPref(userEmail, name, value);
 }
 
-function buildDefaultEnterGameAttrMap (error) {
-	return _buildEnterGameAttrMap({}, '', '', false, error);
-}
-
 function findGamesByEmail (email) {
 
 	var deferred = q.defer();
@@ -185,8 +181,6 @@ exports.createGame = createGame;
 exports.enterGame = enterGame;
 exports.saveMove = saveMove;
 exports.updateUserPrefs = updateUserPrefs;
-// TODO: this could be private
-exports.buildDefaultEnterGameAttrMap = buildDefaultEnterGameAttrMap;
 exports.findGamesByEmail = findGamesByEmail;
 exports.sendFeedback = sendFeedback;
 
@@ -195,7 +189,7 @@ exports.sendFeedback = sendFeedback;
 //
 
 /**
-* Generate the gameState, config, and user objects needed by the client.
+* Generate the gameState and user objects needed by the game.
 */
 function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
 
@@ -210,14 +204,6 @@ function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
 		error: (error) ? error.message : ''
 	};
 
-	// add config needed by the client
-	var config = {
-		recaptcha: {
-			enabled: GLOBAL.CONFIG.recaptcha.enabled,
-			publicKey: GLOBAL.CONFIG.recaptcha.publicKey
-		}
-	};
-
     // user prefs
     var userEmail = _getCurrentUserEmail(gameObj, gameID.key);
     return userPrefsDao.getUserPrefs(userEmail).then(function (userPrefs) {
@@ -227,7 +213,6 @@ function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
         };
         return {
             gameState: gameState,
-            config: config,
             user: user
         };
     });
