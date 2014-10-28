@@ -191,7 +191,7 @@ exports.sendFeedback = sendFeedback;
 /**
 * Generate the gameState and user objects needed by the game.
 */
-function _buildEnterGameAttrMap (gameObj, gameID, perspective, canMove, error) {
+function _buildGameAttrMap (gameObj, gameID, perspective, canMove, error) {
 
 	// vars needed for the game
 	var gameState = {
@@ -260,7 +260,7 @@ function _createGame (player1Email, player2Email) {
         console.log('Created game ' + gameID);
         var newGameIdObj = gameIdFactory.getGameID(gameID, whiteKey);
         emailHandler.sendGameCreationEmail(player1Email, player2Email, newGameIdObj);
-        return _buildEnterGameAttrMap(gameObj, newGameIdObj, 'W', true, null);
+        return _buildGameAttrMap(gameObj, newGameIdObj, 'W', true, null);
     });
 
 }
@@ -271,7 +271,7 @@ function _enterExistingGame (gameID) {
         var gameObj = obj.gameObj;
 		var perspective = _getPerspective(gameObj, gameID.key);
 		var canMove = _playerCanMove(gameObj, gameID.key);
-		deferred.resolve(_buildEnterGameAttrMap(gameObj, gameID, perspective, canMove, null));
+		deferred.resolve(_buildGameAttrMap(gameObj, gameID, perspective, canMove, null));
 	}).fail (function (err) {
 		if (err instanceof customErrors.InvalidGameIdError) {
 			err.message = 'Invalid Game ID: ' + gameID.compositeID;
