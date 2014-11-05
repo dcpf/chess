@@ -10,11 +10,16 @@ Polymer({
     
     init: function(obj) {
         this.obj = obj;
+        this.$.errMsg.style.display = 'none';
+        this.$.response.style.display = 'none';
     },
     
     submit: function(event, detail, sender) {
         var xhr = this.$.xhr;
         xhr.params = {"obj": JSON.stringify(this.obj)};
+        if (csrfToken) {
+            xhr.params._csrf = csrfToken;
+        }
         xhr.go();
     },
     

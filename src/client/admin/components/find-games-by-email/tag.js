@@ -20,6 +20,9 @@ Polymer({
         if (event.keyCode === 13) {
             var xhr = this.$.xhr;
             xhr.params = {"email": this.$.email.value};
+            if (csrfToken) {
+                xhr.params._csrf = csrfToken;
+            }
             xhr.go();
         }
     },

@@ -27,6 +27,7 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var compression = require('compression');
 var errorHandler = require('errorhandler');
+var csrf = require('csurf');
 
 var routes = require('./routes');
 
@@ -118,12 +119,22 @@ app.get('/*', routes.index);
 // basic auth to protect admin URLs defined below
 app.use('/admin', function(req, res, next) {
     if (req.headers.authorization === 'Basic ZHBmOnJ1NWgyMWx6') {
-        next();
-    } else {
-        res.statusCode = 401;
-        res.setHeader('WWW-Authenticate', 'Basic realm="chess_admin"');
-        res.end('Unauthorized');
+        return next();
     }
+    res.statusCode = 401;
+    res.setHeader('WWW-Authenticate', 'Basic realm="chess_admin"');
+    res.end('Unauthorized');
+});
+
+// Add CSRF protection for admin end-points
+app.use('/admin', csrf());
+app.use('/admin', function (err, req, res, next) {
+  if (err.code !== 'EBADCSRFTOKEN') {
+      return next(err);
+  }
+  // handle CSRF token errors
+  res.status(403);
+  res.send('CSRF validation error');
 });
 
 // admin URLs
@@ -149,16 +160,16 @@ function initConfig () {
 	var config = {};
 	try {
 		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
-    console.log('Initialized config file: ' + configFile);
+        console.log('Initialized config file: ' + configFile);
 	} catch (err) {
 		console.warn('No config file found at: ' + configFile + '. Starting with no configuration.');
 	}
 	GLOBAL.CONFIG = config;
 
-  // Set the global appUrl object using the host name and port from either the passed-in args or the env vars.
-	var hostName = cmndr.hostName || process.env.DOMAIN;
-	var port = cmndr.port || process.env.PORT;
-  GLOBAL.APP_URL = appUrl.constructUrl(hostName, port, cmndr.usePortInLinks);
+    // Set the global appUrl object using the host name and port from either the passed-in args or the env vars.
+    var hostName = cmndr.hostName || process.env.DOMAIN;
+    var port = cmndr.port || process.env.PORT;
+    GLOBAL.APP_URL = appUrl.constructUrl(hostName, port, cmndr.usePortInLinks);
 
 }
 
@@ -191,6 +202,10 @@ function sendResponse (req, res) {
             'Pragma': 'no-cache',
             'Expires': '0'
         });
+        // add the CSRF token if it exists
+        if (req.csrfToken) {
+            obj.csrfToken = req.csrfToken();
+        }
         // render
         res.render(responseProps.file, obj);
     } else {
