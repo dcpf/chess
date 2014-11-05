@@ -7,7 +7,7 @@ Polymer({
         this.errMsg = '';
     },
     
-    init: function() {
+    reset: function() {
         this.obj = {};
         this.errMsg = '';
         this.$.errMsg.style.display = 'none';

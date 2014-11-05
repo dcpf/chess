@@ -42,13 +42,12 @@ $('#componentLinks a').click(function(){
     $this.css('font-weight', 'bold');
     // hide all components
     $('#components').children().hide();
-    // convert the link ID into its target's component ID
-    var elemId = $this.attr('id').replace('_link', '').replace(/_/g, '-');
-    var $elem = $(elemId);
-    // render the component
+    // convert the link ID into its target's component element name
+    var elemName = $this.attr('id').replace('_link', '').replace(/_/g, '-');
+    var $elem = $(elemName);
+    // reset and render
     $elem.show();
-    // call the component's init() method
-    $elem[0].init();
+    $elem[0].reset();
     // return false to bypass default click behavior
     return false;
 });
@@ -57,7 +56,7 @@ document.addEventListener('edit-game', function(event) {
     $('#components').children().hide();
     var $elem = $('edit-game');
     $elem.show();
-    $elem[0].init(event.detail.obj);
+    $elem[0].reset(event.detail.obj);
 });
 
 </script>
