@@ -69,6 +69,7 @@ module.exports = function(grunt) {
 
         },
 
+        // We *could* achieve the same results using requireJS or browserify, but I prefer this simpler way for now.
         concat: {
             options: {
               // wrap everything in a self-calling function and use strict
