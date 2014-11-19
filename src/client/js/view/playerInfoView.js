@@ -10,15 +10,12 @@ var PlayerInfoView = View.extend({
         this.parent = this.options.parent;
         this.gameState = this.options.gameState;
 
-        this.attachTemplate('playerInfo');
-        
-        this._render();
+        var data = {
+            whiteEmail: this.gameState.getWhiteEmail(),
+            blackEmail: this.gameState.getBlackEmail()
+        };
+        this.renderTemplate('playerInfo', data);
 
-    },
-
-    _render: function () {
-        this.$('#whiteEmail').html(this.gameState.getWhiteEmail());
-        this.$('#blackEmail').html(this.gameState.getBlackEmail());
     }
 
 });
