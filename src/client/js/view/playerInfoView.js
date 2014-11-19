@@ -10,7 +10,7 @@ var PlayerInfoView = View.extend({
         this.parent = this.options.parent;
         this.gameState = this.options.gameState;
 
-        this.initTemplate('playerInfoTemplate');
+        this.attachTemplate('playerInfo');
         
         this._render();
 

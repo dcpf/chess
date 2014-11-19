@@ -5,7 +5,7 @@ module.exports = function(grunt) {
 
         pkg: grunt.file.readJSON('package.json'),
 
-        clean: ['webapp'],
+        clean: ['build','webapp'],
 
         jshint: {
 
@@ -68,29 +68,60 @@ module.exports = function(grunt) {
             }
 
         },
+        
+        jst: {
+            compile: {
+                options: {
+                    templateSettings: {
+                        variable: 'data'
+                    },
+                    processName: function(filename) {
+                        // Shortens the template name to just the file name with no extension. E.g.: src/templates/playerInfo.html > playerInfo
+                        return filename.split('/').pop().split('.').shift();
+                    }
+                },
+                files: {
+                    'build/compiledTemplates.js': ['src/templates/*.html']
+                }
+            }
+        },
 
-        // We *could* achieve the same results using requireJS or browserify, but I prefer this simpler way for now.
         concat: {
-            options: {
-              // wrap everything in a self-calling function and use strict
-              banner: "(function(){\n'use strict';\n",
-              footer: "})();"
+            
+            // Wrap the compiled templates in a function
+            templates: {
+                options: {
+                    banner: "var Templates = function(){\n",
+                    footer: "\n};\n"
+                },
+                src: ['build/compiledTemplates.js'],
+                dest: 'build/compiledTemplates.js'
             },
-            dist: {
 
-                src: [ //load utils first
+            // We *could* achieve the same results using requireJS or browserify, but I prefer this simpler way for now.
+            dist: {
+                
+                options: {
+                    // wrap everything in a self-calling function and use strict
+                    banner: "(function(){\n'use strict';\n",
+                    footer: "})();"
+                },
+
+                src: [ // load the templates first
+                    'build/compiledTemplates.js',
+                    // utils
                     'src/client/js/util/eventHandler.js',
                     'src/client/js/util/notationConverter.js',
-                    // load models
+                    // models
                     'src/client/js/model/piece.js',
                     'src/client/js/model/board.js',
                     'src/client/js/model/user.js',
                     'src/client/js/model/config.js',
                     'src/client/js/model/gameState.js',
-                    // load collections
+                    // collections
                     'src/client/js/collection/capturedPieces.js',
                     'src/client/js/collection/moveHistory.js',
-                    // load views
+                    // views
                     'src/client/js/view/view.js',
                     'src/client/js/view/feedbackDialogView.js',
                     'src/client/js/view/enterGameView.js',
@@ -170,6 +201,7 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
@@ -178,6 +210,7 @@ module.exports = function(grunt) {
     grunt.registerTask('dev', ['clean',
                                'jshint:server',
                                'jshint:client',
+                               'jst',
                                'concat',
                                'jshint:client_concat',
                                'cssmin',
@@ -188,6 +221,7 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy', ['clean',
                                   'jshint:server',
                                   'jshint:client',
+                                  'jst',
                                   'concat',
                                   'jshint:client_concat',
                                   'uglify',

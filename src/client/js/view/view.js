@@ -8,6 +8,13 @@ var View = Backbone.View.extend({
         this.$el.html(template());
         this.parent.empty();
         this.parent.append(this.$el);
+    },
+    
+    attachTemplate: function (templateId) {
+        var template = templates.JST[templateId]();
+        this.$el.html(template);
+        this.parent.empty();
+        this.parent.append(this.$el);
     }
     
 });
