@@ -10,7 +10,7 @@ var ConfirmMoveDialogView = View.extend({
         this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         
-        this.initTemplate('confirmMoveDialogTemplate');
+        this.renderTemplate('confirmMoveDialog');
         
         // set up the listeners
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.RENDER_CONFIRM_MOVE_DIALOG, this._render);
