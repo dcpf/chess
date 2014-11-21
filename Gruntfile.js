@@ -78,6 +78,10 @@ module.exports = function(grunt) {
                     processName: function(filename) {
                         // Shortens the template name to just the file name with no extension. E.g.: src/templates/playerInfo.html > playerInfo
                         return filename.split('/').pop().split('.').shift();
+                    },
+                    processContent: function(src) {
+                        // Strip whitespace from the beginning and the end of each line
+                        return src.replace(/(^\s+|\s+$)/gm, '');
                     }
                 },
                 files: {
