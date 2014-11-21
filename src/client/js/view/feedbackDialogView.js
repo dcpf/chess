@@ -16,7 +16,8 @@ var FeedbackDialogView = View.extend({
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FEEDBACK_LINK_CLICKED, this._renderDialog);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FEEDBACK_SUCCESS, this._renderSuccess);
         
-        this.renderTemplate('feedbackDialog');
+        var data = {email: this.user ? this.user.getEmail() : ''};
+        this.renderTemplate('feedbackDialog', data);
 
         this.$('#feedbackSubmitButton').click(function() {
           var feedback = self.$("#feedbackText").val();
@@ -27,16 +28,12 @@ var FeedbackDialogView = View.extend({
     },
 
     _renderDialog: function () {
-        var feedbackTextField = this.$('#feedbackText'),
-          feedbackEmailField = this.$('#feedbackEmail');
-        this.parent.modal();
-        feedbackTextField.val('');
         this.$('#feedbackSuccess').hide();
         this.$('#feedbackForm').show();
-        if (!feedbackEmailField.val()) {
-          feedbackEmailField.val(this.user ? this.user.getEmail() : '');
-        }
-        feedbackTextField.focus();
+        var $feedbackTextField = this.$('#feedbackText');
+        $feedbackTextField.val('');
+        $feedbackTextField.focus();
+        this.parent.modal();
     },
 
     _renderSuccess: function (res) {
