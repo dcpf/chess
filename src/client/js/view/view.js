@@ -1,6 +1,7 @@
 var View = Backbone.View.extend({
     
-    renderTemplate: function (templateId, data) {
+    // Get the template's HTML and attach it to the parent element
+    initTemplate: function (templateId, data) {
         data = data || {};
         var template = templates.JST[templateId](data);
         this.$el.html(template);

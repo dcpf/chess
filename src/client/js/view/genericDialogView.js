@@ -13,7 +13,7 @@ var GenericDialogView = View.extend({
         this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         
-        this.renderTemplate('genericDialog');
+        this.initTemplate('genericDialog');
         
         // set up the listeners
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.ERROR, this._renderErrorDialog);

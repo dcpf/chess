@@ -11,7 +11,7 @@ var CapturedPiecesView = View.extend({
         
         this.listenTo(this.capturedPieces, 'add', this._updateCapturedPieces);
         
-        this.renderTemplate('capturedPieces');
+        this.initTemplate('capturedPieces');
         
     },
 

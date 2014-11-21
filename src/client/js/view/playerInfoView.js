@@ -14,7 +14,7 @@ var PlayerInfoView = View.extend({
             whiteEmail: this.gameState.getWhiteEmail(),
             blackEmail: this.gameState.getBlackEmail()
         };
-        this.renderTemplate('playerInfo', data);
+        this.initTemplate('playerInfo', data);
 
     }
 

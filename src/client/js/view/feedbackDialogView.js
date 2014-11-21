@@ -17,7 +17,7 @@ var FeedbackDialogView = View.extend({
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FEEDBACK_SUCCESS, this._renderSuccess);
         
         var data = {email: this.user ? this.user.getEmail() : ''};
-        this.renderTemplate('feedbackDialog', data);
+        this.initTemplate('feedbackDialog', data);
 
         this.$('#feedbackSubmitButton').click(function() {
           var feedback = self.$("#feedbackText").val();

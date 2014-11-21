@@ -15,7 +15,7 @@ var BoardSnapshotView = BoardView.extend({
         this.moveHistory = this.options.moveHistory;
         this.notationConverter = this.options.notationConverter;
         
-        this.renderTemplate('chessBoardSnapshotDialog');
+        this.initTemplate('chessBoardSnapshotDialog');
 
         // set mode to view-only
         this.viewMode = true;

@@ -19,7 +19,7 @@ var MoveHistoryView = View.extend({
         // set up the listener
         this.listenTo(this.moveHistory, 'add', this._updateMoveHistory);
         
-        this.renderTemplate('moveHistory');
+        this.initTemplate('moveHistory');
 
     },
 

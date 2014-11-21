@@ -10,7 +10,7 @@ var OptionsMenuView = View.extend({
         this.eventHandler = this.options.eventHandler;
         this.user = this.options.user;
         
-        this.renderTemplate('optionsMenu');
+        this.initTemplate('optionsMenu');
 
         var duration = 200,
             self = this;
