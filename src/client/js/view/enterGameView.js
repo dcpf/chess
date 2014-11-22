@@ -2,12 +2,11 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-var EnterGameView = Backbone.View.extend({
-
-    el: '#enterGameView',
+var EnterGameView = View.extend({
 
     initialize: function () {
 
+        this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         this.config = this.options.config;
 
@@ -15,6 +14,8 @@ var EnterGameView = Backbone.View.extend({
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.GAME_ENTERED, this.hide);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.CREATE_GAME_ERROR, this._createGameError);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.ENTER_GAME_ERROR, this._enterGameError);
+
+        this.initTemplate('enterGame');
 
         var self = this;
 
@@ -72,12 +73,12 @@ var EnterGameView = Backbone.View.extend({
     },
 
     hide: function () {
-        this.$el.hide();
+        this.parent.hide();
     },
 
     render: function (errorMsg) {
 
-        this.$el.show();
+        this.parent.show();
 
         // Enable the correct form based on the selected radio button
         if (this.$('#existingGameRadio').is(':checked')) {

@@ -28,6 +28,7 @@ var AppContext = function (configData) {
         
         enterScreenContext = enterScreenContext || {
             enterGameView: new EnterGameView({
+                parent: $('#enterGameView'),
                 eventHandler: eventHandler,
                 config: config
             }),
