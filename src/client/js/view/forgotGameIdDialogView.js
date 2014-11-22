@@ -5,16 +5,18 @@
 /*
 * View controller for rendering the 'forgot game ID' dialog
 */
-var ForgotGameIdDialogView = Backbone.View.extend({
-
-    el: '#forgotGameIdDialog',
+var ForgotGameIdDialogView = View.extend({
 
     initialize: function () {
 
+        this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
+
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FORGOT_GAME_ID_LINK_CLICKED, this._renderDialog);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FOUND_GAMES_BY_EMAIL, this._renderSuccess);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FIND_GAMES_BY_EMAIL_ERROR, this._renderError);
+
+        this.initTemplate('forgotGameIdDialog');
 
         var self = this;
         self.$('#forgotGameIdSubmitButton').click(function() {
@@ -25,7 +27,7 @@ var ForgotGameIdDialogView = Backbone.View.extend({
     },
 
     _renderDialog: function () {
-        this.$el.modal();
+        this.parent.modal();
         this.$('#forgotGameIdForm').show();
         this.$('#forgotGameIdEmail').focus();
         this.$('#forgotGameIdSuccess').hide();

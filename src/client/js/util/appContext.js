@@ -32,6 +32,7 @@ var AppContext = function (configData) {
                 config: config
             }),
             forgotGameIdDialogView: new ForgotGameIdDialogView({
+                parent: $('#forgotGameIdDialog'),
                 eventHandler: eventHandler
             })
         };
