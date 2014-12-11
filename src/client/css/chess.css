@@ -78,6 +78,7 @@ h3 {
 #loadingCaptchaText {
   color: #999;
   font-style: italic;
+  height: 0;
   line-height: 78px; /* 78px is the height of the captcha table once it's rendered */
   text-align: center;
 }
