@@ -8,14 +8,7 @@ body {
 hr {
   border-top-color: #999;
 }
-label {
-  font-weight: normal;
-  margin-right: 10px;
-  text-align: left;
-  white-space: nowrap;
-}
 .form-control {
-  display: inline-block;
   margin-bottom: 10px;
 }
 legend {
@@ -29,11 +22,9 @@ legend {
   background-color: #fff;
   border-radius: 6px;
   bottom: auto;
-  left: 50%;
-  margin: 0 0 0 -225px;
-  position: absolute;
-  top: 200px;
-  width: 450px;
+  margin: 15% auto auto;
+  max-width: 450px;
+  width: 95%;
 }
 .modal-header {
   border-bottom: none;
@@ -73,25 +64,21 @@ h3 {
   margin-left: auto;
   margin-right: auto;
   padding: 20px;
-  width: 500px;
-}
-
-#enterGameTable label {
-  width: 180px;
-}
-
-#enterGameTable .form-control {
-  max-width: 240px;
+  width: 364px;
 }
 
 #newGameForm, #existingGameForm {
-  padding-left: 20px;
+  padding: 10px 0 0 20px;
+}
+
+.g-recaptcha {
+    height: 78px; /* Preset the height to avoid FOUC when the captcha is rendered. */
 }
 
 #loadingCaptchaText {
   color: #999;
   font-style: italic;
-  line-height: 123px; /* 123px is the height of the captcha table once it's rendered */
+  line-height: 78px; /* 78px is the height of the captcha table once it's rendered */
   text-align: center;
 }
 
@@ -102,11 +89,6 @@ fieldset[disabled="disabled"] > * {
 
 input[type="radio"], input[type="checkbox"] {
   margin: 0 7px 3px 0;
-}
-
-#recaptcha_response_field {
-  border-radius: 4px;
-  padding: 6px;
 }
 
 /* enter game form end */
@@ -301,7 +283,7 @@ img[draggable=true] {
   border: none;
   box-shadow: none;
   height: 200px;
-    width: 200px;
+  width: 200px;
   left: 50%;
   margin: -100px 0 0 -100px;
   position: absolute;
@@ -322,12 +304,8 @@ img[draggable=true] {
   list-style-position: inside;
 }
 
-#feedbackForm label {
-  width: 60px;
-}
-
-#feedbackForm .form-control {
-  max-width: 300px;
+#feedbackForm fieldset div {
+    text-align: left;
 }
 
 /* dialog styles end */
@@ -390,3 +368,17 @@ img[draggable=true] {
 }
 
 /* spinner styles end */
+
+@media (max-width: 404px) {
+    body {
+        padding: 10px;
+    }
+    #enterGameTable {
+        border: none;
+        padding: 0;
+        width: 304px; /* same width as captcha */
+    }
+    #newGameForm, #existingGameForm {
+        padding: 10px 0 0 0;
+    }
+}

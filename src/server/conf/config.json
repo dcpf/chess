@@ -7,9 +7,9 @@
     },
     "recaptcha": {
         "enabled": true,
-        "verifyUrl": "http://www.google.com/recaptcha/api/verify",
-        "publicKey": "6LfqLOkSAAAAALvKz01zEmrz6QQWRp-i8v3T_Qmr",
-        "privateKey": "6LfqLOkSAAAAAB-KDievG22mgeA_kkNV8wF_pa1Z"
+        "verifyUrl": "https://www.google.com/recaptcha/api/siteverify",
+        "publicKey": "6Lee-f4SAAAAAOL4TAcX3qfPv1Ru0wjbOz7x39ba",
+        "privateKey": "6Lee-f4SAAAAAPW3KAWGevBYFW5s6nSfTx0szcd-"
     },
     "db": {
         "databaseUrl": "chessdb"

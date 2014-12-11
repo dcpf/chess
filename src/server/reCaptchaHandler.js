@@ -3,7 +3,7 @@
 var q = require('q');
 var request = require('request');
 
-exports.validateCaptcha = function (ip, captchaChallenge, captchaResponse) {
+exports.validateCaptcha = function (ip, captchaResponse) {
 
 	var deferred = q.defer();
 
@@ -18,9 +18,8 @@ exports.validateCaptcha = function (ip, captchaChallenge, captchaResponse) {
 				method: 'post',
 				url: GLOBAL.CONFIG.recaptcha.verifyUrl,
 				form: {
-					privatekey: GLOBAL.CONFIG.recaptcha.privateKey,
+					secret: GLOBAL.CONFIG.recaptcha.privateKey,
 					remoteip: ip,
-					challenge: captchaChallenge,
 					response: captchaResponse
 				}
 			},
@@ -28,14 +27,13 @@ exports.validateCaptcha = function (ip, captchaChallenge, captchaResponse) {
                 if (err) {
                     deferred.reject(err);
                 } else {
-										// TODO: Use let with ES6
-                    var responseArray = body.split('\n');
-                    var success = responseArray[0];
-                    //var msg = responseArray[1];
-                    if (success === 'true') {
-												console.log('captcha validation passed');
+                    // TODO: Use let with ES6
+                    var responseObj = JSON.parse(body);
+                    if (responseObj.success) {
+                        console.log('captcha validation passed');
                         deferred.resolve();
                     } else {
+                        console.log('captcha validation error: ' + responseObj['error-codes']);
                         deferred.reject(new Error('Incorrect captcha. Please try again.'));
                     }
                 }

@@ -34,7 +34,7 @@ function createGame (ip, postData) {
 	}
 
 	// Email validation has passed. Now validate the captcha and create the game.
-  reCaptchaHandler.validateCaptcha(ip, postData.captchaChallenge, postData.captchaResponse)
+  reCaptchaHandler.validateCaptcha(ip, postData.captchaResponse)
 		.then(function() {
       deferred.resolve(_createGame(player1Email, player2Email));
     })

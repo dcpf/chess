@@ -14,17 +14,19 @@ var EnterGameView = View.extend({
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.GAME_ENTERED, this.hide);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.CREATE_GAME_ERROR, this._createGameError);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.ENTER_GAME_ERROR, this._enterGameError);
-
-        this.initTemplate('enterGame');
+        
+        var data = {
+            siteKey: this.config.getCaptchaPublicKey()
+        };
+        this.initTemplate('enterGame', data);
 
         var self = this;
 
         // initalize the captcha
         if (this.config.isCaptchaEnabled()) {
             var elem = document.createElement("script");
-            elem.src = "http://www.google.com/recaptcha/api/js/recaptcha_ajax.js";
+            elem.src = "https://www.google.com/recaptcha/api.js";
             document.body.appendChild(elem);
-            this._createCaptcha(self);
         }
 
         // assign click handlers to the radio buttons
@@ -43,9 +45,8 @@ var EnterGameView = View.extend({
                 var params = {};
                 params.player1Email = self.$('#player1Email').val().trim();
                 params.player2Email = self.$('#player2Email').val().trim();
-                if (window.Recaptcha) {
-                    params.captchaResponse = Recaptcha.get_response();
-                    params.captchaChallenge = Recaptcha.get_challenge();
+                if (window.grecaptcha) {
+                    params.captchaResponse = grecaptcha.getResponse();
                 }
                 self.eventHandler.trigger(self.eventHandler.messageNames.CREATE_GAME, params);
             } else if (action === 'E') {
@@ -59,7 +60,6 @@ var EnterGameView = View.extend({
         this.$("button[type='reset']").click(function() {
           self.$('#player1Email').val("");
           self.$('#player2Email').val("");
-          self.$('#recaptcha_response_field').val("");
           self.$('#gameID').val("");
         });
         
@@ -93,25 +93,6 @@ var EnterGameView = View.extend({
 
     },
 
-    /*
-    * Create the captcha UI. Must wait until Google's recaptcha_ajax.js has loaded before the Recaptcha
-    * object is available, so we use setTimeout() within the method, until the object is available.
-    */
-    _createCaptcha: function (self) {
-        if (!window.Recaptcha) {
-            // If the Recaptcha object is not yet available, try again.
-            setTimeout(function(){self._createCaptcha(self);}, 100);
-        } else {
-            Recaptcha.create(
-                this.config.getCaptchaPublicKey(),
-                "captcha",
-                {
-                    theme: "clean"
-                }
-            );
-        }
-    },
-
     /**
     * Enables the "new game" form and disables the "enter game" form
     */
@@ -140,8 +121,8 @@ var EnterGameView = View.extend({
 
     _createGameError: function (errMsg) {
         this.eventHandler.trigger(this.eventHandler.messageNames.ERROR, errMsg);
-        if (window.Recaptcha) {
-            Recaptcha.reload();
+        if (window.grecaptcha) {
+            grecaptcha.reset();
         }
     },
 
