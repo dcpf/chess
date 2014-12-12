@@ -67,6 +67,10 @@ h3 {
   width: 364px;
 }
 
+#existingGameForm {
+    display: none;
+}
+
 #newGameForm, #existingGameForm {
   padding: 10px 0 0 20px;
 }

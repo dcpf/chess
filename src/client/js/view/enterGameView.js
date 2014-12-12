@@ -29,12 +29,16 @@ var EnterGameView = View.extend({
             document.body.appendChild(elem);
         }
 
-        // assign click handlers to the radio buttons
+        // assign click handlers to the radio buttons and forgotGameId link
         this.$('#newGameRadio').click(function() {
           self._enableNewGameForm();
         });
         this.$('#existingGameRadio').click(function() {
           self._enableEnterGameForm();
+        });
+        this.$('#forgotGameIdLink').click(function() {
+            self.eventHandler.trigger(self.eventHandler.messageNames.FORGOT_GAME_ID_LINK_CLICKED);
+            return false;
         });
 
         // assign the click handler to the submit button
@@ -97,26 +101,18 @@ var EnterGameView = View.extend({
     * Enables the "new game" form and disables the "enter game" form
     */
     _enableNewGameForm: function () {
-      this.$('#newGameForm fieldset').removeAttr('disabled');
-      this.$('#existingGameForm fieldset').attr('disabled', 'disabled');
-      this.$('#forgotGameIdLink').addClass('disabledLink');
-      this.$('#forgotGameIdLink').off('click');
-      this.$('#newGameForm #player1Email').focus();
+        this.$('#existingGameForm').hide(200);
+        this.$('#newGameForm').show(200);
+        this.$('#newGameForm #player1Email').focus();
     },
 
     /**
     * Enables the "enter game" form and disables the "new game" form
     */
     _enableEnterGameForm: function () {
-      var self = this;
-      this.$('#newGameForm fieldset').attr('disabled', 'disabled');
-      this.$('#existingGameForm fieldset').removeAttr('disabled');
-      this.$('#forgotGameIdLink').removeClass('disabledLink');
-      this.$('#forgotGameIdLink').click(function() {
-        self.eventHandler.trigger(self.eventHandler.messageNames.FORGOT_GAME_ID_LINK_CLICKED);
-        return false;
-      });
-      this.$('#existingGameForm #gameID').focus();
+        this.$('#newGameForm').hide(200);
+        this.$('#existingGameForm').show(200);
+        this.$('#existingGameForm #gameID').focus();
     },
 
     _createGameError: function (errMsg) {
