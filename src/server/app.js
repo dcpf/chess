@@ -105,6 +105,8 @@ app.use(function (req, res, next) {
 //
 
 // ajax requests
+app.get('/', routes.index);
+app.get('/play/*', routes.index);
 app.post('/findGamesByEmail', routes.findGamesByEmail);
 app.post('/createGame', routes.createGame);
 app.post('/enterGame', routes.enterGame);
@@ -112,9 +114,6 @@ app.post('/saveMove', routes.saveMove);
 app.post('/updateUserPrefs', routes.updateUserPrefs);
 app.post('/feedback', routes.sendFeedback);
 app.post('/logClientError', routes.logClientError);
-
-// all other GET requests render the index page
-app.get('/*', routes.index);
 
 // basic auth to protect admin URLs defined below
 app.use('/admin', function(req, res, next) {
