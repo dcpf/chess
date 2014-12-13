@@ -150,9 +150,9 @@ app.post('/admin/editGame', adminRoutes.editGame);
 // Send the response
 app.use(sendResponse);
 
-app.listen(GLOBAL.APP_URL.port);
-
-console.log('Express server listening on ' + GLOBAL.APP_URL.url);
+app.listen(GLOBAL.APP_URL.port, function(){
+    console.log('Express server listening on ' + GLOBAL.APP_URL.url);
+});
 
 // private functions
 
