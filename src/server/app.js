@@ -29,8 +29,6 @@ var compression = require('compression');
 var errorHandler = require('errorhandler');
 var csrf = require('csurf');
 
-var routes = require('./routes');
-
 // Timestamp of when the app was started. We use this for caching javascript and css files in the browser.
 var runtimestamp = new Date().getTime();
 
@@ -45,8 +43,8 @@ app.set('view engine', 'html');
 // Must be before express.static!!!
 app.use(compression());
 
-// ../../webapp is where grunt copies the static files to
-app.use('/webapp', express.static(path.join(__dirname, '../../webapp'), { maxAge: 31536000000 }));
+// /webapp is where grunt copies the static files to
+app.use('/webapp', express.static('webapp', { maxAge: 31536000000 }));
 
 //app.use(morgan());
 app.use(bodyParser.json());
@@ -96,7 +94,12 @@ app.use(function (req, res, next) {
 
 // log all requests
 app.use(function (req, res, next) {
+    var start = new Date();
     console.log(req.method + ' ' + req.url + '; IP: ' + req.connection.remoteAddress + '; User-agent: ' + req.headers['user-agent']);
+    res.on('finish', function () {
+        var duration = new Date() - start;
+        console.log(req.method + ' ' + req.url + '; IP: ' + req.connection.remoteAddress + '; Execution time: ' + duration + ' ms');
+    });
     next();
 });
 
@@ -104,7 +107,8 @@ app.use(function (req, res, next) {
 // Routes
 //
 
-// ajax requests
+// game end-points
+var routes = require('./routes');
 app.get('/', routes.index);
 app.get('/play/*', routes.index);
 app.post('/findGamesByEmail', routes.findGamesByEmail);
@@ -136,7 +140,7 @@ app.use('/admin', function (err, req, res, next) {
   res.send('CSRF validation error');
 });
 
-// admin URLs
+// admin end-points
 var adminRoutes = require('./admin/routes');
 app.get('/admin', adminRoutes.index);
 app.post('/admin/findGameById', adminRoutes.findGameById);
@@ -184,7 +188,7 @@ function sendResponse (req, res) {
     
     if (responseProps.promise) {
         responseProps.promise.then(function (obj) {
-            res.status(200).send(obj);
+            res.send(obj);
         }).fail(function (err) {
             console.error(err);
             res.status(500).send(err.message);
@@ -209,7 +213,7 @@ function sendResponse (req, res) {
         res.render(responseProps.file, obj);
     } else {
         responseProps.obj = responseProps.obj || {};
-        res.status(200).send(responseProps.obj);
+        res.send(responseProps.obj);
     }
     
 }
