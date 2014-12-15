@@ -3,37 +3,37 @@
 var chessController = require('./chessController');
 
 exports.index = function (req, res, next) {
-    renderIndex(req);
+    renderIndex(res);
     next();
 };
 
 exports.findGamesByEmail = function (req, res, next) {
-    req.responseProps.promise = chessController.findGamesByEmail(req.getParam('email'));
+    res.responseProps.promise = chessController.findGamesByEmail(req.getParam('email'));
     next();
 };
 
 // POST createGame request
 exports.createGame = function (req, res, next) {
     var ip = req.connection.remoteAddress;
-	req.responseProps.promise = chessController.createGame(ip, req.getParams());
+	res.responseProps.promise = chessController.createGame(ip, req.getParams());
     next();
 };
 
 // POST enterGame request
 exports.enterGame = function (req, res, next) {
-    req.responseProps.promise = chessController.enterGame(req.getParams());
+    res.responseProps.promise = chessController.enterGame(req.getParams());
     next();
 };
 
 // POST saveMove request
 exports.saveMove = function (req, res, next) {
-    req.responseProps.promise = chessController.saveMove(req.getParams());
+    res.responseProps.promise = chessController.saveMove(req.getParams());
     next();
 };
 
 // POST updateUserPrefs request
 exports.updateUserPrefs = function (req, res, next) {
-    req.responseProps.promise = chessController.updateUserPrefs(req.getParams());
+    res.responseProps.promise = chessController.updateUserPrefs(req.getParams());
     next();
 };
 
@@ -56,10 +56,10 @@ function logClientError (req, params) {
     console.log('Client error: ' + JSON.stringify(params) + '; User agent: ' + req.headers['user-agent']);
 }
 
-function renderIndex (req) {
-    req.responseProps.file = 'index';
+function renderIndex (res) {
+    res.responseProps.file = 'index';
     // add the game config (as a string) needed by the client
-    req.responseProps.obj = {config: JSON.stringify(getGameConfig())};
+    res.responseProps.obj = {config: JSON.stringify(getGameConfig())};
 }
 
 /*

@@ -60,13 +60,13 @@ app.disable('x-powered-by');
 app.use(function (req, res, next) {
     
     /*
-    Create a responseProps object on the request object to hold app-specific response properties. Valid attrs are:
+    Create a responseProps object on the response object to hold app-specific response properties. Valid attrs are:
     - responseProps.promise - Promise returned by the router/controller
     - responseProps.obj - JSON object to be passed back to the client 
     - responseProps.error - Error to be passed to client the client 
     - responseProps.file - File to render
     */
-    req.responseProps = {};
+    res.responseProps = {};
     
     // Get the passed in params (for either GET, POST or route params), and make them available via req.getParam() and req.getParams()
     var params = {};
@@ -177,14 +177,14 @@ function initConfig () {
 }
 
 /**
-After handling the route, send the response. Based on what's in req.responseProps, we will do one of the following:
+After handling the route, send the response. Based on what's in res.responseProps, we will do one of the following:
 - responseProps.promise: Handle the promise
 - responseProps.file: Render an HTML file
 - other: Send responseProps.obj to the client
 */
 function sendResponse (req, res) {
     
-    var responseProps = req.responseProps;
+    var responseProps = res.responseProps;
     
     if (responseProps.promise) {
         responseProps.promise.then(function (obj) {
