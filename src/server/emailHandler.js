@@ -7,13 +7,16 @@ var nodemailer = require('nodemailer/lib/nodemailer');
 var emailServiceConfig = GLOBAL.CONFIG.emailService;
 var emailSrcDir = path.join(__dirname, 'email/');
 
-var mailTransport = nodemailer.createTransport('SMTP', {
-    service: emailServiceConfig.serviceName,
-    auth: {
-        user: emailServiceConfig.user,
-        pass: emailServiceConfig.pass
-    }
-});
+var mailTransport;
+if (emailServiceConfig.enabled) {
+    mailTransport = createMailTransport();
+} else {
+    console.warn('############# Email notification is disabled! #############');
+    mailTransport = {
+        // Provide a no-op sendmail() function
+        sendMail: function(){}
+    };
+}
 
 exports.sendGameCreationEmail = function (player1Email, player2Email, gameID) {
 
@@ -136,6 +139,18 @@ exports.sendFeedbackEmail = function (data) {
   console.log('Sent feedback email to ' + emailServiceConfig.fromAddress);
 
 };
+
+// private functions
+
+function createMailTransport () {
+    return nodemailer.createTransport('SMTP', {
+        service: emailServiceConfig.serviceName,
+        auth: {
+            user: emailServiceConfig.user,
+            pass: emailServiceConfig.pass
+        }
+    });
+}
 
 function _buildGameUrl (gameID) {
 	return GLOBAL.APP_URL.url + '/play/' + gameID.compositeID;

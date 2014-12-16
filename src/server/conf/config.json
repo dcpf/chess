@@ -1,5 +1,6 @@
 {
     "emailService": {
+        "enabled": true,
         "serviceName": "Gmail",
         "fromAddress": "dpfchess@gmail.com",
         "user": "dpfchess",
