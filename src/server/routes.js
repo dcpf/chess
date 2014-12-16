@@ -70,6 +70,7 @@ function getGameConfig () {
 		recaptcha: {
 			enabled: GLOBAL.CONFIG.recaptcha.enabled,
 			publicKey: GLOBAL.CONFIG.recaptcha.publicKey
-		}
+		},
+        appUrl: GLOBAL.APP_URL.url
 	};
 }

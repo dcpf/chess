@@ -116,6 +116,7 @@ module.exports = function(grunt) {
                     // utils
                     'src/client/js/util/eventHandler.js',
                     'src/client/js/util/notationConverter.js',
+                    'src/client/js/util/socket.io.js',
                     // models
                     'src/client/js/model/piece.js',
                     'src/client/js/model/board.js',

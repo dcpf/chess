@@ -32,6 +32,7 @@
     "nodemailer": "~0.7.1",
     "q": "~1.0.1",
     "request": "~2.44.0",
+    "socket.io": "^1.2.1",
     "uinexpress": "0.0.5",
     "underscore": "~1.7.0",
     "validator": "~3.19.0"

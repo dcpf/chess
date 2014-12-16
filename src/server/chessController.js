@@ -91,7 +91,7 @@ function saveMove (postData) {
                           opponentEmail = obj.email;
                           emailHandler.sendMoveNotificationEmail(obj.email, gameIdFactory.getGameID(gameID.id, obj.key), move);
                       }
-                      deferred.resolve({status: 'ok', opponentEmail: opponentEmail});
+                      deferred.resolve({status: 'ok', opponentEmail: opponentEmail, move: move, gameID: gameID.compositeID});
                     })
                     .fail(function (err) {
                         deferred.reject(err);

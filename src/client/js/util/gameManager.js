@@ -9,10 +9,9 @@ var GameManager = function (attrs) {
         // passed-in attrs
         eventHandler: attrs.eventHandler,
         appContext: attrs.appContext,
-        config: attrs.config,
         
         renderEnterScreen: function (errorMsg) {
-            var enterScreenContext = this.appContext.getEnterScreenContext(this.config);
+            var enterScreenContext = this.appContext.getEnterScreenContext();
             enterScreenContext.render(errorMsg);
             // Hide the game if it's already been rendered. Should we do this via an event?
             var gameContext = this.appContext.getGameContext();

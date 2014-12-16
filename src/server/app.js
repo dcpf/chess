@@ -32,7 +32,10 @@ var csrf = require('csurf');
 // Timestamp of when the app was started. We use this for caching javascript and css files in the browser.
 var runtimestamp = new Date().getTime();
 
+// Create the express app and socket.io object
 var app = express();
+var server = require('http').Server(app);
+require('./socket.io.js')(server);
 
 // all environments
 app.set('port', GLOBAL.APP_URL.port);
@@ -150,7 +153,7 @@ app.post('/admin/editGame', adminRoutes.editGame);
 // Send the response
 app.use(sendResponse);
 
-app.listen(GLOBAL.APP_URL.port, function(){
+server.listen(GLOBAL.APP_URL.port, function(){
     console.log('Express server listening on ' + GLOBAL.APP_URL.url);
 });
 

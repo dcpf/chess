@@ -39,6 +39,7 @@ EventHandler.prototype.messageNames = {
 	SAVE_MOVE: 'saveMove',
 	MOVE_SAVED: 'moveSaved',
 	CANCEL_MOVE: 'cancelMove',
+    OPPONENT_HAS_MOVED: 'opponentHasMoved',
 	MOVE_HISTORY_LINK_CLICKED: 'moveHistoryLinkClicked',
 	REPLAY_GAME_LINK_CLICKED: 'replayGameLinkClicked',
 	FEEDBACK_LINK_CLICKED: 'feedbackLinkClicked',
