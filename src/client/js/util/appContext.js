@@ -69,6 +69,9 @@ var AppContext = function (configData) {
                 
                 var gameState = gameContext.gameState;
 
+                // close all open dialogs
+                $(".modal[role='dialog']").modal('hide');
+
                 // render the board
                 gameContext.boardView.render(gameState.getPerspective());
                 gameContext.playGameView.render();
@@ -103,6 +106,7 @@ var AppContext = function (configData) {
             gameContext.feedbackDialogView.remove();
             gameContext.messagesView.remove();
             gameContext.moveHistoryView.remove();
+            gameContext.opponentHasMovedDialogView.remove();
             gameContext.optionsMenuView.remove();
             gameContext.playerInfoView.remove();
             gameContext.playGameView.remove();
@@ -161,6 +165,10 @@ var AppContext = function (configData) {
             eventHandler: eventHandler,
             moveHistory: moveHistory
         });
+        var opponentHasMovedDialogView = new OpponentHasMovedDialogView({
+            parent: $('#opponentHasMovedDialog'),
+            eventHandler: eventHandler
+        });
         var optionsMenuView = new OptionsMenuView({
             parent: $('#optionsMenuContainer'),
             eventHandler: eventHandler,
@@ -189,6 +197,7 @@ var AppContext = function (configData) {
             messagesView: messagesView,
             moveHistoryView: moveHistoryView,
             optionsMenuView: optionsMenuView,
+            opponentHasMovedDialogView: opponentHasMovedDialogView,
             playerInfoView: playerInfoView,
             playGameView: playGameView
         };

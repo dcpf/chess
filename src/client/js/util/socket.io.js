@@ -27,7 +27,6 @@ var SocketIO = function (attrs) {
         socket.on('moveSaved', function(data){
             if (data.gameID.split('-')[0] === gameID.split('-')[0]) {
                 eventHandler.trigger(eventHandler.messageNames.OPPONENT_HAS_MOVED, data);
-                eventHandler.trigger(eventHandler.messageNames.ENTER_GAME, gameID, false);
             }
         });
         

@@ -42,7 +42,15 @@ var GameManager = function (attrs) {
         * @param doNavigate - pass in true to tell the router to update the URL
         */
         enterGame: function (gameID, doNavigate) {
+
             var self = this;
+
+            // If no gameID was passed in, use the one from the existing game context.
+            if (!gameID) {
+                var gameContext = self.appContext.getGameContext();
+                gameID = gameContext.getGameID();
+            }
+
             $("#progressDialog").modal();
             $.post('/enterGame', {
                 gameID: gameID
@@ -58,6 +66,7 @@ var GameManager = function (attrs) {
             .always(function() {
                 $("#progressDialog").modal('hide');
             });
+
         },
 
         /**

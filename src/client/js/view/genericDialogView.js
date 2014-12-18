@@ -19,7 +19,6 @@ var GenericDialogView = View.extend({
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.ERROR, this._renderErrorDialog);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.GAME_CREATED, this._renderGameCreatedDialog);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.MOVE_SAVED, this._renderMoveSavedDialog);
-        this.listenTo(this.eventHandler, this.eventHandler.messageNames.OPPONENT_HAS_MOVED, this._renderOpponentHasMovedDialog);
         
     },
 
@@ -36,11 +35,6 @@ var GenericDialogView = View.extend({
     _renderMoveSavedDialog: function (obj) {
         this.$('.genericDialogText').html('Your move has been saved, and an email has been sent to your opponent at: ' + obj.opponentEmail);
         this.parent.modal();
-    },
-
-    _renderOpponentHasMovedDialog: function (obj) {
-        this.$('.genericDialogText').html('<p>Your opponent has made the following move:</p><p><b>' + obj.move + '</b></p><p>Close this dialog to make your move.</p>');
-        this.parent.modal();
-    },
+    }
 
 });

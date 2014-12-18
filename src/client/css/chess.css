@@ -47,6 +47,10 @@ legend {
 
 /* Bootstrap over-rides end */
 
+.bold {
+    font-weight: bold;
+}
+
 /* enter game form begin */
 
 .disabledLink:link, .disabledLink:visited, .disabledLink:hover, .disabledLink:active {
@@ -310,6 +314,10 @@ img[draggable=true] {
 }
 
 #feedbackForm fieldset div {
+    text-align: left;
+}
+
+#opponentHasMovedDialog ul {
     text-align: left;
 }
 
