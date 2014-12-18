@@ -99,17 +99,11 @@ var AppContext = function (configData) {
         
         if (gameContext) {
             // Clean up the views so they can be properly re-instantiated
-            gameContext.boardSnapshotView.remove();
-            gameContext.boardView.remove();
-            gameContext.capturedPiecesView.remove();
-            gameContext.confirmMoveDialogView.remove();
-            gameContext.feedbackDialogView.remove();
-            gameContext.messagesView.remove();
-            gameContext.moveHistoryView.remove();
-            gameContext.opponentHasMovedDialogView.remove();
-            gameContext.optionsMenuView.remove();
-            gameContext.playerInfoView.remove();
-            gameContext.playGameView.remove();
+            for (var prop in gameContext) {
+                if (prop.match(/.+View$/) && gameContext[prop].remove) {
+                    gameContext[prop].remove();
+                }
+            }
         }
 
         // Instantiate all of the objects we need
