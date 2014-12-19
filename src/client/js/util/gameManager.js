@@ -48,7 +48,7 @@ var GameManager = function (attrs) {
             // If no gameID was passed in, use the one from the existing game context.
             if (!gameID) {
                 var gameContext = self.appContext.getGameContext();
-                gameID = gameContext.getGameID();
+                gameID = gameContext ? gameContext.getGameID() : gameID;
             }
 
             $("#progressDialog").modal();
