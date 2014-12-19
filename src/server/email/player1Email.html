@@ -1,14 +1,14 @@
-<p>You've created a new chess game.  Details are as follows:</p>
-
+<div>You've created a new chess game.  Details are as follows:</div>
+<br>
 <ul>
-	<li>Your email address: <%= player1Email %></li>
-	<li>Opponent's email address: <%= player2Email %></li>
-	<li>Game ID: <%= gameID %></li>
+    <li><b>Your email address:</b> <%= player1Email %></li>
+	<li><b>Opponent's email address:</b> <%= player2Email %></li>
+	<li><b>Game ID:</b> <%= gameID %></li>
 </ul>
-
-<p>You will be notified via email each time your opponent makes a move.
-You can then make your move by going to:</p>
-
-<p><%= gameUrl %></p>
-
-<p>Please keep this email for future reference. Enjoy your game!</p>
+<br>
+<div>You will be notified via email each time your opponent makes a move.
+You can then make your move by going to:</div>
+<br>
+<div><a href="<%= gameUrl %>"><%= gameUrl %></a></div>
+<br>
+<div>Please keep this email for future reference. Enjoy your game!</div>
