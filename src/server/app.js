@@ -17,6 +17,7 @@ var appUrl = require('./model/appUrl');
 
 // before doing anything more, initialize the configuration
 initConfig();
+require('./emailHandler');
 
 // express and middleware
 var express = require('express');

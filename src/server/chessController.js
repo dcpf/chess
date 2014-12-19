@@ -8,7 +8,7 @@ var gameDao = require('./dao/mongoGameDAO');
 var userPrefsDao = require('./dao/mongoUserPrefsDAO');
 var validator = require('validator');
 var reCaptchaHandler = require('./reCaptchaHandler');
-var emailHandler = require('./emailHandler');
+var eventEmitter = require('./eventEmitter');
 var customErrors = require('./error/customErrors');
 
 // TODO: Use const with ES6
@@ -84,12 +84,12 @@ function saveMove (postData) {
                       var opponentEmail = '';
                       if (gameObj.moveHistory.length == 1) {
                           opponentEmail = gameObj.B.email;
-                          emailHandler.sendInviteEmail(gameObj.W.email, gameObj.B.email, gameIdFactory.getGameID(gameID.id, gameObj.B.key), move);
+                          eventEmitter.emit(eventEmitter.messages.SEND_INVITE_NOTIFICATION, gameObj, gameIdFactory.getGameID(gameID.id, gameObj.B.key), move);
                       } else {
                           // TODO: Use let with ES6
                           var obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
                           opponentEmail = obj.email;
-                          emailHandler.sendMoveNotificationEmail(obj.email, gameIdFactory.getGameID(gameID.id, obj.key), move);
+                          eventEmitter.emit(eventEmitter.messages.SEND_MOVE_NOTIFICATION, obj.email, gameIdFactory.getGameID(gameID.id, obj.key), move);
                       }
                       deferred.resolve({status: 'ok', opponentEmail: opponentEmail, move: move, gameID: gameID.compositeID});
                     })
@@ -159,7 +159,7 @@ function findGamesByEmail (email) {
 						}
 					);
 				}
-				emailHandler.sendForgotGameIdEmail(email, games);
+                eventEmitter.emit(eventEmitter.messages.SEND_FORGOT_GAME_ID_NOTIFICATION, email, games);
 				deferred.resolve({status: 'ok', email: email});
 			} else {
 				deferred.reject(new Error('No games found for email ' + email));
@@ -174,7 +174,7 @@ function findGamesByEmail (email) {
 }
 
 function sendFeedback (data) {
-	emailHandler.sendFeedbackEmail(data);
+    eventEmitter.emit(eventEmitter.messages.SEND_FEEDBACK_NOTIFICATION, data);
 }
 
 exports.createGame = createGame;
@@ -259,7 +259,7 @@ function _createGame (player1Email, player2Email) {
     return gameDao.createGame(gameObj).then(function (gameID) {
         console.log('Created game ' + gameID);
         var newGameIdObj = gameIdFactory.getGameID(gameID, whiteKey);
-        emailHandler.sendGameCreationEmail(player1Email, player2Email, newGameIdObj);
+        eventEmitter.emit(eventEmitter.messages.SEND_GAME_CREATION_NOTIFICATION, player1Email, player2Email, newGameIdObj);
         return _buildGameAttrMap(gameObj, newGameIdObj, 'W', true, null);
     });
 
