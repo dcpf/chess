@@ -7,10 +7,9 @@ var ConfirmMoveDialogView = View.extend({
     initialize: function () {
         
         // set the passed-in options
-        this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         
-        this.initTemplate('confirmMoveDialog');
+        this.initDialog('confirmMoveDialog');
         
         // set up the listeners
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.RENDER_CONFIRM_MOVE_DIALOG, this._render);
@@ -37,7 +36,7 @@ var ConfirmMoveDialogView = View.extend({
 
         // Render the dialog
         this.$('#possibleMoves').html(ul);
-        this.parent.modal();
+        this.$el.modal();
 
     },
     
@@ -56,7 +55,7 @@ var ConfirmMoveDialogView = View.extend({
     * Called from the confirm dialog
     */
     _confirmMove: function (notation) {
-        this.parent.modal('hide');
+        this.$el.modal('hide');
         this.eventHandler.trigger(this.eventHandler.messageNames.MOVE_CONFIRMED, notation);
     },
 
@@ -64,7 +63,7 @@ var ConfirmMoveDialogView = View.extend({
     * Called from the confirm dialog
     */
     _cancelMove: function () {
-        this.parent.modal('hide');
+        this.$el.modal('hide');
         this.eventHandler.trigger(this.eventHandler.messageNames.CANCEL_MOVE);
     }
 

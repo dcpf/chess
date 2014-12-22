@@ -9,14 +9,13 @@ var FeedbackDialogView = View.extend({
 
     initialize: function () {
 
-        this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         this.user = this.options.user;
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FEEDBACK_LINK_CLICKED, this._renderDialog);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FEEDBACK_SUCCESS, this._renderSuccess);
 
         var data = {email: this.user ? this.user.getEmail() : ''};
-        this.initTemplate('feedbackDialog', data);
+        this.initDialog('feedbackDialog', data);
 
         var self = this;
         this.$('#feedbackSubmitButton').click(function() {
@@ -33,7 +32,7 @@ var FeedbackDialogView = View.extend({
         var $feedbackTextField = this.$('#feedbackText');
         $feedbackTextField.val('');
         $feedbackTextField.focus();
-        this.parent.modal();
+        this.$el.modal();
     },
 
     _renderSuccess: function (res) {

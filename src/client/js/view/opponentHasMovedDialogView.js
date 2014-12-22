@@ -9,10 +9,10 @@ var OpponentHasMovedDialogView = View.extend({
         var self = this;
 
         // set the passed-in options
-        this.parent = this.options.parent;
+        // set the passed-in options
         this.eventHandler = this.options.eventHandler;
 
-        this.initTemplate('opponentHasMovedDialog');
+        this.initDialog('opponentHasMovedDialog');
 
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.OPPONENT_HAS_MOVED, this._renderDialog);
 
@@ -20,19 +20,19 @@ var OpponentHasMovedDialogView = View.extend({
             event.preventDefault();
             // passing in null for the gameID will use the gameID for the current game
             self.eventHandler.trigger(self.eventHandler.messageNames.ENTER_GAME, null, false);
-            self.parent.modal('hide');
+            self.$el.modal('hide');
         });
 
         this.$('#dontUpdateBoardWithOpponentsMoveLink').click(function(event){
             event.preventDefault();
-            self.parent.modal('hide');
+            self.$el.modal('hide');
         });
 
     },
 
     _renderDialog: function (obj) {
         this.$('#move').html(obj.move);
-        this.parent.modal();
+        this.$el.modal();
     }
 
 });

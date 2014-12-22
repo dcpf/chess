@@ -22,7 +22,6 @@ var AppContext = function (configData) {
         gameManager: gameManager
     });
     var genericDialogView = new GenericDialogView({
-        parent: $('#genericDialog'),
         eventHandler: eventHandler
     });
     
@@ -35,7 +34,6 @@ var AppContext = function (configData) {
                 config: config
             }),
             forgotGameIdDialogView: new ForgotGameIdDialogView({
-                parent: $('#forgotGameIdDialog'),
                 eventHandler: eventHandler
             })
         };
@@ -123,7 +121,6 @@ var AppContext = function (configData) {
             moveHistory: moveHistory
         });
         var boardSnapshotView = new BoardSnapshotView({
-            parent: $('#chessBoardSnapshotDialog'),
             eventHandler: eventHandler,
             notationConverter: notationConverter,
             moveHistory: moveHistory
@@ -141,11 +138,9 @@ var AppContext = function (configData) {
             capturedPieces: capturedPieces
         });
         var confirmMoveDialogView = new ConfirmMoveDialogView({
-            parent: $('#confirmMoveDialog'),
             eventHandler: eventHandler
         });
         var feedbackDialogView = new FeedbackDialogView({
-            parent: $('#feedbackDialog'),
             eventHandler: eventHandler,
             user: user
         });
@@ -160,7 +155,6 @@ var AppContext = function (configData) {
             moveHistory: moveHistory
         });
         var opponentHasMovedDialogView = new OpponentHasMovedDialogView({
-            parent: $('#opponentHasMovedDialog'),
             eventHandler: eventHandler
         });
         var optionsMenuView = new OptionsMenuView({

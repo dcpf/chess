@@ -10,12 +10,11 @@ var BoardSnapshotView = BoardView.extend({
     initialize: function () {
 
         // set the passed-in options
-        this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         this.moveHistory = this.options.moveHistory;
         this.notationConverter = this.options.notationConverter;
         
-        this.initTemplate('chessBoardSnapshotDialog');
+        this.initDialog('chessBoardSnapshotDialog');
 
         // set mode to view-only
         this.viewMode = true;
@@ -52,7 +51,7 @@ var BoardSnapshotView = BoardView.extend({
         // hide the dialog
         this.$('#chessBoardSnapshotContainer').html('');
         this.$('.modal-body .move').text('');
-        this.parent.modal('hide');
+        this.$el.modal('hide');
 
     },
 
@@ -65,7 +64,7 @@ var BoardSnapshotView = BoardView.extend({
         this.board.notationConverter = this.notationConverter;
         var gameBoard = this._generateBoard();
         this.$('#chessBoardSnapshotContainer').html(gameBoard);
-        this.parent.modal();
+        this.$el.modal();
         var moveHistoryObj, notation;
 
         // If index was passed in, loop through the moves in the move history, updating the board array.

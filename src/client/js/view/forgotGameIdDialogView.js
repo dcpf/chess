@@ -9,14 +9,13 @@ var ForgotGameIdDialogView = View.extend({
 
     initialize: function () {
 
-        this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
 
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FORGOT_GAME_ID_LINK_CLICKED, this._renderDialog);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FOUND_GAMES_BY_EMAIL, this._renderSuccess);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.FIND_GAMES_BY_EMAIL_ERROR, this._renderError);
 
-        this.initTemplate('forgotGameIdDialog');
+        this.initDialog('forgotGameIdDialog');
 
         var self = this;
         self.$('#forgotGameIdSubmitButton').click(function() {
@@ -27,7 +26,7 @@ var ForgotGameIdDialogView = View.extend({
     },
 
     _renderDialog: function () {
-        this.parent.modal();
+        this.$el.modal();
         this.$('#forgotGameIdForm').show();
         this.$('#forgotGameIdEmail').focus();
         this.$('#forgotGameIdSuccess').hide();

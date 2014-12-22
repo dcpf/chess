@@ -10,10 +10,9 @@ var GenericDialogView = View.extend({
     initialize: function () {
         
         // set the passed-in options
-        this.parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         
-        this.initTemplate('genericDialog');
+        this.initDialog('genericDialog');
         
         // set up the listeners
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.ERROR, this._renderErrorDialog);
@@ -24,17 +23,17 @@ var GenericDialogView = View.extend({
 
     _renderErrorDialog: function (msg) {
         this.$('.genericDialogText').html(msg);
-        this.parent.modal();
+        this.$el.modal();
     },
 
     _renderGameCreatedDialog: function () {
         this.$('.genericDialogText').html('Your game has begun - make your first move!');
-        this.parent.modal();
+        this.$el.modal();
     },
 
     _renderMoveSavedDialog: function (obj) {
         this.$('.genericDialogText').html('Your move has been saved, and an email has been sent to your opponent at: ' + obj.opponentEmail);
-        this.parent.modal();
+        this.$el.modal();
     }
 
 });
