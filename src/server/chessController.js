@@ -225,7 +225,7 @@ function _buildGameAttrMap (gameObj, gameID, perspective, canMove, error) {
 * @param String - Err msg to render for a missing required value
 */
 function _validateEmailAddress (email, requiredMsg) {
-	if (!email.trim()) {
+	if (!email || !email.trim()) {
 		throw new Error(requiredMsg);
 	}
 	if (!validator.isEmail(email)) {
