@@ -22,7 +22,7 @@ var PlayerInfoView = View.extend({
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.PLAYER_OFFLINE, this._showOffline);
 
         // Init the tooltips
-        this.$('[data-toggle="tooltip"]').tooltip({placement: 'right', trigger: 'manual'});
+        this.$('[data-toggle="tooltip"]').tooltip({placement: 'right', trigger: 'manual hover'});
 
     },
 
@@ -43,12 +43,12 @@ var PlayerInfoView = View.extend({
         $elem.removeClass('online offline');
         $elem.addClass(status);
         $elem.show(0, function(){
-            // If the initial status is offline, don't render the tooltip.
+            clearTimeout(self._tooltipTimeout);
+            $elem.attr('data-original-title', email + ' is ' + status);
+            // If the initial status is offline, don't auto-render the tooltip.
             if (status === 'offline' && !self._tooltipTimeout) {
                 return;
             }
-            clearTimeout(self._tooltipTimeout);
-            $elem.attr('data-original-title', email + ' is ' + status);
             $elem.tooltip().on('shown.bs.tooltip', function () {
                 self._tooltipTimeout = setTimeout(function(){$elem.tooltip('hide');}, 2000);
             });
