@@ -204,6 +204,31 @@ img[draggable=true] {
   overflow: hidden;
 }
 
+.onlineStatus {
+    display: none;
+    font-size: 30px;
+    margin: -12px 0 0 3px;
+    position: absolute;
+}
+
+#playerInfoContainer .tooltip .tooltip-arrow {
+    border-right-color: #ebf2f9;
+}
+
+#playerInfoContainer .tooltip .tooltip-inner {
+    background-color: #ebf2f9;
+    color: #000;
+    max-width: none;
+}
+
+.online {
+    color: #6c0;
+}
+
+.offline {
+    color: red;
+}
+
 #moveHistoryContainer {
   margin-right: 50px;
 }

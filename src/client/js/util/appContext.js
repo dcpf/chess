@@ -10,10 +10,6 @@ var AppContext = function (configData) {
     // define some common objects
     var config = new Config(configData);
     var eventHandler = new EventHandler();
-    var socketIO = new SocketIO({
-        eventHandler: eventHandler,
-        url: config.getAppUrl()
-    });
     var gameManager = new GameManager({
         eventHandler: eventHandler,
         appContext: this
@@ -50,7 +46,15 @@ var AppContext = function (configData) {
     this.getGameContext = function (userData, gameStateData) {
         
         if (userData && gameStateData) {
-            socketIO.setGameID(gameStateData.gameID);
+            var playerEmail = userData.email;
+            var opponentEmail = (gameStateData.whiteEmail === playerEmail) ? gameStateData.blackEmail : gameStateData.whiteEmail;
+            var socketIO = new SocketIO({
+                eventHandler: eventHandler,
+                url: config.getAppUrl(),
+                gameID: gameStateData.gameID,
+                playerEmail: playerEmail,
+                opponentEmail: opponentEmail
+            });
             instantiateGameContext(userData, gameStateData);
         }
         
@@ -164,6 +168,7 @@ var AppContext = function (configData) {
         });
         var playerInfoView = new PlayerInfoView({
             parent: $('#playerInfoContainer'),
+            eventHandler: eventHandler,
             gameState: gameState
         });
         var playGameView = new PlayGameView({

@@ -44,5 +44,7 @@ EventHandler.prototype.messageNames = {
 	REPLAY_GAME_LINK_CLICKED: 'replayGameLinkClicked',
 	FEEDBACK_LINK_CLICKED: 'feedbackLinkClicked',
 	FEEDBACK_SUBMIT: 'feedbackSubmit',
-	FEEDBACK_SUCCESS: 'feedbackSuccess'
+	FEEDBACK_SUCCESS: 'feedbackSuccess',
+    PLAYER_ONLINE: 'playerOnline',
+    PLAYER_OFFLINE: 'playerOffline'
 };
