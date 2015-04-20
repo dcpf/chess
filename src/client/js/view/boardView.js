@@ -270,13 +270,18 @@ var BoardView = View.extend({
             // Get the base row for the color: W = 7; B = 0
             var baseRow = (piece.isWhite()) ? 7 : 0;
             var origKingId = piece.color + 'K' + baseRow + '4';
-            // If the king has not moved yet, and the rook is moving on the base row from either squares 7 - 5 or 0 - 3, this is a possible castle move
+            // If the king has not moved yet, and the rook is moving on the base row from either squares 7 - 5 or 0 - 3, this is a possible castle move.
+            // But only offer castle move if the king is not in check!
             if (!this.board.rookAndKingMoves[origKingId] && fromRow == baseRow && toRow == baseRow) {
                 var castleNotation;
                 if (fromCol === 7 && toCol === 5) {
-                    castleNotation = 'O-O';
+                    if (!this.board.isKingInCheck(piece, toRow, toCol, new Piece({id: origKingId}), toRow, 6)) {
+                        castleNotation = 'O-O';
+                    }
                 } else if (fromCol === 0 && toCol === 3) {
-                    castleNotation = 'O-O-O';
+                    if (!this.board.isKingInCheck(piece, toRow, toCol, new Piece({id: origKingId}), toRow, 2)) {
+                        castleNotation = 'O-O-O';
+                    }
                 }
                 if (castleNotation) {
                     possibleMoves.push(castleNotation);

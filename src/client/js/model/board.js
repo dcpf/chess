@@ -159,7 +159,7 @@ var Board = Backbone.Model.extend({
                 return false;
             }
         }
-        return !this._isKingInCheck();
+        return !this.isKingInCheck();
     },
 
     /*
@@ -171,7 +171,63 @@ var Board = Backbone.Model.extend({
                 return false;
             }
         }
-        return this._isKingInCheck();
+        return this.isKingInCheck();
+    },
+    
+    /*
+    * Test if the current player's king is in check. If args are passed in, it will perform the test after the move
+    * has been made (to see if it's legal). If no args are passed in, it will examine the board in the current state.
+    * 
+    * @param piece - piece to be moved
+    * @param toRow - row that the piece is moving to
+    * @param toCol - column that the piece is moving to
+    * @param piece2 - 2nd piece to be moved (the king, in the case of a castle move)
+    * @param toRow2 - row that the 2nd piece is moving to
+    * @param toCol2 - column that 2nd the piece is moving to
+    */
+    isKingInCheck: function (piece, toRow, toCol, piece2, toRow2, toCol2) {
+        // Create a new Board object in hypothetical mode
+        var board2 = this._clone();
+        var cellContents;
+        board2._hypothetical = true;
+        // Switch the player
+        board2.currentPlayer = (board2.currentPlayer === 'W') ? 'B' : 'W';
+        // If args were passed in, update the board array with this move
+        if (piece && toRow >= 0 && toCol >= 0) {
+            cellContents = board2.boardArray[piece.row][piece.column];
+            board2.boardArray[piece.row][piece.column] = '';
+            board2.boardArray[toRow][toCol] = cellContents;
+        }
+        if (piece2 && toRow2 >= 0 && toCol2 >= 0) {
+            cellContents = board2.boardArray[piece2.row][piece2.column];
+            board2.boardArray[piece2.row][piece2.column] = '';
+            board2.boardArray[toRow2][toCol2] = cellContents;
+        }
+        // Find the location of current player's king
+        var i, kingCoords;
+        outer:
+        for (i in board2.boardArray) {
+            var rowArray = board2.boardArray[i];
+            for (var j in rowArray) {
+                var testPiece = board2.getPieceByCoords(i, j);
+                if (testPiece && testPiece.color === this.currentPlayer && testPiece.isKing()) {
+                    kingCoords = '' + i + j;
+                    break outer;
+                }
+            }
+        }
+        // Get all legal moves
+        board2.findAllLegalMoves();
+        // Now go through all legal moves to see if the king is in check
+        for (var key in board2.legalMovesMap) {
+            var legalMovesArray = board2.legalMovesMap[key];
+            for (i in legalMovesArray) {
+                if (legalMovesArray[i] === kingCoords) {
+                    return true;
+                }
+            }
+        }
+        return false;
     },
 
     _getLegalMoves: function (piece) {
@@ -396,7 +452,7 @@ var Board = Backbone.Model.extend({
     *
     */
     _updateLegalMovesMap: function (piece, toRow, toCol) {
-        if (this._hypothetical || !this._isKingInCheck(piece, toRow, toCol)) {
+        if (this._hypothetical || !this.isKingInCheck(piece, toRow, toCol)) {
             var id = piece.id;
             var legalMoves = this.legalMovesMap[id];
             if (!legalMoves) {
@@ -405,49 +461,6 @@ var Board = Backbone.Model.extend({
             legalMoves.push('' + toRow + toCol);
             this.legalMovesMap[id] = legalMoves;
         }
-    },
-
-    /*
-    * Test if the current player's king is in check. If args are passed in, it will perform the test after the move
-    * has been made (to see if it's legal). If no args are passed in, it will examine the board in the current state.
-    */
-    _isKingInCheck: function (piece, toRow, toCol) {
-        // Create a new Board object in hypothetical mode
-        var board2 = this._clone();
-        board2._hypothetical = true;
-        // Switch the player
-        board2.currentPlayer = (board2.currentPlayer === 'W') ? 'B' : 'W';
-        // If args were passed in, update the board array with this move
-        if (piece && toRow >= 0 && toCol >= 0) {
-            var cellContents = board2.boardArray[piece.row][piece.column];
-            board2.boardArray[piece.row][piece.column] = '';
-            board2.boardArray[toRow][toCol] = cellContents;
-        }
-        // Find the location of current player's king
-        var i, kingCoords;
-        outer:
-        for (i in board2.boardArray) {
-            var rowArray = board2.boardArray[i];
-            for (var j in rowArray) {
-                var testPiece = board2.getPieceByCoords(i, j);
-                if (testPiece && testPiece.color === this.currentPlayer && testPiece.isKing()) {
-                    kingCoords = '' + i + j;
-                    break outer;
-                }
-            }
-        }
-        // Get all legal moves
-        board2.findAllLegalMoves();
-        // Now go through all legal moves to see if the king is in check
-        for (var key in board2.legalMovesMap) {
-            var legalMovesArray = board2.legalMovesMap[key];
-            for (i in legalMovesArray) {
-                if (legalMovesArray[i] === kingCoords) {
-                    return true;
-                }
-            }
-        }
-        return false;
     },
 
     _isOutOfBounds: function (row, col) {
