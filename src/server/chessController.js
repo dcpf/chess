@@ -11,8 +11,7 @@ var reCaptchaHandler = require('./reCaptchaHandler');
 var eventEmitter = require('./eventEmitter');
 var customErrors = require('./error/customErrors');
 
-// TODO: Use const with ES6
-var KEY_CHARS = '123456789';
+const KEY_CHARS = '123456789';
 
 //
 // public functions
@@ -74,8 +73,7 @@ function saveMove (postData) {
         
             if (_playerCanMove(gameObj, gameID.key)) {
 
-                // TODO: Use let with ES6
-                var move = postData.move;
+                let move = postData.move;
                 gameObj.moveHistory.push(move);
 
                 gameDao.updateMoveHistory(gameID.id, gameObj.moveHistory)
@@ -86,8 +84,7 @@ function saveMove (postData) {
                           opponentEmail = gameObj.B.email;
                           eventEmitter.emit(eventEmitter.messages.SEND_INVITE_NOTIFICATION, gameObj, gameIdFactory.getGameID(gameID.id, gameObj.B.key), move);
                       } else {
-                          // TODO: Use let with ES6
-                          var obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
+                          let obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
                           opponentEmail = obj.email;
                           eventEmitter.emit(eventEmitter.messages.SEND_MOVE_NOTIFICATION, obj.email, gameIdFactory.getGameID(gameID.id, obj.key), move);
                       }
@@ -133,15 +130,13 @@ function findGamesByEmail (email) {
 		.then(function (records) {
 			var numGames = records ? records.length : 0;
 			if (numGames) {
-				// TODO: Use let with ES6
-				var games = [],
+				let games = [],
 					record = null,
 					gameObj = null,
 					gameID = null,
 					createDate = null,
 					lastMoveDate = null;
-				// TODO: Use let with ES6
-				for (var i = 0; i < numGames; i++) {
+				for (let i = 0; i < numGames; i++) {
 					record = records[i];
 					gameObj = record.gameObj;
 					if (gameObj.W.email === email) {
@@ -283,8 +278,7 @@ function _enterExistingGame (gameID) {
 
 function _generateKey () {
 	var s = '';
-	// TODO: Use let with ES6
-	for (var i = 0; i < 5; i++) {
+	for (let i = 0; i < 5; i++) {
 		s += KEY_CHARS.charAt(Math.floor(Math.random() * KEY_CHARS.length));
 	}
 	return s;

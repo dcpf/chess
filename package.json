@@ -38,11 +38,11 @@
     "validator": "^3.19.0"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": "0.12.x"
   },
   "scripts": {
-    "start": "node src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
-    "start-forever": "node_modules/forever/bin/forever start src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
+    "start": "node --harmony src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
+    "start-forever": "node_modules/forever/bin/forever start -c 'node --harmony' src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
     "stop-forever": "node_modules/forever/bin/forever stop src/server/app.js",
     "start-mongo": "mongod --fork --logpath logs/mongodb.log --dbpath /data/db/",
     "test": "echo \"Error: no test specified\" && exit 1",

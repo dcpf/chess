@@ -19,8 +19,7 @@ exports.getGameID = function (id, key) {
       obj.compositeID = id + '-' + key;
     } else {
       try {
-        // TODO: Use let with ES6
-        var parts = id.split('-');
+        let parts = id.split('-');
         obj.id = parts[0];
         obj.key = parts[1];
         obj.compositeID = id;

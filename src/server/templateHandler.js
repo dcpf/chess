@@ -9,8 +9,7 @@ exports.processTemplate = function (filename, attrs) {
 	var template = templateCache[filename];
 	if (!template) {
 		console.log('Getting ' + filename + ' template from disk');
-		// TODO: Use let with ES6
-		var file = fs.readFileSync(filename, {encoding: 'utf8'});
+		let file = fs.readFileSync(filename, {encoding: 'utf8'});
 		template = _.template(file);
 		templateCache[filename] = template;
 	}

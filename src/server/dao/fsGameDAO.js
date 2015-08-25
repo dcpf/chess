@@ -6,9 +6,8 @@
 
 var fs = require('fs');
 
-// TODO: Use const with ES6
-var DATA_DIR = '.data/';
-var GAME_ID_CHARS = 'abcdefghijkmnopqrstuvwxyz234567890';
+const DATA_DIR = '.data/';
+const GAME_ID_CHARS = 'abcdefghijkmnopqrstuvwxyz234567890';
 
 // Create the user prefs dir if it doesn't alreay exist
 if (!fs.existsSync(DATA_DIR)) {
@@ -23,8 +22,7 @@ var getGameObject = function (gameID) {
 	var gameObj = {};
 	var file = DATA_DIR + gameID;
 	try {
-		// TODO: Use let with ES6
-		var jsonStr = fs.readFileSync(file, {encoding: 'utf8'});
+		let jsonStr = fs.readFileSync(file, {encoding: 'utf8'});
 		gameObj = JSON.parse(jsonStr);
 	} catch (err) {
 		err.message = 'Invalid Game ID: ' + gameID;
@@ -61,10 +59,9 @@ exports.createGame = createGame;
 //
 
 function generateRandomGameID () {
-	var s = '';
-	// TODO: Use let with ES6
-  for (var i = 0; i < 12; i++) {
-		s += GAME_ID_CHARS.charAt(Math.floor(Math.random() * GAME_ID_CHARS.length));
+  var s = '';
+  for (let i = 0; i < 12; i++) {
+      s += GAME_ID_CHARS.charAt(Math.floor(Math.random() * GAME_ID_CHARS.length));
   }
   return s;
 }

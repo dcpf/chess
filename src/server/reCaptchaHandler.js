@@ -27,8 +27,7 @@ exports.validateCaptcha = function (ip, captchaResponse) {
                 if (err) {
                     deferred.reject(err);
                 } else {
-                    // TODO: Use let with ES6
-                    var responseObj = JSON.parse(body);
+                    let responseObj = JSON.parse(body);
                     if (responseObj.success) {
                         console.log('captcha validation passed');
                         deferred.resolve();
