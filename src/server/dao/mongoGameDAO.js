@@ -62,7 +62,7 @@ var updateMoveHistory = function (gameID, moveHistory) {
       if (err) {
         deferred.reject(err);
       } else if (!savedObj) {
-        deferred.reject(new Error('Game ' + gameID + ' not saved'));
+        deferred.reject(new Error(`Game ${gameID} not saved`));
       } else {
         deferred.resolve(gameID);
       }
@@ -160,9 +160,9 @@ var editGame = function (obj) {
             if (err) {
                 deferred.reject(err);
             } else if (!savedObj) {
-                deferred.reject(new Error('Error saving game ' + obj._id));
+                deferred.reject(new Error(`Error saving game ${obj._id}`));
             } else {
-                console.log('Edited game: ' + JSON.stringify(obj));
+                console.log(`Edited game: ${JSON.stringify(obj)}`);
                 deferred.resolve({status: 'ok'});
             }
     });

@@ -25,10 +25,8 @@ function getAllGames () {
       if (err) {
         console.log(err);
       } else {
-        // TODO: Use let with ES6
-        var numRecords = records.length;
-        // TODO: Use let with ES6
-        for (var i = 0; i < numRecords; i++) {
+        let numRecords = records.length;
+        for (let i = 0; i < numRecords; i++) {
           console.log(records[i]);
         }
       }

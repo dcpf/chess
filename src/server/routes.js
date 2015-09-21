@@ -53,7 +53,7 @@ exports.logClientError = function (req, res, next) {
 // private functions
 
 function logClientError (req, params) {
-    console.log('Client error: ' + JSON.stringify(params) + '; User agent: ' + req.headers['user-agent']);
+    console.log(`Client error: ${JSON.stringify(params)}; User agent: ${req.headers['user-agent']}`);
 }
 
 function renderIndex (res) {

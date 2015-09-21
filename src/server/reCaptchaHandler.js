@@ -32,7 +32,7 @@ exports.validateCaptcha = function (ip, captchaResponse) {
                         console.log('captcha validation passed');
                         deferred.resolve();
                     } else {
-                        console.log('captcha validation error: ' + responseObj['error-codes']);
+                        console.log(`captcha validation error: ${responseObj['error-codes']}`);
                         deferred.reject(new Error('Incorrect captcha. Please try again.'));
                     }
                 }

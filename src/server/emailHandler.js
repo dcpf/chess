@@ -6,7 +6,7 @@ var nodemailer = require('nodemailer/lib/nodemailer');
 var eventEmitter = require('./eventEmitter');
 
 var emailServiceConfig = GLOBAL.CONFIG.emailService;
-var emailSrcDir = path.join(__dirname, 'email/');
+var emailSrcDir = path.join(__dirname, 'email');
 
 var mailTransport;
 if (emailServiceConfig.enabled) {
@@ -27,7 +27,7 @@ eventEmitter.on(eventEmitter.messages.SEND_FEEDBACK_NOTIFICATION, sendFeedbackEm
 
 function sendGameCreationEmail (player1Email, player2Email, gameID) {
 
-	var html = templateHandler.processTemplate(emailSrcDir + 'player1Email.html', {
+	var html = templateHandler.processTemplate(`${emailSrcDir}/player1Email.html`, {
 		player1Email: player1Email,
 		player2Email: player2Email,
 		gameID: gameID.compositeID,
@@ -41,7 +41,7 @@ function sendGameCreationEmail (player1Email, player2Email, gameID) {
 		html: html
 	});
 
-	console.log('Sent game creation email to ' + player1Email + ' with gameID: ' + gameID.compositeID);
+	console.log(`Sent game creation email to ${player1Email} with gameID: ${gameID.compositeID}`);
 
 }
 
@@ -50,7 +50,7 @@ function sendInviteEmail (gameObj, gameID, move) {
     var player1Email = gameObj.W.email;
     var player2Email = gameObj.B.email;
     
-	var html = templateHandler.processTemplate(emailSrcDir + 'player2InviteEmail.html', {
+	var html = templateHandler.processTemplate(`${emailSrcDir}/player2InviteEmail.html`, {
 		player1Email: player1Email,
 		gameID: gameID.compositeID,
 		move: move,
@@ -64,13 +64,13 @@ function sendInviteEmail (gameObj, gameID, move) {
 		html: html
 	});
 
-	console.log('Sent game invitation email to ' + player2Email + ' with gameID: ' + gameID.compositeID);
+	console.log(`Sent game invitation email to ${player2Email} with gameID: ${gameID.compositeID}`);
 
 }
 
 function sendMoveNotificationEmail (playerEmail, gameID, move) {
 
-	var html = templateHandler.processTemplate(emailSrcDir + 'moveNotificationEmail.html', {
+	var html = templateHandler.processTemplate(`${emailSrcDir}/moveNotificationEmail.html`, {
 		move: move,
 		gameUrl: _buildGameUrl(gameID),
 		appUrl: GLOBAL.APP_URL.url
@@ -83,7 +83,7 @@ function sendMoveNotificationEmail (playerEmail, gameID, move) {
 		html: html
 	});
 
-	console.log('Sent move notification email to ' + playerEmail);
+	console.log(`Sent move notification email to ${playerEmail}`);
 
 }
 
@@ -112,7 +112,7 @@ function sendForgotGameIdEmail (email, games) {
     );
   }
 
-  var html = templateHandler.processTemplate(emailSrcDir + 'forgotGameIdEmail.html', {
+  var html = templateHandler.processTemplate(`${emailSrcDir}/forgotGameIdEmail.html`, {
     email: email,
     gameArray: gameArray
   });
@@ -120,11 +120,11 @@ function sendForgotGameIdEmail (email, games) {
   mailTransport.sendMail({
     from: emailServiceConfig.fromAddress,
     to: email,
-    subject: 'Chess games for ' + email,
+    subject: `Chess games for ${email}`,
     html: html
   });
 
-  console.log('Sent forgot gameID email to ' + email);
+  console.log(`Sent forgot gameID email to ${email}`);
 
 }
 
@@ -146,7 +146,7 @@ function sendFeedbackEmail (data) {
     html: html
   });
 
-  console.log('Sent feedback email to ' + emailServiceConfig.fromAddress);
+  console.log(`Sent feedback email to ${emailServiceConfig.fromAddress}`);
 
 }
 
@@ -163,5 +163,5 @@ function createMailTransport () {
 }
 
 function _buildGameUrl (gameID) {
-	return GLOBAL.APP_URL.url + '/play/' + gameID.compositeID;
+	return `${GLOBAL.APP_URL.url}/play/${gameID.compositeID}`;
 }
