@@ -30,7 +30,6 @@
     "mongojs": "^1.3.0",
     "morgan": "^1.6.0",
     "nodemailer": "^0.7.0",
-    "q": "^1.4.0",
     "request": "^2.61.0",
     "socket.io": "^1.2.0",
     "uinexpress": "^0.0.5",

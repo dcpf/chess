@@ -4,7 +4,7 @@
 
 'use strict';
 
-exports.constructUrl = function (domain, port, usePortInLinks) {
+exports.constructUrl = (domain, port, usePortInLinks) => {
 
 	this.domain = domain;
 	this.port = port;

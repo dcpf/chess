@@ -10,22 +10,22 @@ var logger = log4js.getLogger('server');
 // Set console log functions to use log4js instead, so that all log msgs go to the log file instead of stdout.
 //
 
-console.log = function (msg) {
+console.log = (msg) => {
 	logger.info(msg);
 };
 
-console.info = function (msg) {
+console.info = (msg) => {
 	logger.info(msg);
 };
 
-console.error = function (msg) {
+console.error = (msg) => {
 	logger.error(msg);
 };
 
-console.warn = function (msg) {
+console.warn = (msg) => {
 	logger.warn(msg);
 };
 
-console.trace = function (msg) {
+console.trace = (msg) => {
 	logger.trace(msg);
 };

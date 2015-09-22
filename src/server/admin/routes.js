@@ -2,22 +2,22 @@
 
 var adminController = require('./adminController');
 
-exports.index = function (req, res, next) {
+exports.index = (req, res, next) => {
     res.responseProps.file = 'admin';
     next();
 };
 
-exports.findGameById = function (req, res, next) {
+exports.findGameById = (req, res, next) => {
     res.responseProps.promise = adminController.findGameById(req.getParam('gameID'));
     next();
 };
 
-exports.findGamesByEmail = function (req, res, next) {
+exports.findGamesByEmail = (req, res, next) => {
     res.responseProps.promise = adminController.findGamesByEmail(req.getParam('email'));
     next();
 };
 
-exports.editGame = function (req, res, next) {
+exports.editGame = (req, res, next) => {
     res.responseProps.promise = adminController.editGame(req.getParam('obj'));
     next();
 };
