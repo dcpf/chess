@@ -21,7 +21,7 @@ function setUserPref (email, name, value) {
 	fs.writeFileSync(file, JSON.stringify(userPrefs, valueConverter));
 	console.log('Set user pref for ' + email + ': ' + name + ' = ' + value);
 	return userPrefs;
-};
+}
 
 function getUserPrefs (email) {
 	var userPrefs = {};
@@ -33,7 +33,7 @@ function getUserPrefs (email) {
 		}
 	}
 	return userPrefs;
-};
+}
 
 exports.setUserPref = setUserPref;
 exports.getUserPrefs = getUserPrefs;
