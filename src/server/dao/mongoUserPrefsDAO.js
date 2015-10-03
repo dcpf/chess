@@ -3,6 +3,7 @@
 var mongojs = require("mongojs");
 
 var databaseUrl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || GLOBAL.CONFIG.db.databaseUrl;
+console.log('databaseUrl: ' + databaseUrl);
 var db = mongojs(databaseUrl, ['userPrefs']);
 
 function setUserPref (email, name, value) {
