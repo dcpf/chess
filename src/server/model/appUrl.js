@@ -8,7 +8,7 @@ exports.constructUrl = function (domain, port, usePortInLinks) {
 
 	this.domain = domain;
 	this.port = port;
-	this.url = `http://${domain}`;
+	this.url = 'http://' + domain;
 	if (usePortInLinks && port) {
 		this.url += ':' + port;
 	}

@@ -27,9 +27,9 @@ var setUserPref = function (email, name, value) {
                 if (err) {
                     deferred.reject(err);
                 } else if (!savedObj) {
-                    deferred.reject(new Error(`Error setting user pref for ${email}: ${name} = ${value}`));
+                    deferred.reject(new Error('Error setting user pref for ' + email + ': ' + name + ' = ' + value));
                 } else {
-                    console.log(`Set user pref for ${email}: ${name} = ${value}`);
+                    console.log('Set user pref for ' + email + ': ' + name + ' = ' + value);
                     deferred.resolve(userPrefs);
                 }
             });

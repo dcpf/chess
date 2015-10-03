@@ -78,7 +78,7 @@ function saveMove (postData) {
 
                 gameDao.updateMoveHistory(gameID.id, gameObj.moveHistory)
                     .then(function () {
-                      console.log(`Updated game ${gameID.id} with move ${move}`);
+                      console.log('Updated game ' + gameID.id + ' with move ' + move);
                       var opponentEmail = '';
                       if (gameObj.moveHistory.length == 1) {
                           opponentEmail = gameObj.B.email;
@@ -157,7 +157,7 @@ function findGamesByEmail (email) {
                 eventEmitter.emit(eventEmitter.messages.SEND_FORGOT_GAME_ID_NOTIFICATION, email, games);
 				deferred.resolve({status: 'ok', email: email});
 			} else {
-				deferred.reject(new Error(`No games found for email ${email}`));
+				deferred.reject(new Error('No games found for email ' + email));
 			}
 		})
 		.fail (function (err) {
@@ -224,7 +224,7 @@ function _validateEmailAddress (email, requiredMsg) {
 		throw new Error(requiredMsg);
 	}
 	if (!validator.isEmail(email)) {
-		throw new Error(`Invalid email address: ${email}`);
+		throw new Error('Invalid email address: ' + email);
 	}
 }
 
@@ -252,7 +252,7 @@ function _createGame (player1Email, player2Email) {
     };
 
     return gameDao.createGame(gameObj).then(function (gameID) {
-        console.log(`Created game ${gameID}`);
+        console.log('Created game ' + gameID);
         var newGameIdObj = gameIdFactory.getGameID(gameID, whiteKey);
         eventEmitter.emit(eventEmitter.messages.SEND_GAME_CREATION_NOTIFICATION, player1Email, player2Email, newGameIdObj);
         return _buildGameAttrMap(gameObj, newGameIdObj, 'W', true, null);
@@ -269,7 +269,7 @@ function _enterExistingGame (gameID) {
 		deferred.resolve(_buildGameAttrMap(gameObj, gameID, perspective, canMove, null));
 	}).fail (function (err) {
 		if (err instanceof customErrors.InvalidGameIdError) {
-			err.message = `Invalid Game ID: ${gameID.compositeID}`;
+			err.message = 'Invalid Game ID: ' + gameID.compositeID;
 		}
 		deferred.reject(err);
 	});

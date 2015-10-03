@@ -99,10 +99,10 @@ app.use(function (req, res, next) {
 // log all requests
 app.use(function (req, res, next) {
     var start = new Date();
-    console.log(`${req.method} ${req.url}; IP: ${req.connection.remoteAddress}; User-agent: ${req.headers['user-agent']}`);
+    console.log(req.method + ' ' + req.url + '; IP: ' + req.connection.remoteAddress + '; User-agent: ' + req.headers['user-agent']);
     res.on('finish', function () {
         var duration = new Date() - start;
-        console.log(`${req.method} ${req.url}; IP: ${req.connection.remoteAddress}; Execution time: ${duration} ms`);
+        console.log(req.method + ' ' + req.url + '; IP: ' + req.connection.remoteAddress + '; Execution time: ' + duration + ' ms');
     });
     next();
 });
@@ -155,7 +155,7 @@ app.post('/admin/editGame', adminRoutes.editGame);
 app.use(sendResponse);
 
 server.listen(GLOBAL.APP_URL.port, function(){
-    console.log(`Express server listening on ${GLOBAL.APP_URL.url}`);
+    console.log('Express server listening on ' + GLOBAL.APP_URL.url);
 });
 
 // private functions
@@ -167,9 +167,9 @@ function initConfig () {
 	var config = {};
 	try {
 		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
-        console.log(`Initialized config file: ${configFile}`);
+        console.log('Initialized config file: ' + configFile);
 	} catch (err) {
-		console.warn(`No config file found at: ${configFile}. Starting with no configuration.`);
+		console.warn('No config file found at: ' + configFile + '. Starting with no configuration.');
 	}
 	GLOBAL.CONFIG = config;
 

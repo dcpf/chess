@@ -1,1 +1,1 @@
-web: node src/server/app.js --hostName chess-by-email.herokuapp.com
+web: node --harmony src/server/app.js --hostName chess-by-email.herokuapp.com

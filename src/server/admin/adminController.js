@@ -22,7 +22,7 @@ function findGameById (gameID) {
         deferred.resolve(obj);
     }).fail (function (err) {
         if (err instanceof customErrors.InvalidGameIdError) {
-            err.message = `Invalid Game ID: ${gameIdObj.compositeID}`;
+            err.message = 'Invalid Game ID: ' + gameIdObj.compositeID;
         }
         deferred.reject(err);
     });
