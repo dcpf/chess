@@ -14,7 +14,7 @@ if (!fs.existsSync(DATA_DIR)) {
 	console.log('Created user pref dir: ' + DATA_DIR);
 }
 
-function setUserPref (email, name, value) {
+var setUserPref = function (email, name, value) {
 	var userPrefs = getUserPrefs(email);
 	userPrefs[name] = value;
 	var file = DATA_DIR + email;
@@ -23,7 +23,7 @@ function setUserPref (email, name, value) {
 	return userPrefs;
 };
 
-function getUserPrefs (email) {
+var getUserPrefs = function (email) {
 	var userPrefs = {};
 	if (email) {
 		let file = DATA_DIR + email;

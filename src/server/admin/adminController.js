@@ -1,40 +1,39 @@
 'use strict';
 
+var q = require('q');
 var gameIdFactory = require('../model/mongoGameIdFactory');
 var gameDao = require('../dao/mongoGameDAO');
 var customErrors = require('../error/customErrors');
 
 function findGameById (gameID) {
-
+	var deferred = q.defer();
     var gameIdObj;
 	if (!gameID || !gameID.trim()) {
-		return Promise.reject(new Error('Game ID is required'));
+		deferred.reject(new Error('Game ID is required'));
+		return deferred.promise;
 	}
-
 	try {
 		gameIdObj = gameIdFactory.getGameID(gameID);
 	} catch (err) {
-		return Promise.reject(err);
+		deferred.reject(err);
+		return deferred.promise;
 	}
-
-    var promise = new Promise((resolve, reject) => {
-        gameDao.getGameObject(gameIdObj.id).then((obj) => {
-            resolve(obj);
-        }).catch ((err) => {
-            if (err instanceof customErrors.InvalidGameIdError) {
-                err.message = `Invalid Game ID: ${gameIdObj.compositeID}`;
-            }
-            reject(err);
-        });
+	gameDao.getGameObject(gameIdObj.id).then(function (obj) {
+        deferred.resolve(obj);
+    }).fail (function (err) {
+        if (err instanceof customErrors.InvalidGameIdError) {
+            err.message = `Invalid Game ID: ${gameIdObj.compositeID}`;
+        }
+        deferred.reject(err);
     });
-
-    return promise;
-
+	return deferred.promise;
 }
 
 function findGamesByEmail (email) {
+    var deferred = q.defer();
     if (!email || !email.trim()) {
-        return Promise.reject(new Error('Email is required'));
+        deferred.reject(new Error('Email is required'));
+        return deferred.promise;
     }
     return gameDao.findGamesByEmail(email);
 }

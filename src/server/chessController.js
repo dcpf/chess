@@ -1,6 +1,7 @@
 'use strict';
 
 var fs = require('fs');
+var q = require('q');
 var moment = require('moment');
 var gameIdFactory = require('./model/mongoGameIdFactory');
 var gameDao = require('./dao/mongoGameDAO');
@@ -18,6 +19,8 @@ const KEY_CHARS = '123456789';
 
 function createGame (ip, postData) {
 
+	var deferred = q.defer();
+
 	// get emails and validate them
 	var player1Email = postData.player1Email;
 	var player2Email = postData.player2Email;
@@ -25,80 +28,81 @@ function createGame (ip, postData) {
 		_validateEmailAddress(player1Email, "Email Address is required");
 		_validateEmailAddress(player2Email, "Opponent's Email Address is required");
 	} catch (err) {
-		return Promise.reject(err);
+		deferred.reject(err);
+		return deferred.promise;
 	}
 
-    var promise = new Promise((resolve, reject) => {
-        // Email validation has passed. Now validate the captcha and create the game.
-        reCaptchaHandler.validateCaptcha(ip, postData.captchaResponse)
-		  .then(() => {
-            resolve(_createGame(player1Email, player2Email));
-        })
-        .catch((err) => {
-            reject(err);
-        });
+	// Email validation has passed. Now validate the captcha and create the game.
+  reCaptchaHandler.validateCaptcha(ip, postData.captchaResponse)
+		.then(function() {
+      deferred.resolve(_createGame(player1Email, player2Email));
+    })
+    .fail(function(err){
+      deferred.reject(err);
     });
 
-    return promise;
+	return deferred.promise;
 
 }
 
 function enterGame (postData) {
 	var gameID;
+	var deferred = q.defer();
 	if (!postData.gameID.trim()) {
-		return Promise.reject(new Error('Game ID is required'));
+		deferred.reject(new Error('Game ID is required'));
+		return deferred.promise;
 	}
 	try {
 		gameID = gameIdFactory.getGameID(postData.gameID);
 	} catch (err) {
-		return Promise.reject(err);
+		deferred.reject(err);
+		return deferred.promise;
 	}
 	return _enterExistingGame(gameID);
 }
 
 function saveMove (postData) {
 
+    var deferred = q.defer();
     var gameID = gameIdFactory.getGameID(postData.gameID);
 
-    var promise = new Promise((resolve, reject) => {
-        gameDao.getGameObject(gameID.id)
-            .then((obj) => {
+    gameDao.getGameObject(gameID.id)
+        .then(function (obj) {
         
-                var gameObj = obj.gameObj;
+            var gameObj = obj.gameObj;
         
-                if (_playerCanMove(gameObj, gameID.key)) {
+            if (_playerCanMove(gameObj, gameID.key)) {
 
-                    let move = postData.move;
-                    gameObj.moveHistory.push(move);
+                let move = postData.move;
+                gameObj.moveHistory.push(move);
 
-                    gameDao.updateMoveHistory(gameID.id, gameObj.moveHistory)
-                        .then(() => {
-                            console.log(`Updated game ${gameID.id} with move ${move}`);
-                            var opponentEmail = '';
-                            if (gameObj.moveHistory.length == 1) {
-                                opponentEmail = gameObj.B.email;
-                                eventEmitter.emit(eventEmitter.messages.SEND_INVITE_NOTIFICATION, gameObj, gameIdFactory.getGameID(gameID.id, gameObj.B.key), move);
-                            } else {
-                                let obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
-                                opponentEmail = obj.email;
-                                eventEmitter.emit(eventEmitter.messages.SEND_MOVE_NOTIFICATION, obj.email, gameIdFactory.getGameID(gameID.id, obj.key), move);
-                            }
-                        resolve({status: 'ok', opponentEmail: opponentEmail, move: move, gameID: gameID.compositeID});
+                gameDao.updateMoveHistory(gameID.id, gameObj.moveHistory)
+                    .then(function () {
+                      console.log(`Updated game ${gameID.id} with move ${move}`);
+                      var opponentEmail = '';
+                      if (gameObj.moveHistory.length == 1) {
+                          opponentEmail = gameObj.B.email;
+                          eventEmitter.emit(eventEmitter.messages.SEND_INVITE_NOTIFICATION, gameObj, gameIdFactory.getGameID(gameID.id, gameObj.B.key), move);
+                      } else {
+                          let obj = (gameObj.moveHistory.length % 2 === 0) ? gameObj.W : gameObj.B;
+                          opponentEmail = obj.email;
+                          eventEmitter.emit(eventEmitter.messages.SEND_MOVE_NOTIFICATION, obj.email, gameIdFactory.getGameID(gameID.id, obj.key), move);
+                      }
+                      deferred.resolve({status: 'ok', opponentEmail: opponentEmail, move: move, gameID: gameID.compositeID});
                     })
-                    .catch((err) => {
-                        reject(err);
+                    .fail(function (err) {
+                        deferred.reject(err);
                     });
 
-                }
+            }
 
         })
-        .catch((err) => {
-            reject(err);
+        .fail(function (err) {
+            deferred.reject(err);
         });
-    });
-    
-    return promise;
-    
+
+    return deferred.promise;
+
 }
 
 function updateUserPrefs (postData) {
@@ -110,21 +114,23 @@ function updateUserPrefs (postData) {
 
 function findGamesByEmail (email) {
 
+	var deferred = q.defer();
+
 	try {
 		_validateEmailAddress(email, "Email Address is required");
 	} catch (err) {
-		return Promise.reject(err);
+		deferred.reject(err);
+		return deferred.promise;
 	}
 
 	// Lower-case the email address to make sure our queries work
 	email = email.toLowerCase();
 
-    var promise = new Promise((resolve, reject) => {
-        gameDao.findGamesByEmail(email)
-		  .then((records) => {
-            var numGames = records ? records.length : 0;
-            if (numGames) {
-                let games = [],
+	gameDao.findGamesByEmail(email)
+		.then(function (records) {
+			var numGames = records ? records.length : 0;
+			if (numGames) {
+				let games = [],
 					record = null,
 					gameObj = null,
 					gameID = null,
@@ -149,18 +155,17 @@ function findGamesByEmail (email) {
 					);
 				}
                 eventEmitter.emit(eventEmitter.messages.SEND_FORGOT_GAME_ID_NOTIFICATION, email, games);
-				resolve({status: 'ok', email: email});
-            } else {
-                reject(new Error(`No games found for email ${email}`));
-            }
-        })
-		.catch ((err) => {
-            reject(err);
-        });
-    });
-    
-    return promise;
-        
+				deferred.resolve({status: 'ok', email: email});
+			} else {
+				deferred.reject(new Error(`No games found for email ${email}`));
+			}
+		})
+		.fail (function (err) {
+			deferred.reject(err);
+		});
+
+	return deferred.promise;
+
 }
 
 function sendFeedback (data) {
@@ -196,7 +201,7 @@ function _buildGameAttrMap (gameObj, gameID, perspective, canMove, error) {
 
     // user prefs
     var userEmail = _getCurrentUserEmail(gameObj, gameID.key);
-    return userPrefsDao.getUserPrefs(userEmail).then((userPrefs) => {
+    return userPrefsDao.getUserPrefs(userEmail).then(function (userPrefs) {
         var user = {
             email: userEmail,
             prefs: userPrefs.prefs || {}
@@ -246,7 +251,7 @@ function _createGame (player1Email, player2Email) {
         }
     };
 
-    return gameDao.createGame(gameObj).then((gameID) => {
+    return gameDao.createGame(gameObj).then(function (gameID) {
         console.log(`Created game ${gameID}`);
         var newGameIdObj = gameIdFactory.getGameID(gameID, whiteKey);
         eventEmitter.emit(eventEmitter.messages.SEND_GAME_CREATION_NOTIFICATION, player1Email, player2Email, newGameIdObj);
@@ -256,20 +261,19 @@ function _createGame (player1Email, player2Email) {
 }
 
 function _enterExistingGame (gameID) {
-    var promise = new Promise((resolve, reject) => {
-        gameDao.getGameObject(gameID.id).then((obj) => {
-            var gameObj = obj.gameObj;
-            var perspective = _getPerspective(gameObj, gameID.key);
-            var canMove = _playerCanMove(gameObj, gameID.key);
-            resolve(_buildGameAttrMap(gameObj, gameID, perspective, canMove, null));
-        }).catch ((err) => {
-            if (err instanceof customErrors.InvalidGameIdError) {
-                err.message = `Invalid Game ID: ${gameID.compositeID}`;
-            }
-            reject(err);
-        });
-    });
-    return promise;
+	var deferred = q.defer();
+	gameDao.getGameObject(gameID.id).then(function (obj) {
+        var gameObj = obj.gameObj;
+		var perspective = _getPerspective(gameObj, gameID.key);
+		var canMove = _playerCanMove(gameObj, gameID.key);
+		deferred.resolve(_buildGameAttrMap(gameObj, gameID, perspective, canMove, null));
+	}).fail (function (err) {
+		if (err instanceof customErrors.InvalidGameIdError) {
+			err.message = `Invalid Game ID: ${gameID.compositeID}`;
+		}
+		deferred.reject(err);
+	});
+	return deferred.promise;
 }
 
 function _generateKey () {

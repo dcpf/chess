@@ -61,7 +61,7 @@ app.use(session({resave: true, saveUninitialized: true, secret: 'jellyJam'}));
 app.disable('x-powered-by');
 
 // set up some things we need for the app
-app.use((req, res, next) => {
+app.use(function (req, res, next) {
     
     /*
     Create a responseProps object on the response object to hold app-specific response properties. Valid attrs are:
@@ -79,10 +79,10 @@ app.use((req, res, next) => {
     } else if (req.method === 'GET') {
         params = req.query;
     }
-    req.getParam = (name) => {
+    req.getParam = function (name) {
         return params[name] || req.params[name];
     };
-    req.getParams = () => {
+    req.getParams = function () {
         // add everything from req.params to params
         for (var name in req.params) {
             if (!params[name]) {
@@ -97,10 +97,10 @@ app.use((req, res, next) => {
 });
 
 // log all requests
-app.use((req, res, next) => {
+app.use(function (req, res, next) {
     var start = new Date();
     console.log(`${req.method} ${req.url}; IP: ${req.connection.remoteAddress}; User-agent: ${req.headers['user-agent']}`);
-    res.on('finish', () => {
+    res.on('finish', function () {
         var duration = new Date() - start;
         console.log(`${req.method} ${req.url}; IP: ${req.connection.remoteAddress}; Execution time: ${duration} ms`);
     });
@@ -124,7 +124,7 @@ app.post('/feedback', routes.sendFeedback);
 app.post('/logClientError', routes.logClientError);
 
 // basic auth to protect admin URLs defined below
-app.use('/admin', (req, res, next) => {
+app.use('/admin', function(req, res, next) {
     if (req.headers.authorization === 'Basic ZHBmOnJ1NWgyMWx6') {
         return next();
     }
@@ -135,7 +135,7 @@ app.use('/admin', (req, res, next) => {
 
 // Add CSRF protection for admin end-points
 app.use('/admin', csrf());
-app.use('/admin', (err, req, res, next) => {
+app.use('/admin', function (err, req, res, next) {
   if (err.code !== 'EBADCSRFTOKEN') {
       return next(err);
   }
@@ -154,7 +154,7 @@ app.post('/admin/editGame', adminRoutes.editGame);
 // Send the response
 app.use(sendResponse);
 
-server.listen(GLOBAL.APP_URL.port, () => {
+server.listen(GLOBAL.APP_URL.port, function(){
     console.log(`Express server listening on ${GLOBAL.APP_URL.url}`);
 });
 
@@ -191,9 +191,9 @@ function sendResponse (req, res) {
     var responseProps = res.responseProps;
     
     if (responseProps.promise) {
-        responseProps.promise.then((obj) => {
+        responseProps.promise.then(function (obj) {
             res.send(obj);
-        }).catch((err) => {
+        }).fail(function (err) {
             console.error(err);
             res.status(500).send(err.message);
         });

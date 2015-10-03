@@ -18,7 +18,7 @@ if (!fs.existsSync(DATA_DIR)) {
 /**
 * Get the game object from disk by gameID. Throws an error if no game exists by the ID.
 */
-function getGameObject (gameID) {
+var getGameObject = function (gameID) {
 	var gameObj = {};
 	var file = DATA_DIR + gameID;
 	try {
@@ -31,12 +31,12 @@ function getGameObject (gameID) {
 	return gameObj;
 };
 
-function saveGame (gameID, gameObj) {
+var saveGame = function (gameID, gameObj) {
 	var file = DATA_DIR + gameID;
 	fs.writeFileSync(file, JSON.stringify(gameObj));
 };
 
-function createGame (gameObj) {
+var createGame = function (gameObj) {
 	var gameID, file;
 	while (true) {
 		gameID = generateRandomGameID();

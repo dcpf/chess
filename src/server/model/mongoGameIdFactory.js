@@ -9,7 +9,7 @@
 *
 */
 
-exports.getGameID = (id, key) => {
+exports.getGameID = function (id, key) {
 
     var obj = {};
 

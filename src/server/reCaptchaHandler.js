@@ -1,45 +1,47 @@
 'use strict';
 
+var q = require('q');
 var request = require('request');
 
-exports.validateCaptcha = (ip, captchaResponse) => {
+exports.validateCaptcha = function (ip, captchaResponse) {
 
-    if (!GLOBAL.CONFIG.recaptcha.enabled) {
-        return Promise.resolve();
-    }
-    
+	var deferred = q.defer();
+
 	if (!captchaResponse.trim()) {
-		return Promise.reject(new Error('Captcha is required'));
+		deferred.reject(new Error('Captcha is required'));
+		return deferred.promise;
 	}
-    
-    var promise = new Promise((resolve, reject) => {
-        request(
-            {
-                method: 'post',
-                url: GLOBAL.CONFIG.recaptcha.verifyUrl,
-                form: {
-                    secret: GLOBAL.CONFIG.recaptcha.privateKey,
-                    remoteip: ip,
-                    response: captchaResponse
-                }
-            },
-            function (err, res, body) {
+
+	if (GLOBAL.CONFIG.recaptcha.enabled) {
+		request(
+			{
+				method: 'post',
+				url: GLOBAL.CONFIG.recaptcha.verifyUrl,
+				form: {
+					secret: GLOBAL.CONFIG.recaptcha.privateKey,
+					remoteip: ip,
+					response: captchaResponse
+				}
+			},
+			function (err, res, body) {
                 if (err) {
-                    reject(err);
+                    deferred.reject(err);
                 } else {
                     let responseObj = JSON.parse(body);
                     if (responseObj.success) {
                         console.log('captcha validation passed');
-                        resolve();
+                        deferred.resolve();
                     } else {
                         console.log(`captcha validation error: ${responseObj['error-codes']}`);
-                        reject(new Error('Incorrect captcha. Please try again.'));
+                        deferred.reject(new Error('Incorrect captcha. Please try again.'));
                     }
                 }
-            }
-        );
-    });
-    
-    return promise;
+			}
+		);
+	} else {
+		deferred.resolve();
+	}
+
+	return deferred.promise;
 
 };
