@@ -29,12 +29,12 @@ function getGameObject (gameID) {
 		throw err;
 	}
 	return gameObj;
-}
+};
 
 function saveGame (gameID, gameObj) {
 	var file = DATA_DIR + gameID;
 	fs.writeFileSync(file, JSON.stringify(gameObj));
-}
+};
 
 function createGame (gameObj) {
 	var gameID, file;
@@ -48,7 +48,7 @@ function createGame (gameObj) {
 		}
 	}
 	return gameID;
-}
+};
 
 exports.getGameObject = getGameObject;
 exports.saveGame = saveGame;
