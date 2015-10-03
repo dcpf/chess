@@ -4,7 +4,7 @@ var mongojs = require("mongojs");
 var q = require('q');
 
 var databaseUrl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || GLOBAL.CONFIG.db.databaseUrl;
-var db = mongojs(databaseUrl, ['userPrefs']);
+var db = mongojs(databaseUrl, ['userPrefs'], {authMechanism: 'ScramSHA1'});
 
 var setUserPref = function (email, name, value) {
 

@@ -5,7 +5,7 @@ var q = require('q');
 var customErrors = require('../error/customErrors');
 
 var databaseUrl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || GLOBAL.CONFIG.db.databaseUrl;
-var db = mongojs(databaseUrl, ['games']);
+var db = mongojs(databaseUrl, ['games'], {authMechanism: 'ScramSHA1'});
 
 /**
 * Get the game object from the db by gameID.
