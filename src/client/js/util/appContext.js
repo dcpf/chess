@@ -46,6 +46,15 @@ var AppContext = function (configData) {
     this.getGameContext = function (userData, gameStateData) {
         
         if (userData && gameStateData) {
+            var playerEmail = userData.email;
+            var opponentEmail = (gameStateData.whiteEmail === playerEmail) ? gameStateData.blackEmail : gameStateData.whiteEmail;
+            var socketIO = new SocketIO({
+                eventHandler: eventHandler,
+                url: config.getAppUrl(),
+                gameID: gameStateData.gameID,
+                playerEmail: playerEmail,
+                opponentEmail: opponentEmail
+            });
             instantiateGameContext(userData, gameStateData);
         }
         
@@ -89,33 +98,10 @@ var AppContext = function (configData) {
     };
     
     function instantiateGameContext (userData, gameStateData) {
-
-        // First, see if this is an existing game or a new game.
-        var isExistingGame;
-        if (gameContext && gameContext.gameState.getGameID() === gameStateData.gameID) {
-            isExistingGame = true;
-        }
-
-        // Instantiate the socketIO object, but only if this is a new game.
-        if (!isExistingGame) {
-            var playerEmail = userData.email;
-            var opponentEmail = (gameStateData.whiteEmail === playerEmail) ? gameStateData.blackEmail : gameStateData.whiteEmail;
-            var socketIO = new SocketIO({
-                eventHandler: eventHandler,
-                url: config.getAppUrl(),
-                gameID: gameStateData.gameID,
-                playerEmail: playerEmail,
-                opponentEmail: opponentEmail
-            });
-        }
-
+        
         if (gameContext) {
             // Clean up the views so they can be properly re-instantiated
             for (var prop in gameContext) {
-                if (isExistingGame && prop === 'playerInfoView') {
-                    // If this is an existing game, we don't want to re-instantiate the playerInfoView.
-                    continue;
-                }
                 if (prop.match(/.+View$/) && gameContext[prop].remove) {
                     gameContext[prop].remove();
                 }
@@ -123,10 +109,10 @@ var AppContext = function (configData) {
         }
 
         // Instantiate all of the objects we need
-
+            
         // This is a singleton
         var notationConverter = gameContext ? gameContext.notationConverter : new NotationConverter();
-
+            
         // The rest need to be instantiated anew
         var capturedPieces = new CapturedPieces();
         var moveHistory = new MoveHistory();
@@ -180,19 +166,14 @@ var AppContext = function (configData) {
             eventHandler: eventHandler,
             user: user
         });
+        var playerInfoView = new PlayerInfoView({
+            parent: $('#playerInfoContainer'),
+            eventHandler: eventHandler,
+            gameState: gameState
+        });
         var playGameView = new PlayGameView({
             parent: $('#playGameView')
         });
-
-        // Only instantiate the playerInfoView for a new game
-        var playerInfoView = isExistingGame ? gameContext.playerInfoView : null;
-        if (!playerInfoView) {
-            playerInfoView = new PlayerInfoView({
-                parent: $('#playerInfoContainer'),
-                eventHandler: eventHandler,
-                gameState: gameState
-            });
-        }
 
         gameContext = {
             notationConverter: notationConverter,
