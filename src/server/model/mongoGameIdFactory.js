@@ -9,7 +9,7 @@
 *
 */
 
-exports.getGameID = function (id, key) {
+exports.getGameID = (id, key) => {
 
     var obj = {};
 
@@ -24,7 +24,7 @@ exports.getGameID = function (id, key) {
         obj.key = parts[1];
         obj.compositeID = id;
       } catch (err) {
-        throw(new Error("Invalid game ID: " + id));
+        throw(new Error(`Invalid game ID: ${id}`));
       }
     }
 

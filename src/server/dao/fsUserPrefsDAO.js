@@ -14,16 +14,16 @@ if (!fs.existsSync(DATA_DIR)) {
 	console.log('Created user pref dir: ' + DATA_DIR);
 }
 
-var setUserPref = function (email, name, value) {
+function setUserPref (email, name, value) {
 	var userPrefs = getUserPrefs(email);
 	userPrefs[name] = value;
 	var file = DATA_DIR + email;
 	fs.writeFileSync(file, JSON.stringify(userPrefs, valueConverter));
 	console.log('Set user pref for ' + email + ': ' + name + ' = ' + value);
 	return userPrefs;
-};
+}
 
-var getUserPrefs = function (email) {
+function getUserPrefs (email) {
 	var userPrefs = {};
 	if (email) {
 		let file = DATA_DIR + email;
@@ -33,7 +33,7 @@ var getUserPrefs = function (email) {
 		}
 	}
 	return userPrefs;
-};
+}
 
 exports.setUserPref = setUserPref;
 exports.getUserPrefs = getUserPrefs;
