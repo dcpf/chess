@@ -35,7 +35,7 @@
     "validator": "^3.19.0"
   },
   "engines": {
-    "node": "4.2.1"
+    "node": "12.13.1"
   },
   "scripts": {
     "start": "node src/server/app.js --hostName 127.0.0.1 --port 8081 --usePortInLinks",
