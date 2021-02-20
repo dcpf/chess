@@ -14,8 +14,7 @@ module.exports = function(grunt) {
                 options: {
                     node: true,
                     force: true,
-                    esnext: true,
-                    ignores: 'src/server/server.js' // no longer used
+                    esnext: true
                 },
                 src: ['src/server/**/*.js']
             },
@@ -25,6 +24,7 @@ module.exports = function(grunt) {
                 options: {
                     browser: true,
                     force: true,
+                    esnext: true,
                     globals: {
                         Backbone: true,
                         $: true,
@@ -40,6 +40,7 @@ module.exports = function(grunt) {
                 options: {
                     browser: true,
                     force: true,
+                    esnext: true,
                     globals: {
                         Backbone: true,
                         $: true,
