@@ -103,6 +103,13 @@ const EnterGameView = View.extend({
     _enableNewGameForm: function () {
         this.$('#existingGameForm').hide(200);
         this.$('#newGameForm').show(200);
+        if (this.config.isCaptchaEnabled()) {
+            this.$('#loadingCaptchaText').show();
+            this.$('.g-recaptcha').show();
+        } else {
+            this.$('#loadingCaptchaText').hide();
+            this.$('.g-recaptcha').hide();
+        }
         this.$('#newGameForm #player1Email').focus();
     },
 
@@ -125,6 +132,5 @@ const EnterGameView = View.extend({
     _enterGameError: function (errMsg) {
         this.eventHandler.trigger(this.eventHandler.messageNames.ERROR, errMsg);
     }
-
 
 });
