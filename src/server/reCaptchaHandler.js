@@ -1,6 +1,6 @@
 'use strict';
 
-var request = require('request');
+const request = require('request');
 
 exports.validateCaptcha = (ip, captchaResponse) => {
 
@@ -12,7 +12,7 @@ exports.validateCaptcha = (ip, captchaResponse) => {
 		return Promise.reject(new Error('Captcha is required'));
 	}
     
-    var promise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         request(
             {
                 method: 'post',
@@ -39,7 +39,5 @@ exports.validateCaptcha = (ip, captchaResponse) => {
             }
         );
     });
-    
-    return promise;
 
 };

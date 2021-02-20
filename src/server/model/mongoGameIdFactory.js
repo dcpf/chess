@@ -11,7 +11,7 @@
 
 exports.getGameID = (id, key) => {
 
-    var obj = {};
+    const obj = {};
 
     if (key) {
       obj.id = id;
@@ -19,7 +19,7 @@ exports.getGameID = (id, key) => {
       obj.compositeID = id + '-' + key;
     } else {
       try {
-        let parts = id.split('-');
+        const parts = id.split('-');
         obj.id = parts[0];
         obj.key = parts[1];
         obj.compositeID = id;

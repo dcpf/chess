@@ -4,7 +4,7 @@
 * FileSystem-based implementation
 */
 
-var fs = require('fs');
+const fs = require('fs');
 
 const DATA_DIR = '.data/';
 const GAME_ID_CHARS = 'abcdefghijkmnopqrstuvwxyz234567890';
@@ -19,8 +19,8 @@ if (!fs.existsSync(DATA_DIR)) {
 * Get the game object from disk by gameID. Throws an error if no game exists by the ID.
 */
 function getGameObject (gameID) {
-	var gameObj = {};
-	var file = DATA_DIR + gameID;
+	let gameObj = {};
+	const file = DATA_DIR + gameID;
 	try {
 		let jsonStr = fs.readFileSync(file, {encoding: 'utf8'});
 		gameObj = JSON.parse(jsonStr);
@@ -32,12 +32,12 @@ function getGameObject (gameID) {
 }
 
 function saveGame (gameID, gameObj) {
-	var file = DATA_DIR + gameID;
+	const file = DATA_DIR + gameID;
 	fs.writeFileSync(file, JSON.stringify(gameObj));
 }
 
 function createGame (gameObj) {
-	var gameID, file;
+	let gameID, file;
 	while (true) {
 		gameID = generateRandomGameID();
 		file = DATA_DIR + gameID;
@@ -59,7 +59,7 @@ exports.createGame = createGame;
 //
 
 function generateRandomGameID () {
-  var s = '';
+  let s = '';
   for (let i = 0; i < 12; i++) {
       s += GAME_ID_CHARS.charAt(Math.floor(Math.random() * GAME_ID_CHARS.length));
   }

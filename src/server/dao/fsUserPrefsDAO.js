@@ -4,7 +4,7 @@
 * FileSystem-based implementation
 */
 
-var fs = require('fs');
+const fs = require('fs');
 
 const DATA_DIR = '.user_prefs/';
 
@@ -15,16 +15,16 @@ if (!fs.existsSync(DATA_DIR)) {
 }
 
 function setUserPref (email, name, value) {
-	var userPrefs = getUserPrefs(email);
+	const userPrefs = getUserPrefs(email);
 	userPrefs[name] = value;
-	var file = DATA_DIR + email;
+	const file = DATA_DIR + email;
 	fs.writeFileSync(file, JSON.stringify(userPrefs, valueConverter));
 	console.log('Set user pref for ' + email + ': ' + name + ' = ' + value);
 	return userPrefs;
 }
 
 function getUserPrefs (email) {
-	var userPrefs = {};
+	let userPrefs = {};
 	if (email) {
 		let file = DATA_DIR + email;
 		if (fs.existsSync(file)) {

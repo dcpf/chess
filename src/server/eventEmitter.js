@@ -1,8 +1,8 @@
 'use strict';
 
-var events = require('events');
+const events = require('events');
 
-var eventEmitter;
+let eventEmitter;
 if (!eventEmitter) {
     eventEmitter = new events.EventEmitter();
 }

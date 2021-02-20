@@ -1,6 +1,6 @@
 'use strict';
 
-var chessController = require('./chessController');
+const chessController = require('./chessController');
 
 exports.index = (req, res, next) => {
     renderIndex(res);
@@ -14,7 +14,7 @@ exports.findGamesByEmail = (req, res, next) => {
 
 // POST createGame request
 exports.createGame = (req, res, next) => {
-    var ip = req.connection.remoteAddress;
+    const ip = req.connection.remoteAddress;
 	res.responseProps.promise = chessController.createGame(ip, req.getParams());
     next();
 };
@@ -38,7 +38,7 @@ exports.updateUserPrefs = (req, res, next) => {
 };
 
 exports.sendFeedback = (req, res, next) => {
-    var params = req.getParams();
+    const params = req.getParams();
     params.userAgent = req.headers['user-agent'];
     chessController.sendFeedback(params);
     next();
