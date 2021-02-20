@@ -2,7 +2,6 @@
 
 const { MongoClient, ObjectID } = require("mongodb");
 
-const DB_NAME = global.CONFIG.db.name;
 const USER_PREFS = "userPrefs";
 
 const databaseUrl = process.env.MONGODB_URI || global.CONFIG.db.databaseUrl;
@@ -24,7 +23,7 @@ function setUserPref(email, name, value) {
           prefs: userPrefs.prefs,
         };
         mongoClient
-          .db(DB_NAME)
+          .db()
           .collection(USER_PREFS)
           .updateOne({ email }, { $set: obj }, { upsert: true })
           .then((result) => {
@@ -42,7 +41,7 @@ function getUserPrefs(email) {
   return new Promise((resolve) => {
     if (email) {
       mongoClient
-        .db(DB_NAME)
+        .db()
         .collection(USER_PREFS)
         .findOne({ email })
         .then((record) => {

@@ -3,7 +3,6 @@
 const { MongoClient, ObjectID } = require("mongodb");
 const customErrors = require("../error/customErrors");
 
-const DB_NAME = global.CONFIG.db.name;
 const GAMES = "games";
 
 const databaseUrl = process.env.MONGODB_URI || global.CONFIG.db.databaseUrl;
@@ -24,7 +23,7 @@ function getObjectId(id, reject) {
 function getGameObject(gameID) {
   return new Promise((resolve, reject) => {
     mongoClient
-      .db(DB_NAME)
+      .db()
       .collection(GAMES)
       .findOne({ _id: getObjectId(gameID, reject) })
       .then((record) => {
@@ -44,7 +43,7 @@ function getGameObject(gameID) {
 function updateMoveHistory(gameID, moveHistory) {
   return new Promise((resolve, reject) => {
     mongoClient
-      .db(DB_NAME)
+      .db()
       .collection(GAMES)
       .updateOne(
         // query
@@ -73,7 +72,7 @@ function createGame(gameObj) {
 
   return new Promise((resolve, reject) => {
     mongoClient
-      .db(DB_NAME)
+      .db()
       .collection(GAMES)
       .insertOne(obj)
       .then((res) => {
@@ -91,7 +90,7 @@ function createGame(gameObj) {
 function findGamesByEmail(email) {
   return new Promise((resolve, reject) => {
     const cursor = mongoClient
-      .db(DB_NAME)
+      .db()
       .collection(GAMES)
       .find(
         {

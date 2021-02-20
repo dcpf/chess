@@ -13,7 +13,6 @@
         "privateKey": "6Lee-f4SAAAAAPW3KAWGevBYFW5s6nSfTx0szcd-"
     },
     "db": {
-        "databaseUrl": "mongodb+srv://chess-by-email:ch355@cluster0.sucsb.mongodb.net/chess-by-email?retryWrites=true&w=majority",
-        "name": "chess-by-email"
+        "databaseUrl": "mongodb+srv://chess-by-email:ch355@cluster0.sucsb.mongodb.net/chess-by-email?retryWrites=true&w=majority"
     }
 }
