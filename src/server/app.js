@@ -39,7 +39,7 @@ var server = require('http').Server(app);
 require('./socket.io.js')(server);
 
 // all environments
-app.set('port', GLOBAL.APP_URL.port);
+app.set('port', global.APP_URL.port);
 app.set('views', path.join(__dirname, 'view'));
 app.engine('html', require('uinexpress').__express);
 app.set('view engine', 'html');
@@ -126,8 +126,8 @@ app.post('/logClientError', routes.logClientError);
 // Send the response
 app.use(sendResponse);
 
-server.listen(GLOBAL.APP_URL.port, () => {
-    console.log(`Express server listening on ${GLOBAL.APP_URL.url}`);
+server.listen(global.APP_URL.port, () => {
+    console.log(`Express server listening on ${global.APP_URL.url}`);
 });
 
 // private functions
@@ -143,12 +143,12 @@ function initConfig () {
 	} catch (err) {
 		console.warn(`No config file found at: ${configFile}. Starting with no configuration.`);
 	}
-	GLOBAL.CONFIG = config;
+	global.CONFIG = config;
 
     // Set the global appUrl object using the host name and port from either the passed-in args or the env vars.
     var hostName = cmndr.hostName || process.env.DOMAIN;
     var port = cmndr.port || process.env.PORT;
-    GLOBAL.APP_URL = appUrl.constructUrl(hostName, port, cmndr.usePortInLinks);
+    global.APP_URL = appUrl.constructUrl(hostName, port, cmndr.usePortInLinks);
 
 }
 

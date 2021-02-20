@@ -5,7 +5,7 @@ var templateHandler = require('./templateHandler');
 var nodemailer = require('nodemailer/lib/nodemailer');
 var eventEmitter = require('./eventEmitter');
 
-var emailServiceConfig = GLOBAL.CONFIG.emailService;
+var emailServiceConfig = global.CONFIG.emailService;
 var emailSrcDir = path.join(__dirname, 'email');
 
 var mailTransport;
@@ -73,7 +73,7 @@ function sendMoveNotificationEmail (playerEmail, gameID, move) {
 	var html = templateHandler.processTemplate(`${emailSrcDir}/moveNotificationEmail.html`, {
 		move: move,
 		gameUrl: _buildGameUrl(gameID),
-		appUrl: GLOBAL.APP_URL.url
+		appUrl: global.APP_URL.url
 	});
 
 	mailTransport.sendMail({
@@ -163,5 +163,5 @@ function createMailTransport () {
 }
 
 function _buildGameUrl (gameID) {
-	return `${GLOBAL.APP_URL.url}/play/${gameID.compositeID}`;
+	return `${global.APP_URL.url}/play/${gameID.compositeID}`;
 }

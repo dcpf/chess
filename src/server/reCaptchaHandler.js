@@ -4,7 +4,7 @@ var request = require('request');
 
 exports.validateCaptcha = (ip, captchaResponse) => {
 
-    if (!GLOBAL.CONFIG.recaptcha.enabled) {
+    if (!global.CONFIG.recaptcha.enabled) {
         return Promise.resolve();
     }
     
@@ -16,9 +16,9 @@ exports.validateCaptcha = (ip, captchaResponse) => {
         request(
             {
                 method: 'post',
-                url: GLOBAL.CONFIG.recaptcha.verifyUrl,
+                url: global.CONFIG.recaptcha.verifyUrl,
                 form: {
-                    secret: GLOBAL.CONFIG.recaptcha.privateKey,
+                    secret: global.CONFIG.recaptcha.privateKey,
                     remoteip: ip,
                     response: captchaResponse
                 }

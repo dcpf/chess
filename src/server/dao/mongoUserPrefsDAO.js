@@ -2,10 +2,10 @@
 
 const { MongoClient, ObjectID } = require("mongodb");
 
-const DB_NAME = GLOBAL.CONFIG.db.name;
+const DB_NAME = global.CONFIG.db.name;
 const USER_PREFS = "userPrefs";
 
-const databaseUrl = process.env.MONGODB_URI || GLOBAL.CONFIG.db.databaseUrl;
+const databaseUrl = process.env.MONGODB_URI || global.CONFIG.db.databaseUrl;
 const mongoClient = new MongoClient(databaseUrl, { useUnifiedTopology: true });
 mongoClient.connect();
 

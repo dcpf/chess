@@ -68,9 +68,9 @@ function renderIndex (res) {
 function getGameConfig () {
     return {
 		recaptcha: {
-			enabled: GLOBAL.CONFIG.recaptcha.enabled,
-			publicKey: GLOBAL.CONFIG.recaptcha.publicKey
+			enabled: global.CONFIG.recaptcha.enabled,
+			publicKey: global.CONFIG.recaptcha.publicKey
 		},
-        appUrl: GLOBAL.APP_URL.url
+        appUrl: global.APP_URL.url
 	};
 }
