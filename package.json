@@ -5,7 +5,6 @@
   "main": "/",
   "dependencies": {
     "body-parser": "^1.13.0",
-    "bower": "^1.3.10",
     "commander": "^2.3.0",
     "compression": "^1.5.0",
     "cookie-parser": "^1.3.0",
@@ -42,9 +41,7 @@
     "start": "node src/server/app.js --hostName 127.0.0.1 --port 8081 --usePortInLinks",
     "start-forever": "node_modules/forever/bin/forever start -c 'node --harmony' src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
     "stop-forever": "node_modules/forever/bin/forever stop src/server/app.js",
-    "start-mongo": "mongod --fork --logpath logs/mongodb.log --dbpath /data/db/",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "./node_modules/bower/bin/bower install polymer; ./node_modules/bower/bin/bower install Polymer/core-elements; ./node_modules/grunt-cli/bin/grunt deploy"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

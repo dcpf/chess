@@ -161,28 +161,6 @@ module.exports = function(grunt) {
                 files: [
                     {src: ['src/client/images/*'], dest: 'webapp/images/', flatten: true, expand: true}
                 ]
-            },
-            polymer: {
-                files: [
-                    {cwd: 'bower_components',
-                     src: ['platform/platform.js',
-                           'platform/platform.js.map',
-                           'polymer/layout.html',
-                           'polymer/polymer.html',
-                           'polymer/polymer.js',
-                           'polymer/polymer.js.map',
-                           'core-ajax/core-ajax.html',
-                           'core-ajax/core-xhr.html' // this is a dependency of core-ajax
-                           ],
-                     dest: 'webapp/polymer/',
-                     flatten: true,
-                     expand: true}
-                ]
-            },
-            components: {
-                files: [
-                    {cwd: 'src/client', src: ['admin/components/**/*'], dest: 'webapp', flatten: false, expand: true}
-                ]
             }
         }
 
@@ -203,8 +181,6 @@ module.exports = function(grunt) {
                                'concat',
                                'jshint:client_concat',
                                'cssmin',
-                               'copy:polymer',
-                               'copy:components',
                                'copy:images'
                               ]);
     grunt.registerTask('deploy', ['clean',
@@ -215,8 +191,6 @@ module.exports = function(grunt) {
                                   'jshint:client_concat',
                                   'uglify',
                                   'cssmin',
-                                  'copy:polymer',
-                                  'copy:components',
                                   'copy:images'
                                  ]);
 

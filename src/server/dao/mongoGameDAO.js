@@ -105,52 +105,7 @@ function findGamesByEmail(email) {
   });
 }
 
-/**
- * This is for admin purposes only
- */
-function editGame(obj) {
-  // If moveHistory has been modified, it will be a string, so convert it back to an array.
-  let moveHistory = obj.gameObj.moveHistory;
-  if (typeof moveHistory === "string") {
-    moveHistory = moveHistory.split(",");
-  }
-
-  return new Promise((resolve, reject) => {
-    mongoClient.connect((dbErr) => {
-      const collection = mongoClient.db(DB_NAME).collection(GAMES);
-      collection.updateOne(
-        // query
-        { _id: obj._id },
-        // update fields
-        {
-          $set: {
-            modifyDate: new Date(),
-            "gameObj.moveHistory": moveHistory,
-            "gameObj.W.email": obj.gameObj.W.email,
-            "gameObj.B.email": obj.gameObj.B.email,
-          },
-        },
-        // options
-        {},
-        // callback
-        function (err, savedObj) {
-          if (err) {
-            reject(err);
-          } else if (!savedObj) {
-            reject(new Error(`Error saving game ${obj._id}`));
-          } else {
-            console.log(`Edited game: ${JSON.stringify(obj)}`);
-            resolve({ status: "ok" });
-          }
-        }
-      );
-      mongoClient.close();
-    });
-  });
-}
-
 exports.getGameObject = getGameObject;
 exports.updateMoveHistory = updateMoveHistory;
 exports.createGame = createGame;
 exports.findGamesByEmail = findGamesByEmail;
-exports.editGame = editGame;

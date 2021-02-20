@@ -123,34 +123,6 @@ app.post('/updateUserPrefs', routes.updateUserPrefs);
 app.post('/feedback', routes.sendFeedback);
 app.post('/logClientError', routes.logClientError);
 
-// basic auth to protect admin URLs defined below
-app.use('/admin', (req, res, next) => {
-    if (req.headers.authorization === 'Basic ZHBmOnJ1NWgyMWx6') {
-        return next();
-    }
-    res.statusCode = 401;
-    res.setHeader('WWW-Authenticate', 'Basic realm="chess_admin"');
-    res.end('Unauthorized');
-});
-
-// Add CSRF protection for admin end-points
-app.use('/admin', csrf());
-app.use('/admin', (err, req, res, next) => {
-  if (err.code !== 'EBADCSRFTOKEN') {
-      return next(err);
-  }
-  // handle CSRF token errors
-  res.status(403);
-  res.send('CSRF validation error');
-});
-
-// admin end-points
-var adminRoutes = require('./admin/routes');
-app.get('/admin', adminRoutes.index);
-app.post('/admin/findGameById', adminRoutes.findGameById);
-app.post('/admin/findGamesByEmail', adminRoutes.findGamesByEmail);
-app.post('/admin/editGame', adminRoutes.editGame);
-
 // Send the response
 app.use(sendResponse);
 
