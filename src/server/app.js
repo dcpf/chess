@@ -194,7 +194,7 @@ function sendResponse (req, res) {
         responseProps.promise.then((obj) => {
             res.send(obj);
         }).catch((err) => {
-            console.error(err);
+            console.error(err.toString());
             res.status(500).send(err.message);
         });
     } else if (responseProps.file) {

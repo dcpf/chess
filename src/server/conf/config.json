@@ -7,12 +7,13 @@
         "pass": "DPF1na+0r"
     },
     "recaptcha": {
-        "enabled": true,
+        "enabled": false,
         "verifyUrl": "https://www.google.com/recaptcha/api/siteverify",
         "publicKey": "6Lee-f4SAAAAAOL4TAcX3qfPv1Ru0wjbOz7x39ba",
         "privateKey": "6Lee-f4SAAAAAPW3KAWGevBYFW5s6nSfTx0szcd-"
     },
     "db": {
-        "databaseUrl": "chessdb"
+        "databaseUrl": "mongodb+srv://chess-by-email:ch355@cluster0.sucsb.mongodb.net/chess-by-email?retryWrites=true&w=majority",
+        "name": "chess-by-email"
     }
 }

@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-var EnterGameView = View.extend({
+const EnterGameView = View.extend({
 
     initialize: function () {
 
@@ -15,16 +15,16 @@ var EnterGameView = View.extend({
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.CREATE_GAME_ERROR, this._createGameError);
         this.listenTo(this.eventHandler, this.eventHandler.messageNames.ENTER_GAME_ERROR, this._enterGameError);
         
-        var data = {
+        const data = {
             siteKey: this.config.getCaptchaPublicKey()
         };
         this.initTemplate('enterGame', data);
 
-        var self = this;
+        const self = this;
 
         // initalize the captcha
         if (this.config.isCaptchaEnabled()) {
-            var elem = document.createElement("script");
+            const elem = document.createElement("script");
             elem.src = "https://www.google.com/recaptcha/api.js";
             document.body.appendChild(elem);
         }
@@ -43,10 +43,10 @@ var EnterGameView = View.extend({
 
         // assign the click handler to the submit button
         this.$('#enterGameSubmitButton').click(function() {
-            var action = self.$("input[type='radio'][name='newOrExisting']:checked").val();
+            const action = self.$("input[type='radio'][name='newOrExisting']:checked").val();
             if (action === 'N') {
                 // new
-                var params = {};
+                const params = {};
                 params.player1Email = self.$('#player1Email').val().trim();
                 params.player2Email = self.$('#player2Email').val().trim();
                 if (window.grecaptcha) {
@@ -55,7 +55,7 @@ var EnterGameView = View.extend({
                 self.eventHandler.trigger(self.eventHandler.messageNames.CREATE_GAME, params);
             } else if (action === 'E') {
                 // existing
-                var gameID = self.$('#gameID').val().trim();
+                const gameID = self.$('#gameID').val().trim();
                 self.eventHandler.trigger(self.eventHandler.messageNames.ENTER_GAME, gameID, true);
             }
         });

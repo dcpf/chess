@@ -1,80 +1,73 @@
-'use strict';
+"use strict";
 
-var mongojs = require("mongojs");
+const { MongoClient, ObjectID } = require("mongodb");
 
-var databaseUrl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || GLOBAL.CONFIG.db.databaseUrl;
-var db = mongojs(databaseUrl, ['userPrefs'], {authMechanism: 'ScramSHA1'});
+const DB_NAME = GLOBAL.CONFIG.db.name;
+const USER_PREFS = "userPrefs";
 
-function setUserPref (email, name, value) {
+const databaseUrl = process.env.MONGODB_URI || GLOBAL.CONFIG.db.databaseUrl;
+const mongoClient = new MongoClient(databaseUrl, { useUnifiedTopology: true });
+mongoClient.connect();
 
-    var promise = new Promise((resolve, reject) => {
-        getUserPrefs(email)
-        .then((userPrefs) => {
-            userPrefs.prefs = userPrefs.prefs || {};
-            var id = userPrefs._id || null;
-            var modifyDate = new Date();
-            var createDate = userPrefs.createDate || modifyDate;
-            userPrefs.prefs[name] = _valueConverter(value);
-            var obj = {
-                _id: id,
-                createDate: createDate,
-                modifyDate: modifyDate,
-                email: email,
-                prefs: userPrefs.prefs
-            };
-            db.userPrefs.save(obj, (err, savedObj) => {
-                if (err) {
-                    reject(err);
-                } else if (!savedObj) {
-                    reject(new Error(`Error setting user pref for ${email}: ${name} = ${value}`));
-                } else {
-                    console.log(`Set user pref for ${email}: ${name} = ${value}`);
-                    resolve(userPrefs);
-                }
-            });
-        })
-        .catch((err) => {
-            reject(err);
-        });
-    });
-
-    return promise;
-
+function setUserPref(email, name, value) {
+  return new Promise((resolve, reject) => {
+    getUserPrefs(email)
+      .then((userPrefs) => {
+        userPrefs.prefs = userPrefs.prefs || {};
+        const modifyDate = new Date();
+        const createDate = userPrefs.createDate || modifyDate;
+        userPrefs.prefs[name] = _valueConverter(value);
+        const obj = {
+          createDate,
+          modifyDate,
+          email,
+          prefs: userPrefs.prefs,
+        };
+        mongoClient
+          .db(DB_NAME)
+          .collection(USER_PREFS)
+          .updateOne({ email }, { $set: obj }, { upsert: true })
+          .then((result) => {
+            console.log(`Set user pref for ${email}: ${name} = ${value}`);
+            resolve();
+          })
+          .catch((err) => {
+            reject(new Error(`Error setting user pref for ${email}: ${err.toString()}`));
+          });
+      });
+  });
 }
 
-function getUserPrefs (email) {
-    var promise = new Promise((resolve, reject) => {
-        if (email) {
-            db.userPrefs.findOne({email: email}, (err, userPrefs) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(userPrefs || {});
-                }
-            });
-        } else {
-            resolve({});
-        }
-    });
-    return promise;
+function getUserPrefs(email) {
+  return new Promise((resolve) => {
+    if (email) {
+      mongoClient
+        .db(DB_NAME)
+        .collection(USER_PREFS)
+        .findOne({ email })
+        .then((record) => {
+          resolve(record || {});
+        });
+    } else {
+      resolve({});
+    }
+  });
 }
 
 exports.setUserPref = setUserPref;
 exports.getUserPrefs = getUserPrefs;
 
 /**
-* Converts certain values into what we need in the JSON
-*/
-function _valueConverter (value) {
+ * Converts certain values into what we need in the JSON
+ */
+function _valueConverter(value) {
+  // convert boolean 'strings' to real booleans
+  if (value === "false") {
+    return false;
+  }
+  if (value === "true") {
+    return true;
+  }
 
-	// convert boolean 'strings' to real booleans
-	if (value === 'false') {
-		return false;
-	}
-	if (value === 'true') {
-		return true;
-	}
-
-	return value;
-
+  return value;
 }
