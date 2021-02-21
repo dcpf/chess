@@ -2,7 +2,7 @@
 
 module.exports = init;
 
-var events = {
+const events = {
     CONNECT: 'connect',
     JOIN: 'join',
     ONLINE: 'online',
@@ -16,8 +16,8 @@ var events = {
 */
 function init (server) {
     
-    var playerMap = {},
-        io = require('socket.io')(server);
+    const playerMap = {};
+    const io = require('socket.io')(server);
     
     io.on(events.CONNECT, (client) => {
         
@@ -25,8 +25,7 @@ function init (server) {
         // back to the calling client indicating whether their opponent is online or offline.
         client.on(events.JOIN, (data) => {
             
-            var playerEmail = data.playerEmail;
-            var opponentEmail = data.opponentEmail;
+            const { playerEmail, opponentEmail } = data;
             
             // Add the player's email to the playerMap
             playerMap[client.id] = playerEmail;
@@ -35,15 +34,15 @@ function init (server) {
             client.broadcast.emit(events.ONLINE, playerEmail);
             
             // If the player's opponent is online, send a message back to the client.
-            var opponentOnline = false;
-            for (var id in playerMap) {
-                var email = playerMap[id];
+            let opponentOnline = false;
+            for (let id in playerMap) {
+                const email = playerMap[id];
                 if (email && email === opponentEmail) {
                     opponentOnline = true;
                     break;
                 }
             }
-            var evt = (opponentOnline) ? events.ONLINE : events.OFFLINE;
+            const evt = (opponentOnline) ? events.ONLINE : events.OFFLINE;
             client.emit(evt, opponentEmail);
             
         });
