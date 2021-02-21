@@ -38,7 +38,7 @@
     "node": "12.13.1"
   },
   "scripts": {
-    "start": "node src/server/app.js --hostName 127.0.0.1 --port 8081 --usePortInLinks",
+    "start": "node src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
     "start-forever": "node_modules/forever/bin/forever start -c 'node --harmony' src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
     "stop-forever": "node_modules/forever/bin/forever stop src/server/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
