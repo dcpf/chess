@@ -23,11 +23,6 @@ var OpponentHasMovedDialogView = View.extend({
             self.$el.modal('hide');
         });
 
-        this.$('#dontUpdateBoardWithOpponentsMoveLink').click(function(event){
-            event.preventDefault();
-            self.$el.modal('hide');
-        });
-
     },
 
     _renderDialog: function (obj) {
