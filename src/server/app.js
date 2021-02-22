@@ -1,6 +1,6 @@
 'use strict';
 
-var cmndr = require('commander');
+const cmndr = require('commander');
 
 cmndr
   .option('-h, --hostName <hostName>', 'Specify the host name')
@@ -9,26 +9,25 @@ cmndr
   .option('-c, --configFile <configFile>', 'Specify a config file to use')
   .parse(process.argv);
 
-var fs = require('fs');
-var path = require('path');
+const fs = require('fs');
+const path = require('path');
 // instantiate the logger to reset all console logging functions to use log4js
 require('./logger');
-var appUrl = require('./model/appUrl');
+const appUrl = require('./model/appUrl');
 
 // before doing anything more, initialize the configuration
 initConfig();
 require('./emailHandler');
 
 // express and middleware
-var express = require('express');
-//var morgan = require('morgan');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
-var compression = require('compression');
-var errorHandler = require('errorhandler');
-var csrf = require('csurf');
+const express = require('express');
+const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const compression = require('compression');
+const errorHandler = require('errorhandler');
+const csrf = require('csurf');
 
 // Timestamp of when the app was started. We use this for caching javascript and css files in the browser.
 var runtimestamp = new Date().getTime();
@@ -50,7 +49,6 @@ app.use(compression());
 // /webapp is where grunt copies the static files to
 app.use('/webapp', express.static('webapp', { maxAge: 31536000000 }));
 
-//app.use(morgan());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride());

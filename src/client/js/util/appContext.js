@@ -100,7 +100,7 @@ var AppContext = function (configData) {
         if (!isExistingGame) {
             var playerEmail = userData.email;
             var opponentEmail = (gameStateData.whiteEmail === playerEmail) ? gameStateData.blackEmail : gameStateData.whiteEmail;
-            var socketIO = new SocketIO({
+            new SocketIO({
                 eventHandler: eventHandler,
                 url: config.getAppUrl(),
                 gameID: gameStateData.gameID,

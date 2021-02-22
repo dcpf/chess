@@ -1,14 +1,17 @@
-var SocketIO = function (attrs) {
+const SocketIO = function (attrs) {
 
-    var eventHandler = attrs.eventHandler,
+    // Socket protocol must match URL!
+    const url = attrs.url.replace(/^https?:/, location.protocol);
+
+    const eventHandler = attrs.eventHandler,
         gameID = attrs.gameID,
         playerEmail = attrs.playerEmail,
         opponentEmail = attrs.opponentEmail,
-        socket = window.io ? io.connect(attrs.url) : null,
+        socket = window.io ? io.connect(url) : null,
         listener = {};
 
     // Event name constants
-    var events = {
+    const events = {
         CONNECT: 'connect',
         JOIN: 'join',
         ONLINE: 'online',
