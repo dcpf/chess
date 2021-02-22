@@ -2,9 +2,9 @@
     "emailService": {
         "enabled": true,
         "serviceName": "Gmail",
-        "fromAddress": "dpfinator@gmail.com",
-        "user": "dpfinator",
-        "pass": "DPF1na+0r"
+        "fromAddress": "dpfchess@gmail.com",
+        "user": "dpfchess",
+        "pass": "hlao-r00g"
     },
     "recaptcha": {
         "enabled": false,
