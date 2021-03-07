@@ -5,5 +5,5 @@
 /**
 * model: {pieceId: 'WP35'}
 */
-var CapturedPieces = Backbone.Collection.extend({
+const CapturedPieces = Backbone.Collection.extend({
 });

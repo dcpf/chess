@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-var AppContext = function (configData) {
+const AppContext = function (configData) {
 
     var enterScreenContext;
     var gameContext;

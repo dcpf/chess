@@ -1,4 +1,4 @@
-var View = Backbone.View.extend({
+const View = Backbone.View.extend({
 
     // Get the template's HTML and attach it to the parent element
     initTemplate: function (templateId, data) {
@@ -18,7 +18,7 @@ var View = Backbone.View.extend({
     */
     _attachTemplate: function (templateId, data) {
         data = data || {};
-        var template = templates.JST[templateId](data);
+        const template = templates.JST[templateId](data);
         this.$el = $(template);
     }
 

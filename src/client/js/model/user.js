@@ -11,7 +11,7 @@ Model is in the format:
     }
 }
 */
-var User = Backbone.Model.extend({
+const User = Backbone.Model.extend({
     
     getEmail: function () {
         return this.get('email');
@@ -29,7 +29,7 @@ var User = Backbone.Model.extend({
     * Toggle showLegalMovesEnabled from true to false or visa-versa
     */
     toggleShowLegalMovesEnabled: function () {
-        var bool = !this.isShowLegalMovesEnabled();
+        const bool = !this.isShowLegalMovesEnabled();
 		this.get('prefs').showLegalMovesEnabled = bool;
 		this._updateUserPrefs('showLegalMovesEnabled', bool);
     },

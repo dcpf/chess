@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
-var PlayerInfoView = View.extend({
+const PlayerInfoView = View.extend({
 
     initialize: function () {
         
@@ -11,7 +11,7 @@ var PlayerInfoView = View.extend({
         this.eventHandler = this.options.eventHandler;
         this.gameState = this.options.gameState;
 
-        var data = {
+        const data = {
             whiteEmail: this.gameState.getWhiteEmail(),
             blackEmail: this.gameState.getBlackEmail()
         };
@@ -38,7 +38,7 @@ var PlayerInfoView = View.extend({
     * Update/render the online status indicator and show a tertiary tooltip.
     */
     _updateOnlineStatus: function (email, status) {
-        var self = this,
+        const self = this,
             $elem = this.$('div:contains(' + email + ') > [class~="onlineStatus"]');
         $elem.removeClass('online offline');
         $elem.addClass(status);

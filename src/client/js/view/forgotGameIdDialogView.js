@@ -5,7 +5,7 @@
 /*
 * View controller for rendering the 'forgot game ID' dialog
 */
-var ForgotGameIdDialogView = View.extend({
+const ForgotGameIdDialogView = View.extend({
 
     initialize: function () {
 

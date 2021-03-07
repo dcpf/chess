@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
-var OptionsMenuView = View.extend({
+const OptionsMenuView = View.extend({
 
     initialize: function () {
 
@@ -12,8 +12,8 @@ var OptionsMenuView = View.extend({
         
         this.initTemplate('optionsMenu');
 
-        var duration = 200,
-            self = this;
+        const duration = 200;
+        const self = this;
 
         self.$('#optionsMenuIcon').click(function() {
             if (self.user.getEmail()) {
@@ -29,7 +29,7 @@ var OptionsMenuView = View.extend({
         self.$('#showLegalMovesOption a').click(function(event) {
             event.preventDefault();
             self.user.toggleShowLegalMovesEnabled();
-            var showLegalMovesValueElement = self.$('#showLegalMovesValue');
+            const showLegalMovesValueElement = self.$('#showLegalMovesValue');
             showLegalMovesValueElement.fadeOut(duration, function() {
                 showLegalMovesValueElement.text(self._getShowLegalMovesDisplayValue());
                 showLegalMovesValueElement.fadeIn(duration, function() {

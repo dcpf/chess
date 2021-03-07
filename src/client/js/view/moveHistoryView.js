@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
-var MoveHistoryView = View.extend({
+const MoveHistoryView = View.extend({
 
     events: {
         'click .moveHistoryLink': '_handleMoveHistoryLinkClick',

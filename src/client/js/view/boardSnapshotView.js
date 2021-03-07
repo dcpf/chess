@@ -5,7 +5,7 @@
 /*
 * Child of BoardView with the sole purpose of rendering the board in 'view only' mode in a dialog.
 */
-var BoardSnapshotView = BoardView.extend({
+const BoardSnapshotView = BoardView.extend({
 
     initialize: function () {
 

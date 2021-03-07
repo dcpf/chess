@@ -12,7 +12,7 @@ Model is in the format:
     "appUrl": "http://my.domain.com:8080"
 }
 */
-var Config = Backbone.Model.extend({
+const Config = Backbone.Model.extend({
     
     isCaptchaEnabled: function () {
         return this.get('recaptcha').enabled;

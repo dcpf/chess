@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-var NotationConverter = function () {
+const NotationConverter = function () {
 
     this.letters = ['a','b','c','d','e','f','g','h'];
     this.rowNums = [8,7,6,5,4,3,2,1];

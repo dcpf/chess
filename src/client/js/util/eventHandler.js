@@ -2,10 +2,10 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-var EventHandler = function () {
+const EventHandler = function () {
 
 	// this is the object we'll return
-	var obj = {
+	let obj = {
 		// defined below using prototype
 		messageNames: this.messageNames
 	};

@@ -96,7 +96,7 @@ module.exports = function(grunt) {
             // Wrap the compiled templates in a function
             templates: {
                 options: {
-                    banner: "var Templates = function(){\n",
+                    banner: "const Templates = function(){\n",
                     footer: "\n};\n"
                 },
                 src: ['build/compiledTemplates.js'],

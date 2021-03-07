@@ -2,11 +2,11 @@
 * Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
-var OpponentHasMovedDialogView = View.extend({
+const OpponentHasMovedDialogView = View.extend({
 
     initialize: function () {
 
-        var self = this;
+        const self = this;
 
         // set the passed-in options
         // set the passed-in options

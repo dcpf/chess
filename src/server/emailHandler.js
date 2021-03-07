@@ -1,14 +1,14 @@
 'use strict';
 
-var path = require('path');
-var templateHandler = require('./templateHandler');
-var nodemailer = require('nodemailer/lib/nodemailer');
-var eventEmitter = require('./eventEmitter');
+const path = require('path');
+const templateHandler = require('./templateHandler');
+const nodemailer = require('nodemailer/lib/nodemailer');
+const eventEmitter = require('./eventEmitter');
 
-var emailServiceConfig = global.CONFIG.emailService;
-var emailSrcDir = path.join(__dirname, 'email');
+const emailServiceConfig = global.CONFIG.emailService;
+const emailSrcDir = path.join(__dirname, 'email');
 
-var mailTransport;
+let mailTransport;
 if (emailServiceConfig.enabled) {
     mailTransport = createMailTransport();
 } else {
@@ -27,9 +27,9 @@ eventEmitter.on(eventEmitter.messages.SEND_FEEDBACK_NOTIFICATION, sendFeedbackEm
 
 function sendGameCreationEmail (player1Email, player2Email, gameID) {
 
-	var html = templateHandler.processTemplate(`${emailSrcDir}/player1Email.html`, {
-		player1Email: player1Email,
-		player2Email: player2Email,
+	const html = templateHandler.processTemplate(`${emailSrcDir}/player1Email.html`, {
+		player1Email,
+		player2Email,
 		gameID: gameID.compositeID,
 		gameUrl: _buildGameUrl(gameID)
 	});
@@ -38,7 +38,7 @@ function sendGameCreationEmail (player1Email, player2Email, gameID) {
 		from: emailServiceConfig.fromAddress,
 		to: player1Email,
 		subject: 'New Chess Game',
-		html: html
+		html
 	});
 
 	console.log(`Sent game creation email to ${player1Email} with gameID: ${gameID.compositeID}`);
@@ -47,13 +47,13 @@ function sendGameCreationEmail (player1Email, player2Email, gameID) {
 
 function sendInviteEmail (gameObj, gameID, move) {
     
-    var player1Email = gameObj.W.email;
-    var player2Email = gameObj.B.email;
+  const player1Email = gameObj.W.email;
+  const player2Email = gameObj.B.email;
     
-	var html = templateHandler.processTemplate(`${emailSrcDir}/player2InviteEmail.html`, {
-		player1Email: player1Email,
+	const html = templateHandler.processTemplate(`${emailSrcDir}/player2InviteEmail.html`, {
+		player1Email,
 		gameID: gameID.compositeID,
-		move: move,
+		move,
 		gameUrl: _buildGameUrl(gameID)
 	});
 
@@ -61,7 +61,7 @@ function sendInviteEmail (gameObj, gameID, move) {
 		from: emailServiceConfig.fromAddress,
 		to: player2Email,
 		subject: 'You have been invited to play a game of chess',
-		html: html
+		html
 	});
 
 	console.log(`Sent game invitation email to ${player2Email} with gameID: ${gameID.compositeID}`);
@@ -70,8 +70,8 @@ function sendInviteEmail (gameObj, gameID, move) {
 
 function sendMoveNotificationEmail (playerEmail, gameID, move) {
 
-	var html = templateHandler.processTemplate(`${emailSrcDir}/moveNotificationEmail.html`, {
-		move: move,
+	const html = templateHandler.processTemplate(`${emailSrcDir}/moveNotificationEmail.html`, {
+		move,
 		gameUrl: _buildGameUrl(gameID),
 		appUrl: global.APP_URL.url
 	});
@@ -80,7 +80,7 @@ function sendMoveNotificationEmail (playerEmail, gameID, move) {
 		from: emailServiceConfig.fromAddress,
 		to: playerEmail,
 		subject: 'Your opponent awaits your next move',
-		html: html
+		html
 	});
 
 	console.log(`Sent move notification email to ${playerEmail}`);
@@ -93,15 +93,12 @@ function sendMoveNotificationEmail (playerEmail, gameID, move) {
 */
 function sendForgotGameIdEmail (email, games) {
 
-  var numGames = games.length,
-      game,
-      gameID,
-      gameArray = [],
-      i;
+  const numGames = games.length;
+  const gameArray = [];
 
-  for (i = 0; i < numGames; i++) {
-    game = games[i];
-    gameID = game.gameID;
+  for (let i = 0; i < numGames; i++) {
+    const game = games[i];
+    const gameID = game.gameID;
     gameArray.push(
       {
         id: gameID.compositeID,
@@ -112,16 +109,16 @@ function sendForgotGameIdEmail (email, games) {
     );
   }
 
-  var html = templateHandler.processTemplate(`${emailSrcDir}/forgotGameIdEmail.html`, {
-    email: email,
-    gameArray: gameArray
+  const html = templateHandler.processTemplate(`${emailSrcDir}/forgotGameIdEmail.html`, {
+    email,
+    gameArray
   });
 
   mailTransport.sendMail({
     from: emailServiceConfig.fromAddress,
     to: email,
     subject: `Chess games for ${email}`,
-    html: html
+    html
   });
 
   console.log(`Sent forgot gameID email to ${email}`);
@@ -135,15 +132,15 @@ function sendFeedbackEmail (data) {
     data.feedback = data.feedback.substring(0, 1000);
   }
 
-  var html = templateHandler.processTemplate(emailSrcDir + 'feedback.html', {
-    data: data
+  const html = templateHandler.processTemplate(emailSrcDir + 'feedback.html', {
+    data
   });
 
   mailTransport.sendMail({
     from: emailServiceConfig.fromAddress,
     to: emailServiceConfig.fromAddress,
     subject: 'Chess Feedback',
-    html: html
+    html
   });
 
   console.log(`Sent feedback email to ${emailServiceConfig.fromAddress}`);

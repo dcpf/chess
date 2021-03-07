@@ -2,12 +2,12 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-var MessagesView = Backbone.View.extend({
+const MessagesView = Backbone.View.extend({
 
     initialize: function () {
 
         // set the passed-in options
-        var parent = this.options.parent;
+        let parent = this.options.parent;
         this.eventHandler = this.options.eventHandler;
         this.board = this.options.board;
 
@@ -34,7 +34,7 @@ var MessagesView = Backbone.View.extend({
     },
 
     _renderCheckmateMessage: function () {
-        var winner = (this.board.currentPlayer === 'W') ? 'Black' : 'White';
+        const winner = (this.board.currentPlayer === 'W') ? 'Black' : 'White';
         this.$el.html('Checkmate! ' + winner + ' wins!!');
     }
 

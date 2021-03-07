@@ -14,7 +14,7 @@ Model is in the format:
     "error": ""
 }
 */
-var GameState = Backbone.Model.extend({
+const GameState = Backbone.Model.extend({
     
     getGameID: function () {
         return this.get('gameID');

@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
-var ConfirmMoveDialogView = View.extend({
+const ConfirmMoveDialogView = View.extend({
 
     initialize: function () {
         

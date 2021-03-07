@@ -2,13 +2,13 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-var Piece = Backbone.Model.extend({
+const Piece = Backbone.Model.extend({
 
     initialize: function () {
         if (!this.id) {
             return null;
         }
-        var array = this.id.split('');
+        const array = this.id.split('');
         if (!array || array.length !== 4 || (array[0] !== 'W' && array[0] !== 'B')) {
             return null;
         }

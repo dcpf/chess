@@ -5,7 +5,7 @@
 /*
 * Represents the board, piece positions, and all logic regarding chess rules, legal moves, etc.
 */
-var Board = Backbone.Model.extend({
+const Board = Backbone.Model.extend({
 
     initialize: function (attrs) {
 

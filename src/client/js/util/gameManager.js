@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2013 dpf, dpf@theworld.com
 */
 
-var GameManager = function (attrs) {
+const GameManager = function (attrs) {
 
     var obj = {
 

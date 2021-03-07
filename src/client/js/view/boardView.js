@@ -2,7 +2,7 @@
 * Copyright (c) 2000 - 2014 dpf, dpf@theworld.com
 */
 
-var BoardView = View.extend({
+const BoardView = View.extend({
 
     // Variable to track the piece being moved. Normally, we would use the dataTransfer object, but that does not appear to work properly.
     pieceInMotion: '',

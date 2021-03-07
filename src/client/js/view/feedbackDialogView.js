@@ -5,7 +5,7 @@
 /*
 * View controller for rendering the feedback dialog
 */
-var FeedbackDialogView = View.extend({
+const FeedbackDialogView = View.extend({
 
     initialize: function () {
 

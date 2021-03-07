@@ -5,7 +5,7 @@
 /*
 * View controller for rendering misc dialogs
 */
-var GenericDialogView = View.extend({
+const GenericDialogView = View.extend({
 
     initialize: function () {
         
