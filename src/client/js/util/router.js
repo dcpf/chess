@@ -15,7 +15,7 @@ const Router = Backbone.Router.extend({
     //
     
     enterScreen: function () {
-        var gameID = this._getGameIdFromURL();
+        const gameID = this._getGameIdFromURL();
         if (gameID) {
             this.gameManager.enterGame(gameID);
         } else {
@@ -45,15 +45,15 @@ const Router = Backbone.Router.extend({
     * to continue to support it for backwards compatability.
     */
     _getGameIdFromURL: function () {
-        var gameID;
-        var queryString = window.location.search;
+        let gameID;
+        let queryString = window.location.search;
         if (queryString) {
             queryString = queryString.replace(/^\?/, '');
-            var pairs = queryString.split('&');
+            const pairs = queryString.split('&');
             if (pairs) {
-                for (var i = 0; i < pairs.length; i++) {
-                    var pair = pairs[i].split('=');
-                    var key = pair[0];
+                for (let i = 0; i < pairs.length; i++) {
+                    const pair = pairs[i].split('=');
+                    const key = pair[0];
                     if (key === 'gameID') {
                         gameID = pair[1];
                         break;
