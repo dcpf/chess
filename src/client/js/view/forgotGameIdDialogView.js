@@ -17,9 +17,9 @@ const ForgotGameIdDialogView = View.extend({
 
         this.initDialog('forgotGameIdDialog');
 
-        var self = this;
+        const self = this;
         self.$('#forgotGameIdSubmitButton').click(function() {
-          var email = self.$("#forgotGameIdEmail").val();
+          const email = self.$("#forgotGameIdEmail").val();
           self.eventHandler.trigger(self.eventHandler.messageNames.FIND_GAMES_BY_EMAIL, email);
         });
 

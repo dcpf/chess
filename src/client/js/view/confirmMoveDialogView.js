@@ -17,20 +17,19 @@ const ConfirmMoveDialogView = View.extend({
 
     _render: function (moveNotations) {
 
-        var self = this;
-        var possibleMoves = [];
-        var i;
+        const self = this;
+        const possibleMoves = [];
 
-        for (i in moveNotations) {
-            var notation = moveNotations[i];
-            var moveLink = $('<a>').attr({href: '#'}).append(notation).click(self._generateConfirmMoveClickHandlerFunction(notation));
+        for (let i in moveNotations) {
+            const notation = moveNotations[i];
+            const moveLink = $('<a>').attr({href: '#'}).append(notation).click(self._generateConfirmMoveClickHandlerFunction(notation));
             possibleMoves.push(moveLink);
         }
 
-        var cancelLink = $('<a>').attr({href: '#'}).append('Cancel').click(function(){self._cancelMove(); return false;});
+        const cancelLink = $('<a>').attr({href: '#'}).append('Cancel').click(function(){self._cancelMove(); return false;});
         possibleMoves.push(cancelLink);
-        var ul = $('<ul>');
-        for (i in possibleMoves) {
+        const ul = $('<ul>');
+        for (let i in possibleMoves) {
             $(ul).append($('<li>').append(possibleMoves[i]));
         }
 
@@ -44,7 +43,7 @@ const ConfirmMoveDialogView = View.extend({
     * Generate the click handler function for a link in the 'confirm move' dialog 
     */
     _generateConfirmMoveClickHandlerFunction: function (notation) {
-        var self = this;
+        const self = this;
         return function () {
             self._confirmMove(notation);
             return false;

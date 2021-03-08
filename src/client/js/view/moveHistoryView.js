@@ -29,7 +29,7 @@ const MoveHistoryView = View.extend({
     _updateMoveHistory: function () {
 
         // first, see how many moves are in the history
-        var numMoves = this.moveHistory.models.length;
+        const numMoves = this.moveHistory.models.length;
 
         // if two or more moves, show the auto-replay link
         if (numMoves > 1) {
@@ -37,13 +37,13 @@ const MoveHistoryView = View.extend({
         }
 
         // get the latest move from the history, and update the table
-        var index = numMoves - 1;
-        var notation = this.moveHistory.models[index].attributes.notation;
-        var cell = '<td class="moveHistoryLink ' + index + '">' + notation + '</td>';
+        const index = numMoves - 1;
+        const notation = this.moveHistory.models[index].attributes.notation;
+        const cell = '<td class="moveHistoryLink ' + index + '">' + notation + '</td>';
         if (index === 0 || index % 2 === 0) {
             // white's move
-            var count = (parseInt(index, 10) + 2)/2;
-            var html = '<tr><td style="text-align: right">' + count + '</td>' + cell + '</tr>';
+            const count = (parseInt(index, 10) + 2)/2;
+            const html = '<tr><td style="text-align: right">' + count + '</td>' + cell + '</tr>';
             this.$('#moveHistoryTable tr:last').after(html);
             this.$('#moveHistoryTable th:eq(1)').removeClass('currentPlayer');
             this.$('#moveHistoryTable th:eq(2)').addClass('currentPlayer');
@@ -60,11 +60,11 @@ const MoveHistoryView = View.extend({
     * Publish a message when a moveHistory link is clicked
     */
     _handleMoveHistoryLinkClick: function (e) {
-        var $obj = $(e.target);
-        var cssClass = $obj.attr('class');
+        const $obj = $(e.target);
+        const cssClass = $obj.attr('class');
         // The css class should be in the form 'moveHistoryLink #', where # is the move number.
         // We'll grab that, and pass it as an arg with the message.
-        var index = cssClass.split(' ')[1];
+        const index = cssClass.split(' ')[1];
         this.eventHandler.trigger(this.eventHandler.messageNames.MOVE_HISTORY_LINK_CLICKED, index);
         return false;
     },
