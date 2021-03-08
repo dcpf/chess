@@ -30,11 +30,11 @@ const errorHandler = require('errorhandler');
 const csrf = require('csurf');
 
 // Timestamp of when the app was started. We use this for caching javascript and css files in the browser.
-var runtimestamp = new Date().getTime();
+const runtimestamp = new Date().getTime();
 
 // Create the express app and socket.io object
-var app = express();
-var server = require('http').Server(app);
+const app = express();
+const server = require('http').Server(app);
 require('./socket.io.js')(server);
 
 // all environments
@@ -71,7 +71,7 @@ app.use((req, res, next) => {
     res.responseProps = {};
     
     // Get the passed in params (for either GET, POST or route params), and make them available via req.getParam() and req.getParams()
-    var params = {};
+    let params = {};
     if (req.method === 'POST') {
         params = req.body;
     } else if (req.method === 'GET') {
@@ -82,7 +82,7 @@ app.use((req, res, next) => {
     };
     req.getParams = () => {
         // add everything from req.params to params
-        for (var name in req.params) {
+        for (let name in req.params) {
             if (!params[name]) {
                 params[name] = req.params[name];
             }
@@ -96,10 +96,10 @@ app.use((req, res, next) => {
 
 // log all requests
 app.use((req, res, next) => {
-    var start = new Date();
+    const start = new Date();
     console.log(`${req.method} ${req.url}; IP: ${req.connection.remoteAddress}; User-agent: ${req.headers['user-agent']}`);
     res.on('finish', () => {
-        var duration = new Date() - start;
+        const duration = new Date() - start;
         console.log(`${req.method} ${req.url}; IP: ${req.connection.remoteAddress}; Execution time: ${duration} ms`);
     });
     next();
@@ -110,7 +110,7 @@ app.use((req, res, next) => {
 //
 
 // game end-points
-var routes = require('./routes');
+const routes = require('./routes');
 app.get('/', routes.index);
 app.get('/play/*', routes.index);
 app.post('/findGamesByEmail', routes.findGamesByEmail);
@@ -133,8 +133,8 @@ server.listen(global.APP_URL.port, () => {
 function initConfig () {
 
 	// Read the config file and make the config object globally available
-	var configFile = cmndr.configFile || path.join(__dirname, 'conf/config.json');
-	var config = {};
+	const configFile = cmndr.configFile || path.join(__dirname, 'conf/config.json');
+	let config = {};
 	try {
 		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
         console.log(`Initialized config file: ${configFile}`);
@@ -144,8 +144,8 @@ function initConfig () {
 	global.CONFIG = config;
 
     // Set the global appUrl object using the host name and port from either the passed-in args or the env vars.
-    var hostName = cmndr.hostName || process.env.DOMAIN;
-    var port = cmndr.port || process.env.PORT;
+    const hostName = cmndr.hostName || process.env.DOMAIN;
+    const port = cmndr.port || process.env.PORT;
     global.APP_URL = appUrl.constructUrl(hostName, port, cmndr.usePortInLinks);
 
 }
@@ -158,7 +158,7 @@ After handling the route, send the response. Based on what's in res.responseProp
 */
 function sendResponse (req, res) {
     
-    var responseProps = res.responseProps;
+    const { responseProps } = res;
     
     if (responseProps.promise) {
         responseProps.promise.then((obj) => {
@@ -168,7 +168,7 @@ function sendResponse (req, res) {
             res.status(500).send(err.message);
         });
     } else if (responseProps.file) {
-        var obj = responseProps.obj || {};
+        const obj = responseProps.obj || {};
         // add the runtimestamp for versioning css and javascript
         obj.runtimestamp = runtimestamp;
         // set layout to false
