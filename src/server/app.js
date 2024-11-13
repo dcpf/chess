@@ -3,11 +3,11 @@
 const cmndr = require('commander');
 
 cmndr
-  .option('-h, --hostName <hostName>', 'Specify the host name')
-  .option('-p, --port <port>', 'Specify the port')
-  .option('-u, --usePortInLinks', 'Include the port in the game URL in the emails')
-  .option('-c, --configFile <configFile>', 'Specify a config file to use')
-  .parse(process.argv);
+	.option('-h, --hostName <hostName>', 'Specify the host name')
+	.option('-p, --port <port>', 'Specify the port')
+	.option('-u, --usePortInLinks', 'Include the port in the game URL in the emails')
+	.option('-c, --configFile <configFile>', 'Specify a config file to use')
+	.parse(process.argv);
 
 const fs = require('fs');
 const path = require('path');
@@ -50,59 +50,59 @@ app.use(compression());
 app.use('/webapp', express.static('webapp', { maxAge: 31536000000 }));
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());
 // cookieParser should be before session
 app.use(cookieParser());
-app.use(session({resave: true, saveUninitialized: true, secret: 'jellyJam'}));
+app.use(session({ resave: true, saveUninitialized: true, secret: 'jellyJam' }));
 
 app.disable('x-powered-by');
 
 // set up some things we need for the app
 app.use((req, res, next) => {
-    
-    /*
-    Create a responseProps object on the response object to hold app-specific response properties. Valid attrs are:
-    - responseProps.promise - Promise returned by the router/controller
-    - responseProps.obj - JSON object to be passed back to the client 
-    - responseProps.error - Error to be passed to client the client 
-    - responseProps.file - File to render
-    */
-    res.responseProps = {};
-    
-    // Get the passed in params (for either GET, POST or route params), and make them available via req.getParam() and req.getParams()
-    let params = {};
-    if (req.method === 'POST') {
-        params = req.body;
-    } else if (req.method === 'GET') {
-        params = req.query;
-    }
-    req.getParam = (name) => {
-        return params[name] || req.params[name];
-    };
-    req.getParams = () => {
-        // add everything from req.params to params
-        for (let name in req.params) {
-            if (!params[name]) {
-                params[name] = req.params[name];
-            }
-        }
-        return params;
-    };
-    
-    next();
-    
+
+	/*
+	Create a responseProps object on the response object to hold app-specific response properties. Valid attrs are:
+	- responseProps.promise - Promise returned by the router/controller
+	- responseProps.obj - JSON object to be passed back to the client 
+	- responseProps.error - Error to be passed to client the client 
+	- responseProps.file - File to render
+	*/
+	res.responseProps = {};
+
+	// Get the passed in params (for either GET, POST or route params), and make them available via req.getParam() and req.getParams()
+	let params = {};
+	if (req.method === 'POST') {
+		params = req.body;
+	} else if (req.method === 'GET') {
+		params = req.query;
+	}
+	req.getParam = (name) => {
+		return params[name] || req.params[name];
+	};
+	req.getParams = () => {
+		// add everything from req.params to params
+		for (const name in req.params) {
+			if (!params[name]) {
+				params[name] = req.params[name];
+			}
+		}
+		return params;
+	};
+
+	next();
+
 });
 
 // log all requests
 app.use((req, res, next) => {
-    const start = new Date();
-    console.log(`${req.method} ${req.url}; IP: ${req.connection.remoteAddress}; User-agent: ${req.headers['user-agent']}`);
-    res.on('finish', () => {
-        const duration = new Date() - start;
-        console.log(`${req.method} ${req.url}; IP: ${req.connection.remoteAddress}; Execution time: ${duration} ms`);
-    });
-    next();
+	const start = new Date();
+	console.log(`${req.method} ${req.url}; IP: ${req.connection.remoteAddress}; User-agent: ${req.headers['user-agent']}`);
+	res.on('finish', () => {
+		const duration = new Date() - start;
+		console.log(`${req.method} ${req.url}; IP: ${req.connection.remoteAddress}; Execution time: ${duration} ms`);
+	});
+	next();
 });
 
 //
@@ -125,30 +125,30 @@ app.post('/logClientError', routes.logClientError);
 app.use(sendResponse);
 
 server.listen(global.APP_URL.port, () => {
-    console.log(`Express server listening on ${global.APP_URL.url}`);
+	console.log(`Express server listening on ${global.APP_URL.url}`);
 });
 
 // private functions
 
-function initConfig () {
+function initConfig() {
 
 	// Read the config file and make the config object globally available
 	const configFile = cmndr.configFile || path.join(__dirname, 'conf/config.json');
 	let config = {};
 	try {
-		config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf8'}));
-        console.log(`Initialized config file: ${configFile}`);
+		config = JSON.parse(fs.readFileSync(configFile, { encoding: 'utf8' }));
+		console.log(`Initialized config file: ${configFile}`);
 	} catch (err) {
 		console.warn(`No config file found at: ${configFile}. Starting with no configuration.`);
 	}
 	global.CONFIG = config;
 
-    // Set the global appUrl object using the host name and port from either the passed-in args or the env vars.
-    const hostName = cmndr.hostName || process.env.DOMAIN;
-    const port = cmndr.port || process.env.PORT;
-    global.APP_URL = appUrl.constructUrl(hostName, port, cmndr.usePortInLinks);
+	// Set the global appUrl object using the host name and port from either the passed-in args or the env vars.
+	const hostName = cmndr.hostName || process.env.DOMAIN;
+	const port = cmndr.port || process.env.PORT;
+	global.APP_URL = appUrl.constructUrl(hostName, port, cmndr.usePortInLinks);
 
-}
+};
 
 /**
 After handling the route, send the response. Based on what's in res.responseProps, we will do one of the following:
@@ -156,38 +156,38 @@ After handling the route, send the response. Based on what's in res.responseProp
 - responseProps.file: Render an HTML file
 - other: Send responseProps.obj to the client
 */
-function sendResponse (req, res) {
-    
-    const { responseProps } = res;
-    
-    if (responseProps.promise) {
-        responseProps.promise.then((obj) => {
-            res.send(obj);
-        }).catch((err) => {
-            console.error(err.toString());
-            res.status(500).send(err.message);
-        });
-    } else if (responseProps.file) {
-        const obj = responseProps.obj || {};
-        // add the runtimestamp for versioning css and javascript
-        obj.runtimestamp = runtimestamp;
-        // set layout to false
-        obj.layout = false;
-        // set no-cache headers
-        res.set({
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-        });
-        // add the CSRF token if it exists
-        if (req.csrfToken) {
-            obj.csrfToken = req.csrfToken();
-        }
-        // render
-        res.render(responseProps.file, obj);
-    } else {
-        responseProps.obj = responseProps.obj || {};
-        res.send(responseProps.obj);
-    }
-    
-}
+function sendResponse(req, res) {
+
+	const { responseProps } = res;
+
+	if (responseProps.promise) {
+		responseProps.promise.then((obj) => {
+			res.send(obj);
+		}).catch((err) => {
+			console.error(err.toString());
+			res.status(500).send(err.message);
+		});
+	} else if (responseProps.file) {
+		const obj = responseProps.obj || {};
+		// add the runtimestamp for versioning css and javascript
+		obj.runtimestamp = runtimestamp;
+		// set layout to false
+		obj.layout = false;
+		// set no-cache headers
+		res.set({
+			'Cache-Control': 'no-cache, no-store, must-revalidate',
+			'Pragma': 'no-cache',
+			'Expires': '0'
+		});
+		// add the CSRF token if it exists
+		if (req.csrfToken) {
+			obj.csrfToken = req.csrfToken();
+		}
+		// render
+		res.render(responseProps.file, obj);
+	} else {
+		responseProps.obj = responseProps.obj || {};
+		res.send(responseProps.obj);
+	}
+
+};

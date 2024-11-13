@@ -3,6 +3,28 @@
   "version": "0.0.0",
   "description": "Dave's Chess By Email",
   "main": "/",
+  "author": "David Piersol-Freedman",
+  "license": "BSD-2-Clause",
+  "engines": {
+    "node": "12.13.1"
+  },
+  "bugs": {
+    "url": "https://github.com/dcpf/chess/issues"
+  },
+  "homepage": "https://github.com/dcpf/chess",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dcpf/chess.git"
+  },
+  "scripts": {
+    "build": "grunt deploy",
+    "devbuild": "grunt dev",
+    "start": "node src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
+    "devstart": "node src/server/app.js --hostName 127.0.0.1 --port 8081 --usePortInLinks",
+    "start-forever": "node_modules/forever/bin/forever start -c 'node --harmony' src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
+    "stop-forever": "node_modules/forever/bin/forever stop src/server/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
     "body-parser": "^1.13.0",
     "commander": "^2.3.0",
@@ -33,27 +55,5 @@
     "uinexpress": "^0.0.5",
     "underscore": "^1.8.0",
     "validator": "^3.19.0"
-  },
-  "engines": {
-    "node": "12.13.1"
-  },
-  "scripts": {
-    "build": "grunt deploy",
-    "devbuild": "grunt dev",
-    "start": "node src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
-    "devstart": "node src/server/app.js --hostName 127.0.0.1 --port 8081 --usePortInLinks",
-    "start-forever": "node_modules/forever/bin/forever start -c 'node --harmony' src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
-    "stop-forever": "node_modules/forever/bin/forever stop src/server/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/dcpf/chess.git"
-  },
-  "author": "David Piersol-Freedman",
-  "license": "BSD-2-Clause",
-  "bugs": {
-    "url": "https://github.com/dcpf/chess/issues"
-  },
-  "homepage": "https://github.com/dcpf/chess"
+  }
 }

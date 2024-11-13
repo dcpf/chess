@@ -1,18 +1,18 @@
 {
-    "emailService": {
-        "enabled": true,
-        "serviceName": "Gmail",
-        "fromAddress": "dpfchess@gmail.com",
-        "user": "dpfchess",
-        "pass": "hlao-r00g"
-    },
-    "recaptcha": {
-        "enabled": false,
-        "verifyUrl": "https://www.google.com/recaptcha/api/siteverify",
-        "publicKey": "6Lee-f4SAAAAAOL4TAcX3qfPv1Ru0wjbOz7x39ba",
-        "privateKey": "6Lee-f4SAAAAAPW3KAWGevBYFW5s6nSfTx0szcd-"
-    },
-    "db": {
-        "databaseUrl": "mongodb+srv://chess-by-email:ch355@cluster0.sucsb.mongodb.net/chess-by-email?retryWrites=true&w=majority"
-    }
+	"emailService": {
+		"enabled": true,
+		"serviceName": "Gmail",
+		"fromAddress": "dpfchess@gmail.com",
+		"user": "dpfchess",
+		"pass": "hlao-r00g"
+	},
+	"recaptcha": {
+		"enabled": false,
+		"verifyUrl": "https://www.google.com/recaptcha/api/siteverify",
+		"publicKey": "6Lee-f4SAAAAAOL4TAcX3qfPv1Ru0wjbOz7x39ba",
+		"privateKey": "6Lee-f4SAAAAAPW3KAWGevBYFW5s6nSfTx0szcd-"
+	},
+	"db": {
+		"databaseUrl": "mongodb://localhost:27017"
+	}
 }

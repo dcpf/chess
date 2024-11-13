@@ -11,22 +11,22 @@
 
 exports.getGameID = (id, key) => {
 
-    const obj = {};
+  const obj = {};
 
-    if (key) {
-      obj.id = id;
-      obj.key = key;
-      obj.compositeID = id + '-' + key;
-    } else {
-      try {
-        const parts = id.split('-');
-        obj.id = parts[0];
-        obj.key = parts[1];
-        obj.compositeID = id;
-      } catch (err) {
-        throw(new Error(`Invalid game ID: ${id}`));
-      }
+  if (key) {
+    obj.id = id;
+    obj.key = key;
+    obj.compositeID = id + '-' + key;
+  } else {
+    try {
+      const parts = id.split('-');
+      obj.id = parts[0];
+      obj.key = parts[1];
+      obj.compositeID = id;
+    } catch (err) {
+      throw (new Error(`Invalid game ID: ${id}`));
     }
+  }
 
-    return obj;
+  return obj;
 };
