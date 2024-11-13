@@ -26,8 +26,6 @@ const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const compression = require('compression');
-const errorHandler = require('errorhandler');
-const csrf = require('csurf');
 
 // Timestamp of when the app was started. We use this for caching javascript and css files in the browser.
 const runtimestamp = new Date().getTime();

@@ -1,6 +1,5 @@
 'use strict';
 
-const fs = require('fs');
 const moment = require('moment');
 const gameIdFactory = require('./model/mongoGameIdFactory');
 const gameDao = require('./dao/mongoGameDAO');
