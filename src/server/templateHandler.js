@@ -6,7 +6,7 @@ const _ = require('underscore/underscore');
 const templateCache = {};
 
 exports.processTemplate = function (filename, attrs) {
-	const template = templateCache[filename];
+	let template = templateCache[filename];
 	if (!template) {
 		console.log(`Getting ${filename} template from disk`);
 		const file = fs.readFileSync(filename, {encoding: 'utf8'});
