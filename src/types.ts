@@ -22,7 +22,7 @@ export type Move = {
 export type GameObject = {
   W: Player;
   B: Player;
-  moveHistory?: Move[];
+  moveHistory: Move[];
 };
 
 export type SetUserPrefRequest = {

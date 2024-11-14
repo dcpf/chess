@@ -33,9 +33,6 @@ export const saveMove = async (request) => {
 	const gameID = gameIdFactory.getGameID(request.gameID);
 	const obj = await gameDao.getGameObject(gameID.id);
 	const { gameObj } = obj;
-	if (!gameObj.moveHistory) {
-		gameObj.moveHistory = [];
-	}
 
 	if (playerCanMove(gameObj, gameID.key)) {
 
@@ -84,7 +81,7 @@ export const findGamesByEmail = async (email: string) => {
 			gameID = gameIdFactory.getGameID(record._id, gameObj.B.key);
 		}
 		const createDate = formatDate(record.createDate);
-		const lastMoveDate = gameObj.moveHistory ? formatDate(record.modifyDate) : '';
+		const lastMoveDate = gameObj.moveHistory.length ? formatDate(record.modifyDate) : '';
 		return {
 				id: gameID!.compositeID,
 				createDate,
@@ -114,7 +111,7 @@ const buildGameAttrMap = async (gameObj: GameObject, gameID: GameIdObject, persp
 	// vars needed for the game
 	const gameState = {
 		gameID: gameID.compositeID,
-		moveHistory: gameObj.moveHistory ?? [],
+		moveHistory: gameObj.moveHistory,
 		perspective,
 		canMove,
 		whiteEmail: (gameObj.W) ? gameObj.W.email : '',
@@ -159,7 +156,7 @@ const doCreateGame = async (player1Email: string, player2Email: string) => {
 		blackKey = generateKey();
 	}
 
-	// Build the game object, normalizing the email address to lower-case.
+	// Build the game object, normalizing the email addresses to lower-case.
 	const gameObj: GameObject = {
 		W: {
 			email: player1Email.toLowerCase(),
@@ -168,7 +165,8 @@ const doCreateGame = async (player1Email: string, player2Email: string) => {
 		B: {
 			email: player2Email.toLowerCase(),
 			key: blackKey,
-		}
+		},
+		moveHistory: [],
 	};
 
 	const gameID = await gameDao.createGame(gameObj);
@@ -206,8 +204,7 @@ const getPerspective = (gameObj: GameObject, key: string): PlayerColor => {
 };
 
 const getCurrentPlayer = (gameObj: GameObject): PlayerColor => {
-	const { moveHistory = [] } = gameObj;
-	return (moveHistory.length % 2 === 0) ? 'W' : 'B';
+	return (gameObj.moveHistory.length % 2 === 0) ? 'W' : 'B';
 };
 
 const playerCanMove = (gameObj: GameObject, key: string): boolean => {
