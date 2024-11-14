@@ -1,12 +1,6 @@
-'use strict';
-
 const events = require('events');
 
-let eventEmitter;
-if (!eventEmitter) {
-	eventEmitter = new events.EventEmitter();
-}
-
+const eventEmitter = new events.EventEmitter();
 eventEmitter.messages = {
 	SEND_GAME_CREATION_NOTIFICATION: 'sendGameCreationNotification',
 	SEND_INVITE_NOTIFICATION: 'sendInviteNotification',
@@ -15,4 +9,4 @@ eventEmitter.messages = {
 	SEND_FEEDBACK_NOTIFICATION: 'sendFeedbackNotification'
 };
 
-module.exports = eventEmitter;
+export default eventEmitter;

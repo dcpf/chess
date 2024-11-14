@@ -1,15 +1,22 @@
-"use strict";
+import { GameObject, Move } from "../../types";
+import * as customErrors from "../error/customErrors";
 
 const { MongoClient, ObjectID } = require("mongodb");
-const customErrors = require("../error/customErrors");
 
 const GAMES = "games";
 
-const databaseUrl = process.env.MONGODB_URI || global.CONFIG.db.databaseUrl;
+type GameObjectRecord = {
+  _id: string,
+  createDate: Date;
+  modifyDate: Date;
+  gameObj: GameObject;
+};
+
+const databaseUrl = process.env.MONGODB_URI ?? global.CONFIG.db.databaseUrl;
 const mongoClient = new MongoClient(databaseUrl, { useUnifiedTopology: true });
 mongoClient.connect();
 
-const getObjectId = (id) => {
+const getObjectId = (id: string): string => {
   try {
     return new ObjectID(id);
   } catch (err) {
@@ -20,7 +27,7 @@ const getObjectId = (id) => {
 /**
  * Get the game object from the db by gameID.
  */
-const getGameObject = async (gameID) => {
+export const getGameObject = async (gameID: string): Promise<GameObjectRecord> => {
   try {
     return await mongoClient
       .db()
@@ -31,11 +38,7 @@ const getGameObject = async (gameID) => {
   }
 };
 
-/**
- * @param String gameID
- * @param Array moveHistory
- */
-const updateMoveHistory = async (gameID, moveHistory) => {
+export const updateMoveHistory = async (gameID: string, moveHistory: Move[]): Promise<string> => {
   await mongoClient
     .db()
     .collection(GAMES)
@@ -51,10 +54,7 @@ const updateMoveHistory = async (gameID, moveHistory) => {
   return gameID;
 };
 
-/**
- * @param Object gameObj
- */
-const createGame = async (gameObj) => {
+export const createGame = async (gameObj: GameObject): Promise<string> => {
   const obj = {
     createDate: new Date(),
     modifyDate: new Date(),
@@ -72,10 +72,7 @@ const createGame = async (gameObj) => {
   }
 };
 
-/**
- * Find games by email address
- */
-const findGamesByEmail = async (email) => {
+export const findGamesByEmail = async (email: string): Promise<GameObjectRecord[]> => {
   const cursor = mongoClient
     .db()
     .collection(GAMES)
@@ -89,8 +86,3 @@ const findGamesByEmail = async (email) => {
     );
   return await cursor.toArray();
 };
-
-exports.getGameObject = getGameObject;
-exports.updateMoveHistory = updateMoveHistory;
-exports.createGame = createGame;
-exports.findGamesByEmail = findGamesByEmail;

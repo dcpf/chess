@@ -1,18 +1,24 @@
-"use strict";
-
+import { UserPrefs } from "../../types";
 const { MongoClient } = require("mongodb");
+
+type UserPrefsRecord = {
+  createDate: Date;
+  modifyDate: Date;
+  email: string;
+  prefs: UserPrefs;
+};
 
 const USER_PREFS = "userPrefs";
 
-const databaseUrl = process.env.MONGODB_URI || global.CONFIG.db.databaseUrl;
+const databaseUrl = process.env.MONGODB_URI ?? global.CONFIG.db.databaseUrl;
 const mongoClient = new MongoClient(databaseUrl, { useUnifiedTopology: true });
 mongoClient.connect();
 
-const setUserPref = async (email, name, value) => {
+export const setUserPref = async (email: string, name: string, value: unknown) => {
   const userPrefs = await getUserPrefs(email);
-  userPrefs.prefs = userPrefs.prefs || {};
+  userPrefs.prefs = userPrefs.prefs ?? {};
   const modifyDate = new Date();
-  const createDate = userPrefs.createDate || modifyDate;
+  const createDate = userPrefs.createDate ?? modifyDate;
   userPrefs.prefs[name] = valueConverter(value);
   const obj = {
     createDate,
@@ -26,14 +32,15 @@ const setUserPref = async (email, name, value) => {
       .collection(USER_PREFS)
       .updateOne({ email }, { $set: obj }, { upsert: true });
     console.log(`Set user pref for ${email}: ${name} = ${value}`);
-  } catch(_e) {
-    throw new Error(`Error setting user pref for ${email}: ${err.toString()}`)
+  } catch (err: unknown) {
+    const errMsg = err instanceof Error ? err.message : JSON.stringify(err);
+    throw new Error(`Error setting user pref for ${email}: ${errMsg}`);
   }
 };
 
-const getUserPrefs = async (email) => {
+export const getUserPrefs = async (email: string): Promise<UserPrefsRecord> => {
   if (!email) {
-    return {};
+    return {} as UserPrefsRecord;
   }
   const userPrefs = await mongoClient
     .db()
@@ -42,13 +49,10 @@ const getUserPrefs = async (email) => {
   return userPrefs ?? {};
 };
 
-exports.setUserPref = setUserPref;
-exports.getUserPrefs = getUserPrefs;
-
 /**
  * Converts certain values into what we need in the JSON
  */
-const valueConverter = (value) => {
+const valueConverter = (value: unknown): unknown => {
   if (value === "false") {
     return false;
   }

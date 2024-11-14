@@ -1,12 +1,12 @@
-'use strict';
-
+import { ForgotGameIdEmailGameData, GameIdObject, GameObject } from "../types";
+import { buildGameUrl } from "./util";
+import { processTemplate } from './templateHandler';
+import eventEmitter from './eventEmitter';
 const path = require('path');
-const templateHandler = require('./templateHandler');
 const nodemailer = require('nodemailer/lib/nodemailer');
-const eventEmitter = require('./eventEmitter');
 
 const emailServiceConfig = global.CONFIG.emailService;
-const emailSrcDir = path.join(__dirname, 'email');
+const emailSrcDir = path.join(__dirname, '../../templates/email');
 
 let mailTransport;
 if (emailServiceConfig.enabled) {
@@ -25,13 +25,9 @@ if (emailServiceConfig.enabled) {
   };
 }
 
-const buildGameUrl = (gameID) => {
-  return `${global.APP_URL.url}/play/${gameID.compositeID}`;
-};
+const sendGameCreationEmail = (player1Email: string, player2Email: string, gameID: GameIdObject) => {
 
-const sendGameCreationEmail = (player1Email, player2Email, gameID) => {
-
-  const html = templateHandler.processTemplate(`${emailSrcDir}/player1Email.html`, {
+  const html = processTemplate(`${emailSrcDir}/player1Email.html`, {
     player1Email,
     player2Email,
     gameID: gameID.compositeID,
@@ -49,12 +45,12 @@ const sendGameCreationEmail = (player1Email, player2Email, gameID) => {
 
 };
 
-const sendInviteEmail = (gameObj, gameID, move) => {
+const sendInviteEmail = (gameObj: GameObject, gameID: GameIdObject, move: string) => {
 
   const player1Email = gameObj.W.email;
   const player2Email = gameObj.B.email;
 
-  const html = templateHandler.processTemplate(`${emailSrcDir}/player2InviteEmail.html`, {
+  const html = processTemplate(`${emailSrcDir}/player2InviteEmail.html`, {
     player1Email,
     gameID: gameID.compositeID,
     move,
@@ -72,9 +68,9 @@ const sendInviteEmail = (gameObj, gameID, move) => {
 
 }
 
-const sendMoveNotificationEmail = (playerEmail, gameID, move) => {
+const sendMoveNotificationEmail = (playerEmail: string, gameID: GameIdObject, move: string) => {
 
-  const html = templateHandler.processTemplate(`${emailSrcDir}/moveNotificationEmail.html`, {
+  const html = processTemplate(`${emailSrcDir}/moveNotificationEmail.html`, {
     move,
     gameUrl: buildGameUrl(gameID),
     appUrl: global.APP_URL.url
@@ -91,31 +87,11 @@ const sendMoveNotificationEmail = (playerEmail, gameID, move) => {
 
 };
 
-/**
-* @param String email
-* @param Array of game objects
-*/
-const sendForgotGameIdEmail = (email, games) => {
+const sendForgotGameIdEmail = (email: string, games: ForgotGameIdEmailGameData[]) => {
 
-  const numGames = games.length;
-  const gameArray = [];
-
-  for (let i = 0; i < numGames; i++) {
-    const game = games[i];
-    const gameID = game.gameID;
-    gameArray.push(
-      {
-        id: gameID.compositeID,
-        createDate: game.createDate,
-        lastMoveDate: game.lastMoveDate,
-        url: buildGameUrl(gameID)
-      }
-    );
-  };
-
-  const html = templateHandler.processTemplate(`${emailSrcDir}/forgotGameIdEmail.html`, {
+  const html = processTemplate(`${emailSrcDir}/forgotGameIdEmail.html`, {
     email,
-    gameArray
+    games
   });
 
   mailTransport.sendMail({
@@ -129,14 +105,20 @@ const sendForgotGameIdEmail = (email, games) => {
 
 };
 
-const sendFeedbackEmail = (data) => {
+type FeedbackData = {
+  feedback: string;
+  email: string;
+  gameID: string;
+};
+
+const sendFeedbackEmail = (data: FeedbackData) => {
 
   // limit feedback to 1000 chars
   if (data.feedback && data.feedback.length > 1000) {
     data.feedback = data.feedback.substring(0, 1000);
   }
 
-  const html = templateHandler.processTemplate(emailSrcDir + 'feedback.html', {
+  const html = processTemplate(emailSrcDir + 'feedback.html', {
     data
   });
 

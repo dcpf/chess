@@ -3,7 +3,7 @@
 const path = require('path');
 const log4js = require('log4js');
 
-log4js.configure(path.join(__dirname, 'conf/log4js.json'));
+log4js.configure(path.join(__dirname, '../../conf/log4js.json'));
 const logger = log4js.getLogger('server');
 
 //

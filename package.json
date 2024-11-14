@@ -6,7 +6,7 @@
   "author": "David Piersol-Freedman",
   "license": "BSD-2-Clause",
   "engines": {
-    "node": "12.13.1"
+    "node": "20.18.0"
   },
   "bugs": {
     "url": "https://github.com/dcpf/chess/issues"
@@ -17,25 +17,14 @@
     "url": "https://github.com/dcpf/chess.git"
   },
   "scripts": {
+    "tsc": "tsc",
     "build": "grunt deploy",
     "devbuild": "grunt dev",
     "start": "node src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
-    "devstart": "node src/server/app.js --hostName 127.0.0.1 --port 8081 --usePortInLinks",
+    "devstart": "node dist/server/app.js --hostName 127.0.0.1 --port 8081 --usePortInLinks",
     "start-forever": "node_modules/forever/bin/forever start -c 'node --harmony' src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
     "stop-forever": "node_modules/forever/bin/forever stop src/server/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "devDependencies": {
-    "forever": "^0.15.0",
-    "grunt": "^0.4.0",
-    "grunt-cli": "^0.1.0",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-concat": "^0.5.0",
-    "grunt-contrib-copy": "^0.8.0",
-    "grunt-contrib-cssmin": "^0.13.0",
-    "grunt-contrib-jshint": "^0.11.0",
-    "grunt-contrib-jst": "^0.6.0",
-    "grunt-contrib-uglify": "^0.9.0"
   },
   "dependencies": {
     "body-parser": "^1.13.0",
@@ -55,5 +44,18 @@
     "uinexpress": "^0.0.5",
     "underscore": "^1.8.0",
     "validator": "^3.19.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "forever": "^0.15.0",
+    "grunt": "^0.4.0",
+    "grunt-cli": "^0.1.0",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-cssmin": "^0.13.0",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-jst": "^0.6.0",
+    "grunt-contrib-uglify": "^0.9.0"
   }
 }

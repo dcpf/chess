@@ -1,44 +1,51 @@
-'use strict';
+import { CreateGameRequest, ForgotGameIdEmailGameData, GameIdObject, GameObject, SetUserPrefRequest } from "../types";
+import * as gameDao from './dao/mongoGameDAO';
+import * as userPrefsDao from './dao/mongoUserPrefsDAO';
+import eventEmitter from './eventEmitter';
+import * as gameIdFactory from './model/mongoGameIdFactory';
+import { buildGameUrl } from "./util";
+import * as customErrors from './error/customErrors';
 
 const moment = require('moment');
-const gameIdFactory = require('./model/mongoGameIdFactory');
-const gameDao = require('./dao/mongoGameDAO');
-const userPrefsDao = require('./dao/mongoUserPrefsDAO');
 const validator = require('validator');
-const eventEmitter = require('./eventEmitter');
-const customErrors = require('./error/customErrors');
 
 const KEY_CHARS = '123456789';
 
-const createGame = async (postData) => {
-	const { player1Email, player2Email } = postData;
+type PlayerColor = 'B' | 'W';
+
+export const createGame = async (request: CreateGameRequest) => {
+	const { player1Email, player2Email } = request;
 	validateEmailAddress(player1Email, "Email Address is required");
 	validateEmailAddress(player2Email, "Opponent's Email Address is required");
 	return await doCreateGame(player1Email, player2Email);
 };
 
-const enterGame = async (postData) => {
-	if (!postData.gameID.trim()) {
+export const enterGame = async (request) => {
+	if (!request.gameID.trim()) {
 		throw new Error('Game ID is required');
 	}
-	const gameID = gameIdFactory.getGameID(postData.gameID);
+	const gameID = gameIdFactory.getGameID(request.gameID);
 	return await enterExistingGame(gameID);
 };
 
-const saveMove = async (postData) => {
+export const saveMove = async (request) => {
 
-	const gameID = gameIdFactory.getGameID(postData.gameID);
-	const obj = await gameDao.getGameObject(gameID.id)
+	const gameID = gameIdFactory.getGameID(request.gameID);
+	const obj = await gameDao.getGameObject(gameID.id);
 	const { gameObj } = obj;
+	if (!gameObj.moveHistory) {
+		gameObj.moveHistory = [];
+	}
+
 	if (playerCanMove(gameObj, gameID.key)) {
 
-		const { move } = postData;
+		const { move } = request;
 		gameObj.moveHistory.push(move);
 
 		await gameDao.updateMoveHistory(gameID.id, gameObj.moveHistory)
 		console.log(`Updated game ${gameID.id} with move ${move}`);
 		let opponentEmail = '';
-		if (gameObj.moveHistory.length == 1) {
+		if (gameObj.moveHistory.length === 1) {
 			opponentEmail = gameObj.B.email;
 			eventEmitter.emit(eventEmitter.messages.SEND_INVITE_NOTIFICATION, gameObj, gameIdFactory.getGameID(gameID.id, gameObj.B.key), move);
 		} else {
@@ -50,12 +57,12 @@ const saveMove = async (postData) => {
 	}
 };
 
-const updateUserPrefs = async (postData) => {
-	const { userEmail, name, value } = postData;
+export const updateUserPrefs = async (req: SetUserPrefRequest) => {
+	const { userEmail, name, value } = req;
 	return await userPrefsDao.setUserPref(userEmail, name, value);
 };
 
-const findGamesByEmail = async (email) => {
+export const findGamesByEmail = async (email: string) => {
 
 	validateEmailAddress(email, "Email Address is required");
 
@@ -63,50 +70,37 @@ const findGamesByEmail = async (email) => {
 	email = email.toLowerCase();
 
 	const records = await gameDao.findGamesByEmail(email);
-	const numGames = records?.length ?? 0;
-	if (!numGames) {
+	const numGames = records.length;
+	if (numGames === 0) {
 		throw new Error(`No games found for email ${email}`);
 	}
 
-	let games = [],
-		record = null,
-		gameObj = null,
-		gameID = null,
-		createDate = null,
-		lastMoveDate = null;
-	for (let i = 0; i < numGames; i++) {
-		record = records[i];
-		gameObj = record.gameObj;
+	const games = records.map<ForgotGameIdEmailGameData>((record) => {
+		const gameObj = record.gameObj;
+		let gameID: GameIdObject;
 		if (gameObj.W.email === email) {
 			gameID = gameIdFactory.getGameID(record._id, gameObj.W.key);
 		} else if (gameObj.B.email === email) {
 			gameID = gameIdFactory.getGameID(record._id, gameObj.B.key);
 		}
-		createDate = formatDate(record.createDate);
-		lastMoveDate = gameObj.moveHistory ? formatDate(record.modifyDate) : '';
-		games.push(
-			{
-				gameID,
+		const createDate = formatDate(record.createDate);
+		const lastMoveDate = gameObj.moveHistory ? formatDate(record.modifyDate) : '';
+		return {
+				id: gameID!.compositeID,
 				createDate,
-				lastMoveDate
-			}
-		);
-	}
+				lastMoveDate,
+				url: buildGameUrl(gameID!),
+			};
+	});
+
 	eventEmitter.emit(eventEmitter.messages.SEND_FORGOT_GAME_ID_NOTIFICATION, email, games);
-	return { status: 'ok', email: email };
+	return { status: 'ok', email };
 
 };
 
-const sendFeedback = (data) => {
+export const sendFeedback = (data) => {
 	eventEmitter.emit(eventEmitter.messages.SEND_FEEDBACK_NOTIFICATION, data);
 };
-
-exports.createGame = createGame;
-exports.enterGame = enterGame;
-exports.saveMove = saveMove;
-exports.updateUserPrefs = updateUserPrefs;
-exports.findGamesByEmail = findGamesByEmail;
-exports.sendFeedback = sendFeedback;
 
 //
 // private functions
@@ -115,17 +109,17 @@ exports.sendFeedback = sendFeedback;
 /**
 * Generate the gameState and user objects needed by the game.
 */
-const buildGameAttrMap = async (gameObj, gameID, perspective, canMove, error) => {
+const buildGameAttrMap = async (gameObj: GameObject, gameID: GameIdObject, perspective: PlayerColor, canMove: boolean, error?: Error) => {
 
 	// vars needed for the game
 	const gameState = {
 		gameID: gameID.compositeID,
-		moveHistory: gameObj.moveHistory || [],
+		moveHistory: gameObj.moveHistory ?? [],
 		perspective,
 		canMove,
 		whiteEmail: (gameObj.W) ? gameObj.W.email : '',
 		blackEmail: (gameObj.B) ? gameObj.B.email : '',
-		error: error?.message ?? ''
+		error: error?.message ?? '',
 	};
 
 	// user prefs
@@ -133,21 +127,19 @@ const buildGameAttrMap = async (gameObj, gameID, perspective, canMove, error) =>
 	const userPrefs = await userPrefsDao.getUserPrefs(userEmail);
 	const user = {
 		email: userEmail,
-		prefs: userPrefs.prefs || {}
+		prefs: userPrefs.prefs ?? {}
 	};
 	return {
 		gameState,
-		user
+		user,
 	};
 
 };
 
 /**
 * Validate an email address. Throws an error if validation fails.
-* @param String - Email address to validate
-* @param String - Err msg to render for a missing required value
 */
-const validateEmailAddress = (email, requiredMsg) => {
+const validateEmailAddress = (email: string, requiredMsg: string) => {
 	if (!email?.trim()) {
 		throw new Error(requiredMsg);
 	}
@@ -156,7 +148,7 @@ const validateEmailAddress = (email, requiredMsg) => {
 	}
 };
 
-const doCreateGame = async (player1Email, player2Email) => {
+const doCreateGame = async (player1Email: string, player2Email: string) => {
 
 	// Get the keys for each player
 	const whiteKey = generateKey();
@@ -168,14 +160,14 @@ const doCreateGame = async (player1Email, player2Email) => {
 	}
 
 	// Build the game object, normalizing the email address to lower-case.
-	const gameObj = {
+	const gameObj: GameObject = {
 		W: {
 			email: player1Email.toLowerCase(),
-			key: whiteKey
+			key: whiteKey,
 		},
 		B: {
 			email: player2Email.toLowerCase(),
-			key: blackKey
+			key: blackKey,
 		}
 	};
 
@@ -183,17 +175,16 @@ const doCreateGame = async (player1Email, player2Email) => {
 	console.log(`Created game ${gameID}`);
 	const newGameIdObj = gameIdFactory.getGameID(gameID, whiteKey);
 	eventEmitter.emit(eventEmitter.messages.SEND_GAME_CREATION_NOTIFICATION, player1Email, player2Email, newGameIdObj);
-	return buildGameAttrMap(gameObj, newGameIdObj, 'W', true, null);
+	return buildGameAttrMap(gameObj, newGameIdObj, 'W', true);
 
 };
 
-const enterExistingGame = async (gameID) => {
+const enterExistingGame = async (gameID: GameIdObject) => {
 	try {
-		const obj = await gameDao.getGameObject(gameID.id);
-		const { gameObj } = obj;
+		const { gameObj } = await gameDao.getGameObject(gameID.id);
 		const perspective = getPerspective(gameObj, gameID.key);
 		const canMove = playerCanMove(gameObj, gameID.key);
-		return buildGameAttrMap(gameObj, gameID, perspective, canMove, null);
+		return buildGameAttrMap(gameObj, gameID, perspective, canMove);
 	} catch (err) {
 		if (err instanceof customErrors.InvalidGameIdError) {
 			err.message = `Invalid Game ID: ${gameID.compositeID}`;
@@ -202,7 +193,7 @@ const enterExistingGame = async (gameID) => {
 	}
 };
 
-const generateKey = () => {
+const generateKey = (): string => {
 	let s = '';
 	for (let i = 0; i < 5; i++) {
 		s += KEY_CHARS.charAt(Math.floor(Math.random() * KEY_CHARS.length));
@@ -210,35 +201,30 @@ const generateKey = () => {
 	return s;
 };
 
-const getPerspective = (gameObj, key) => {
-	return (gameObj.B.key == key) ? 'B' : 'W';
+const getPerspective = (gameObj: GameObject, key: string): PlayerColor => {
+	return (gameObj.B.key === key) ? 'B' : 'W';
 };
 
-const getCurrentPlayer = (gameObj) => {
-	gameObj.moveHistory = gameObj.moveHistory || [];
-	return (gameObj.moveHistory.length % 2 === 0) ? 'W' : 'B';
+const getCurrentPlayer = (gameObj: GameObject): PlayerColor => {
+	const { moveHistory = [] } = gameObj;
+	return (moveHistory.length % 2 === 0) ? 'W' : 'B';
 };
 
-const playerCanMove = (gameObj, key) => {
+const playerCanMove = (gameObj: GameObject, key: string): boolean => {
 	const whiteKey = gameObj.W.key;
 	const blackKey = gameObj.B.key;
-	let canMove = false;
 	const currentPlayer = getCurrentPlayer(gameObj);
-	if ((key == whiteKey && currentPlayer === 'W') ||
-		(key == blackKey && currentPlayer === 'B')) {
-		canMove = true;
-	}
-	return canMove;
+	return (key === whiteKey && currentPlayer === 'W') || (key === blackKey && currentPlayer === 'B');
 };
 
 /**
 * Gets the email of the current user based on the passed-in key
 */
-const getCurrentUserEmail = (gameObj, key) => {
+const getCurrentUserEmail = (gameObj: GameObject, key: string) => {
 	let email = '';
-	if (gameObj.W && key == gameObj.W.key) {
+	if (gameObj.W && key === gameObj.W.key) {
 		email = gameObj.W.email;
-	} else if (gameObj.B && key == gameObj.B.key) {
+	} else if (gameObj.B && key === gameObj.B.key) {
 		email = gameObj.B.email;
 	}
 	return email;
@@ -247,7 +233,7 @@ const getCurrentUserEmail = (gameObj, key) => {
 /**
 * Format the date as 07/19/2014 06:05 AM EDT
 */
-const formatDate = (date) => {
+const formatDate = (date): string => {
 	// parse the time zone out of the date string
 	const tz = date.toString().split(' ').pop().replace(/[()]/g, '');
 	return moment(date).format('MM/DD/YYYY hh:mm A') + ' ' + tz;

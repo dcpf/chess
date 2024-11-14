@@ -1,4 +1,4 @@
-'use strict';
+import { constructAppUrl } from './util';
 
 const cmndr = require('commander');
 
@@ -13,11 +13,10 @@ const fs = require('fs');
 const path = require('path');
 // instantiate the logger to reset all console logging functions to use log4js
 require('./logger');
-const appUrl = require('./model/appUrl');
 
-// before doing anything more, initialize the configuration
+// before doing anything more, initialize the configuration.
 initConfig();
-require('./emailHandler');
+import './emailHandler';
 
 // express and middleware
 const express = require('express');
@@ -28,7 +27,7 @@ const session = require('express-session');
 const compression = require('compression');
 
 // Timestamp of when the app was started. We use this for caching javascript and css files in the browser.
-const runtimestamp = new Date().getTime();
+const runtimestamp = Date.now();
 
 // Create the express app and socket.io object
 const app = express();
@@ -37,7 +36,7 @@ require('./socket.io.js')(server);
 
 // all environments
 app.set('port', global.APP_URL.port);
-app.set('views', path.join(__dirname, 'view'));
+app.set('views', path.join(__dirname, '../../templates'));
 app.engine('html', require('uinexpress').__express);
 app.set('view engine', 'html');
 
@@ -76,7 +75,7 @@ app.use((req, res, next) => {
 		params = req.query;
 	}
 	req.getParam = (name) => {
-		return params[name] || req.params[name];
+		return params[name] ?? req.params[name];
 	};
 	req.getParams = () => {
 		// add everything from req.params to params
@@ -94,21 +93,17 @@ app.use((req, res, next) => {
 
 // log all requests
 app.use((req, res, next) => {
-	const start = new Date();
+	const start = Date.now();
 	console.log(`${req.method} ${req.url}; IP: ${req.connection.remoteAddress}; User-agent: ${req.headers['user-agent']}`);
 	res.on('finish', () => {
-		const duration = new Date() - start;
+		const duration = Date.now() - start;
 		console.log(`${req.method} ${req.url}; IP: ${req.connection.remoteAddress}; Execution time: ${duration} ms`);
 	});
 	next();
 });
 
-//
-// Routes
-//
-
 // game end-points
-const routes = require('./routes');
+import * as routes from './routes';
 app.get('/', routes.index);
 app.get('/play/*', routes.index);
 app.post('/findGamesByEmail', routes.findGamesByEmail);
@@ -131,7 +126,7 @@ server.listen(global.APP_URL.port, () => {
 function initConfig() {
 
 	// Read the config file and make the config object globally available
-	const configFile = cmndr.configFile || path.join(__dirname, 'conf/config.json');
+	const configFile = cmndr.configFile ?? path.join(__dirname, '../../conf/config.json');
 	let config = {};
 	try {
 		config = JSON.parse(fs.readFileSync(configFile, { encoding: 'utf8' }));
@@ -142,9 +137,9 @@ function initConfig() {
 	global.CONFIG = config;
 
 	// Set the global appUrl object using the host name and port from either the passed-in args or the env vars.
-	const hostName = cmndr.hostName || process.env.DOMAIN;
-	const port = cmndr.port || process.env.PORT;
-	global.APP_URL = appUrl.constructUrl(hostName, port, cmndr.usePortInLinks);
+	const hostName = cmndr.hostName ?? process.env.DOMAIN;
+	const port = cmndr.port ?? process.env.PORT;
+	global.APP_URL = constructAppUrl(hostName, port, cmndr.usePortInLinks);
 
 };
 
@@ -166,7 +161,7 @@ function sendResponse(req, res) {
 			res.status(500).send(err.message);
 		});
 	} else if (responseProps.file) {
-		const obj = responseProps.obj || {};
+		const obj = responseProps.obj ?? {};
 		// add the runtimestamp for versioning css and javascript
 		obj.runtimestamp = runtimestamp;
 		// set layout to false
@@ -184,7 +179,7 @@ function sendResponse(req, res) {
 		// render
 		res.render(responseProps.file, obj);
 	} else {
-		responseProps.obj = responseProps.obj || {};
+		responseProps.obj = responseProps.obj ?? {};
 		res.send(responseProps.obj);
 	}
 
