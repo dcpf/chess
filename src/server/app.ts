@@ -62,7 +62,7 @@ app.use((req, res, next) => {
 	Create a responseProps object on the response object to hold app-specific response properties. Valid attrs are:
 	- responseProps.promise - Promise returned by the router/controller
 	- responseProps.obj - JSON object to be passed back to the client 
-	- responseProps.error - Error to be passed to client the client 
+	- responseProps.error - Error to be passed to the client 
 	- responseProps.file - File to render
 	*/
 	res.responseProps = {};

@@ -1,4 +1,4 @@
-import { GameObject, Move } from "../../types";
+import { GameObject } from "../../types";
 import * as customErrors from "../error/customErrors";
 
 const { MongoClient, ObjectID } = require("mongodb");
@@ -38,7 +38,7 @@ export const getGameObject = async (gameID: string): Promise<GameObjectRecord> =
   }
 };
 
-export const updateMoveHistory = async (gameID: string, moveHistory: Move[]): Promise<string> => {
+export const updateMoveHistory = async (gameID: string, moveHistory: string[]): Promise<string> => {
   await mongoClient
     .db()
     .collection(GAMES)

@@ -1,3 +1,4 @@
+import { FeedbackData } from '../types';
 import * as chessController from './chessController';
 
 export const index = (_req, res, next) => {
@@ -33,8 +34,10 @@ export const updateUserPrefs = (req, res, next) => {
 };
 
 export const sendFeedback = (req, _res, next) => {
-	const params = req.getParams();
-	params.userAgent = req.headers['user-agent'];
+	const params: FeedbackData = {
+		...req.getParams(),
+	  userAgent: req.headers['user-agent'],
+	};
 	chessController.sendFeedback(params);
 	next();
 };

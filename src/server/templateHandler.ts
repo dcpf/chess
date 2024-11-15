@@ -3,7 +3,7 @@ const underscore = require('underscore/underscore');
 
 const templateCache = {};
 
-export const processTemplate = (filename: string, attrs: Record<string, unknown>) => {
+export const processTemplate = (filename: string, attrs: Record<string, unknown>): string => {
 	let template = templateCache[filename];
 	if (!template) {
 		console.log(`Getting ${filename} template from disk`);

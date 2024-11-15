@@ -1,4 +1,4 @@
-import { ForgotGameIdEmailGameData, GameIdObject, GameObject } from "../types";
+import { FeedbackData, ForgotGameIdEmailGameData, GameIdObject, GameObject } from "../types";
 import { buildGameUrl } from "./util";
 import { processTemplate } from './templateHandler';
 import eventEmitter from './eventEmitter';
@@ -105,12 +105,6 @@ const sendForgotGameIdEmail = (email: string, games: ForgotGameIdEmailGameData[]
 
 };
 
-type FeedbackData = {
-  feedback: string;
-  email: string;
-  gameID: string;
-};
-
 const sendFeedbackEmail = (data: FeedbackData) => {
 
   // limit feedback to 1000 chars
@@ -118,7 +112,7 @@ const sendFeedbackEmail = (data: FeedbackData) => {
     data.feedback = data.feedback.substring(0, 1000);
   }
 
-  const html = processTemplate(emailSrcDir + 'feedback.html', {
+  const html = processTemplate(emailSrcDir + '/feedback.html', {
     data
   });
 
