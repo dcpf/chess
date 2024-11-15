@@ -1,5 +1,6 @@
 import {
 	CreateGameRequest,
+	EnterGameRequest,
 	FeedbackData,
 	FindGamesByEmailResponse,
 	ForgotGameIdEmailGameData,
@@ -32,7 +33,7 @@ export const createGame = async (request: CreateGameRequest): Promise<GameContex
 	return await doCreateGame(player1Email, player2Email);
 };
 
-export const enterGame = async (request) => {
+export const enterGame = async (request: EnterGameRequest): Promise<GameContext> => {
 	if (!request.gameID.trim()) {
 		throw new Error('Game ID is required');
 	}

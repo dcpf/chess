@@ -33,3 +33,7 @@ export type GameContext = {
   gameState: GameState;
 	user: User,
 };
+
+export type EnterGameRequest = {
+	gameID: string;
+};
