@@ -37,7 +37,6 @@
     "method-override": "^2.3.0",
     "moment": "^2.8.0",
     "mongodb": "^3.6.4",
-    "morgan": "^1.6.0",
     "nodemailer": "^0.7.0",
     "request": "^2.61.0",
     "socket.io": "^1.2.0",
