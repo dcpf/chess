@@ -1,3 +1,5 @@
+import { Application, Request, Response } from 'express';
+import { Config } from '../types';
 import { constructAppUrl } from './util';
 
 const cmndr = require('commander');
@@ -30,7 +32,7 @@ const compression = require('compression');
 const runtimestamp = Date.now();
 
 // Create the express app and socket.io object
-const app = express();
+const app: Application = express();
 const server = require('http').Server(app);
 require('./socket.io.js')(server);
 
@@ -58,17 +60,11 @@ app.disable('x-powered-by');
 // set up some things we need for the app
 app.use((req, res, next) => {
 
-	/*
-	Create a responseProps object on the response object to hold app-specific response properties. Valid attrs are:
-	- responseProps.promise - Promise returned by the router/controller
-	- responseProps.obj - JSON object to be passed back to the client 
-	- responseProps.error - Error to be passed to the client 
-	- responseProps.file - File to render
-	*/
+	// Create a responseProps object on the response object to hold app-specific response properties
 	res.responseProps = {};
 
 	// Get the passed in params (for either GET, POST or route params), and make them available via req.getParam() and req.getParams()
-	let params = {};
+	let params: Record<string, unknown> = {};
 	if (req.method === 'POST') {
 		params = req.body;
 	} else if (req.method === 'GET') {
@@ -127,7 +123,7 @@ function initConfig() {
 
 	// Read the config file and make the config object globally available
 	const configFile = cmndr.configFile ?? path.join(__dirname, '../../conf/config.json');
-	let config = {};
+	let config = {} as Config;
 	try {
 		config = JSON.parse(fs.readFileSync(configFile, { encoding: 'utf8' }));
 		console.log(`Initialized config file: ${configFile}`);
@@ -149,16 +145,17 @@ After handling the route, send the response. Based on what's in res.responseProp
 - responseProps.file: Render an HTML file
 - other: Send responseProps.obj to the client
 */
-function sendResponse(req, res) {
+function sendResponse(req: Request, res: Response) {
 
 	const { responseProps } = res;
 
 	if (responseProps.promise) {
 		responseProps.promise.then((obj) => {
 			res.send(obj);
-		}).catch((err) => {
-			console.error(err.toString());
-			res.status(500).send(err.message);
+		}).catch ((err: unknown) => {
+			const errMsg = err instanceof Error ? err.message : JSON.stringify(err);
+			console.error(errMsg);
+			res.status(500).send(errMsg);
 		});
 	} else if (responseProps.file) {
 		const obj = responseProps.obj ?? {};

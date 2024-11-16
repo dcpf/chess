@@ -1,6 +1,6 @@
-import { GameIdObject } from "../types";
+import { AppUrl, GameIdObject } from "../types";
 
-export function constructAppUrl(domain: string, port: string, usePortInLinks: boolean) {
+export function constructAppUrl(domain: string, port: string, usePortInLinks: boolean): AppUrl {
 
 	let url = `http://${domain}`;
 	if (usePortInLinks && port) {

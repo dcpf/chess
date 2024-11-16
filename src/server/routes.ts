@@ -1,39 +1,40 @@
+import { NextFunction, Request, Response } from 'express';
 import { FeedbackData } from '../types';
 import * as chessController from './chessController';
 
-export const index = (_req, res, next) => {
+export const index = (_req: Request, res: Response, next: NextFunction) => {
 	res.responseProps.file = 'index';
 	// add the game config (as a string) needed by the client
 	res.responseProps.obj = { config: JSON.stringify(getGameConfig()) };
 	next();
 };
 
-export const findGamesByEmail = (req, res, next) => {
-	res.responseProps.promise = chessController.findGamesByEmail(req.getParam('email'));
+export const findGamesByEmail = (req: Request, res: Response, next: NextFunction) => {
+	res.responseProps.promise = chessController.findGamesByEmail(req.getParam('email') as string);
 	next();
 };
 
-export const createGame = (req, res, next) => {
+export const createGame = (req: Request, res: Response, next: NextFunction) => {
 	res.responseProps.promise = chessController.createGame(req.getParams());
 	next();
 };
 
-export const enterGame = (req, res, next) => {
+export const enterGame = (req: Request, res: Response, next: NextFunction) => {
 	res.responseProps.promise = chessController.enterGame(req.getParams());
 	next();
 };
 
-export const saveMove = (req, res, next) => {
+export const saveMove = (req: Request, res: Response, next: NextFunction) => {
 	res.responseProps.promise = chessController.saveMove(req.getParams());
 	next();
 };
 
-export const updateUserPrefs = (req, res, next) => {
+export const updateUserPrefs = (req: Request, res: Response, next: NextFunction) => {
 	res.responseProps.promise = chessController.updateUserPrefs(req.getParams());
 	next();
 };
 
-export const sendFeedback = (req, _res, next) => {
+export const sendFeedback = (req: Request, _res: Response, next: NextFunction) => {
 	const params: FeedbackData = {
 		...req.getParams(),
 	  userAgent: req.headers['user-agent'],
@@ -42,7 +43,7 @@ export const sendFeedback = (req, _res, next) => {
 	next();
 };
 
-export const logClientError = (req, _res, next) => {
+export const logClientError = (req: Request, _res: Response, next: NextFunction) => {
 	console.log(`Client error: ${JSON.stringify(req.getParams())}; User agent: ${req.headers['user-agent']}`);
 	next();
 };

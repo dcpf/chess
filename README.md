@@ -12,7 +12,7 @@ npm run devbuild
 
 3. Run the app
 ```
-npm run start
+npm run devstart
 ```
 
 Access the app at: http://127.0.0.1:8081

@@ -6,7 +6,7 @@
     <th>Date Created</th>
     <th>Last Move</th>
   </tr>
-  <% _.each(gameArray, function(game) { %>
+  <% _.each(games, function(game) { %>
     <tr>
       <td><a href="<%= game.url %>"><%= game.id %></a></td>
       <td><%= game.createDate %></td>
