@@ -77,7 +77,7 @@ module.exports = function(grunt) {
                         variable: 'data'
                     },
                     processName: function(filename) {
-                        // Shortens the template name to just the file name with no extension. E.g.: src/templates/playerInfo.html > playerInfo
+                        // Shortens the template name to just the file name with no extension. E.g.: templates/playerInfo.html > playerInfo
                         return filename.split('/').pop().split('.').shift();
                     },
                     processContent: function(src) {
@@ -86,7 +86,7 @@ module.exports = function(grunt) {
                     }
                 },
                 files: {
-                    'build/compiledTemplates.js': ['src/templates/*.html']
+                    'build/compiledTemplates.js': ['templates/*.html']
                 }
             }
         },
