@@ -4,4 +4,4 @@
 
 const templates = new Templates();
 const appContext = new AppContext(chessAttrs.config);
-Backbone.history.start({pushState: true});
+Backbone.history.start({ pushState: true });

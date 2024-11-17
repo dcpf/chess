@@ -53,7 +53,7 @@ const GameManager = function (attrs) {
 
             $("#progressDialog").modal();
             $.post('/enterGame', {
-                gameID: gameID
+                gameID,
             })
             .done(function(res) {
                 var gameContext = self.appContext.getGameContext(res.user, res.gameState);
@@ -78,8 +78,8 @@ const GameManager = function (attrs) {
             var gameContext = self.appContext.getGameContext();
             var gameID = gameContext.getGameID();
             $.post('/saveMove', {
-                gameID: gameID,
-                move: notation
+                gameID,
+                move: notation,
             })
             .done(function(res) {
                 self.eventHandler.trigger(self.eventHandler.messageNames.MOVE_SAVED, res);
@@ -95,9 +95,9 @@ const GameManager = function (attrs) {
             var gameContext = self.appContext.getGameContext();
             var gameID = gameContext ? gameContext.getGameID() : '';
             $.post('/feedback', {
-                feedback: feedback,
-                email: email,
-                gameID: gameID
+                feedback,
+                email,
+                gameID,
             })
             .always(function() {
                 $("#progressDialog").modal('hide');
@@ -112,7 +112,7 @@ const GameManager = function (attrs) {
             var self = this;
             $("#progressDialog").modal();
             $.post('/findGamesByEmail', {
-              email: email
+              email,
             })
             .done(function(res) {
               self.eventHandler.trigger(self.eventHandler.messageNames.FOUND_GAMES_BY_EMAIL, res);

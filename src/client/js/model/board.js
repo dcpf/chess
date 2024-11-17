@@ -454,10 +454,7 @@ const Board = Backbone.Model.extend({
     _updateLegalMovesMap: function (piece, toRow, toCol) {
         if (this._hypothetical || !this.isKingInCheck(piece, toRow, toCol)) {
             var id = piece.id;
-            var legalMoves = this.legalMovesMap[id];
-            if (!legalMoves) {
-                legalMoves = [];
-            }
+            var legalMoves = this.legalMovesMap[id] ?? [];
             legalMoves.push('' + toRow + toCol);
             this.legalMovesMap[id] = legalMoves;
         }

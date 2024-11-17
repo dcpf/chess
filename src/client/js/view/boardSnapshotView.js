@@ -103,8 +103,8 @@ const BoardSnapshotView = BoardView.extend({
             for (var j in moveArray) {
                 var moveObj = {
                     moveIndex: i,
-                    notation: notation,
-                    move: moveArray[j]
+                    notation,
+                    move: moveArray[j],
                 };
                 this.moveObjArray.push(moveObj);
             }

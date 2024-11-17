@@ -37,8 +37,8 @@ const User = Backbone.Model.extend({
     _updateUserPrefs: function (name, value) {
         $.post('/updateUserPrefs', {
             userEmail: this.get('email'),
-            name: name,
-            value: value
+            name,
+            value,
         });
     }
 

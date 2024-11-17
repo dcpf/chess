@@ -13,7 +13,7 @@ const PlayerInfoView = View.extend({
 
         const data = {
             whiteEmail: this.gameState.getWhiteEmail(),
-            blackEmail: this.gameState.getBlackEmail()
+            blackEmail: this.gameState.getBlackEmail(),
         };
         this.initTemplate('playerInfo', data);
 

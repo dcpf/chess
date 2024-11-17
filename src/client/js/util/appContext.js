@@ -11,14 +11,14 @@ const AppContext = function (configData) {
     var config = new Config(configData);
     var eventHandler = new EventHandler();
     var gameManager = new GameManager({
-        eventHandler: eventHandler,
-        appContext: this
+        eventHandler,
+        appContext: this,
     });
     var router = new Router({
-        gameManager: gameManager
+        gameManager,
     });
     var genericDialogView = new GenericDialogView({
-        eventHandler: eventHandler
+        eventHandler,
     });
     
     this.getEnterScreenContext = function () {
@@ -26,11 +26,11 @@ const AppContext = function (configData) {
         enterScreenContext = enterScreenContext || {
             enterGameView: new EnterGameView({
                 parent: $('#enterGameView'),
-                eventHandler: eventHandler,
-                config: config
+                eventHandler,
+                config,
             }),
             forgotGameIdDialogView: new ForgotGameIdDialogView({
-                eventHandler: eventHandler
+                eventHandler,
             })
         };
     
@@ -101,11 +101,11 @@ const AppContext = function (configData) {
             var playerEmail = userData.email;
             var opponentEmail = (gameStateData.whiteEmail === playerEmail) ? gameStateData.blackEmail : gameStateData.whiteEmail;
             new SocketIO({
-                eventHandler: eventHandler,
+                eventHandler,
                 url: config.getAppUrl(),
                 gameID: gameStateData.gameID,
-                playerEmail: playerEmail,
-                opponentEmail: opponentEmail
+                playerEmail,
+                opponentEmail,
             });
         }
 
@@ -133,52 +133,52 @@ const AppContext = function (configData) {
         var user = new User(userData);
         var gameState = new GameState(gameStateData);
         var board = new Board({
-            eventHandler: eventHandler,
-            notationConverter: notationConverter,
-            capturedPieces: capturedPieces,
-            moveHistory: moveHistory
+            eventHandler,
+            notationConverter,
+            capturedPieces,
+            moveHistory,
         });
         var boardSnapshotView = new BoardSnapshotView({
-            eventHandler: eventHandler,
-            notationConverter: notationConverter,
-            moveHistory: moveHistory
+            eventHandler,
+            notationConverter,
+            moveHistory,
         });
         var boardView = new BoardView({
             parent: $('#chessBoardContainer'),
-            eventHandler: eventHandler,
-            gameState: gameState,
-            board: board,
-            notationConverter: notationConverter,
-            user: user
+            eventHandler,
+            gameState,
+            board,
+            notationConverter,
+            user,
         });
         var capturedPiecesView = new CapturedPiecesView({
             parent: $('#capturedPiecesContainer'),
-            capturedPieces: capturedPieces
+            capturedPieces,
         });
         var confirmMoveDialogView = new ConfirmMoveDialogView({
-            eventHandler: eventHandler
+            eventHandler,
         });
         var feedbackDialogView = new FeedbackDialogView({
-            eventHandler: eventHandler,
-            user: user
+            eventHandler,
+            user,
         });
         var messagesView = new MessagesView({
             parent: $('#messageContainer'),
-            eventHandler: eventHandler,
-            board: board
+            eventHandler,
+            board,
         });
         var moveHistoryView = new MoveHistoryView({
             parent: $('#moveHistoryContainer'),
-            eventHandler: eventHandler,
-            moveHistory: moveHistory
+            eventHandler,
+            moveHistory,
         });
         var opponentHasMovedDialogView = new OpponentHasMovedDialogView({
-            eventHandler: eventHandler
+            eventHandler,
         });
         var optionsMenuView = new OptionsMenuView({
             parent: $('#optionsMenuContainer'),
-            eventHandler: eventHandler,
-            user: user
+            eventHandler,
+            user,
         });
         var playGameView = new PlayGameView({
             parent: $('#playGameView')
@@ -189,29 +189,29 @@ const AppContext = function (configData) {
         if (!playerInfoView) {
             playerInfoView = new PlayerInfoView({
                 parent: $('#playerInfoContainer'),
-                eventHandler: eventHandler,
-                gameState: gameState
+                eventHandler,
+                gameState,
             });
         }
 
         gameContext = {
-            notationConverter: notationConverter,
-            capturedPieces: capturedPieces,
-            moveHistory: moveHistory,
-            user: user,
-            gameState: gameState,
-            board: board,
-            boardSnapshotView: boardSnapshotView,
-            boardView: boardView,
-            capturedPiecesView: capturedPiecesView,
-            confirmMoveDialogView: confirmMoveDialogView,
-            feedbackDialogView: feedbackDialogView,
-            messagesView: messagesView,
-            moveHistoryView: moveHistoryView,
-            optionsMenuView: optionsMenuView,
-            opponentHasMovedDialogView: opponentHasMovedDialogView,
-            playerInfoView: playerInfoView,
-            playGameView: playGameView
+            notationConverter,
+            capturedPieces,
+            moveHistory,
+            user,
+            gameState,
+            board,
+            boardSnapshotView,
+            boardView,
+            capturedPiecesView,
+            confirmMoveDialogView,
+            feedbackDialogView,
+            messagesView,
+            moveHistoryView,
+            optionsMenuView,
+            opponentHasMovedDialogView,
+            playerInfoView,
+            playGameView,
         };
 
         // Perform some init functions
