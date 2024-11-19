@@ -1,4 +1,5 @@
 import { FeedbackData, ForgotGameIdEmailGameData, GameIdObject, GameObject } from "../types";
+import { decrypt } from './crypto';
 import { buildGameUrl } from "./util";
 import { processTemplate } from './templateHandler';
 import eventEmitter from './eventEmitter';
@@ -14,7 +15,7 @@ if (emailServiceConfig.enabled) {
     service: emailServiceConfig.serviceName,
     auth: {
       user: emailServiceConfig.user,
-      pass: emailServiceConfig.pass
+      pass: decrypt(emailServiceConfig.pass)
     }
   });
 } else {
