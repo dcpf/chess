@@ -13,6 +13,7 @@
 		"privateKey": "6Lee-f4SAAAAAPW3KAWGevBYFW5s6nSfTx0szcd-"
 	},
 	"db": {
-		"databaseUrl": "mongodb://localhost:27017"
+		"databaseUrl": "mongodb+srv://chess-by-email:<password>@cluster0.sucsb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+		"pass": "28096786629b900f4f64d0e2c29733a2"
 	}
 }

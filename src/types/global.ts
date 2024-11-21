@@ -4,23 +4,30 @@ export type AppUrl = {
   port: string;
 };
 
+type EmailSvcConfig = {
+  enabled: boolean;
+  serviceName: string;
+  fromAddress: string;
+  user: string;
+  pass: string;
+};
+
+type RecaptchaConfig = {
+  enabled: boolean;
+  verifyUrl: string;
+  publicKey: string;
+  privateKey: string;
+};
+
+type DbConfig = {
+  databaseUrl: string;
+  pass: string;
+};
+
 export type Config = {
-  emailService: {
-    enabled: boolean;
-    serviceName: string;
-    fromAddress: string;
-    user: string;
-    pass: string;
-  },
-  recaptcha: {
-    enabled: boolean;
-    verifyUrl: string;
-    publicKey: string;
-    privateKey: string;
-  },
-  db: {
-    databaseUrl: string;
-  }
+  emailService: EmailSvcConfig;
+  recaptcha: RecaptchaConfig;
+  db: DbConfig;
 };
 
 type ResponseProps = {

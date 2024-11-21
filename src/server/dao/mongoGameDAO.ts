@@ -1,7 +1,8 @@
 import { GameObject } from "../../types";
 import * as customErrors from "../error/customErrors";
+import { getMongoClient } from "./mongoClient";
 
-const { MongoClient, ObjectID } = require("mongodb");
+const { ObjectID } = require("mongodb");
 
 const GAMES = "games";
 
@@ -11,10 +12,6 @@ type GameObjectRecord = {
   modifyDate: Date;
   gameObj: GameObject;
 };
-
-const databaseUrl = process.env.MONGODB_URI ?? global.CONFIG.db.databaseUrl;
-const mongoClient = new MongoClient(databaseUrl, { useUnifiedTopology: true });
-mongoClient.connect();
 
 const getObjectId = (id: string): string => {
   try {
@@ -29,6 +26,7 @@ const getObjectId = (id: string): string => {
  */
 export const getGameObject = async (gameID: string): Promise<GameObjectRecord> => {
   try {
+    const mongoClient = await getMongoClient();
     return await mongoClient
       .db()
       .collection(GAMES)
@@ -39,6 +37,7 @@ export const getGameObject = async (gameID: string): Promise<GameObjectRecord> =
 };
 
 export const updateMoveHistory = async (gameID: string, moveHistory: string[]): Promise<string> => {
+  const mongoClient = await getMongoClient();
   await mongoClient
     .db()
     .collection(GAMES)
@@ -62,6 +61,7 @@ export const createGame = async (gameObj: GameObject): Promise<string> => {
   };
 
   try {
+    const mongoClient = await getMongoClient();
     const res = await mongoClient
       .db()
       .collection(GAMES)
@@ -73,6 +73,7 @@ export const createGame = async (gameObj: GameObject): Promise<string> => {
 };
 
 export const findGamesByEmail = async (email: string): Promise<GameObjectRecord[]> => {
+  const mongoClient = await getMongoClient();
   const cursor = mongoClient
     .db()
     .collection(GAMES)

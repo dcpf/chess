@@ -1,5 +1,5 @@
 import { UserPrefs } from "../../types";
-const { MongoClient } = require("mongodb");
+import { getMongoClient } from "./mongoClient";
 
 type UserPrefsRecord = {
   createDate: Date;
@@ -9,10 +9,6 @@ type UserPrefsRecord = {
 };
 
 const USER_PREFS = "userPrefs";
-
-const databaseUrl = process.env.MONGODB_URI ?? global.CONFIG.db.databaseUrl;
-const mongoClient = new MongoClient(databaseUrl, { useUnifiedTopology: true });
-mongoClient.connect();
 
 export const setUserPref = async (email: string, name: string, value: unknown) => {
   const userPrefs = await getUserPrefs(email);
@@ -27,6 +23,7 @@ export const setUserPref = async (email: string, name: string, value: unknown) =
     prefs: userPrefs.prefs,
   };
   try {
+    const mongoClient = await getMongoClient();
     const result = await mongoClient
       .db()
       .collection(USER_PREFS)
@@ -42,6 +39,7 @@ export const getUserPrefs = async (email: string): Promise<UserPrefsRecord> => {
   if (!email) {
     return {} as UserPrefsRecord;
   }
+  const mongoClient = await getMongoClient();
   const userPrefs = await mongoClient
     .db()
     .collection(USER_PREFS)
