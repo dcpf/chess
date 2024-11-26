@@ -23,6 +23,7 @@
     "full-dev-build": "npm run tsc && npm run devbuild",
     "start": "node dist/server/app.js",
     "devstart": "node dist/server/app.js --hostName 127.0.0.1 --port 8081 --usePortInLinks",
+    "vercel-build-and-start": "npm run full-dev-build && npm run start",
     "start-forever": "node_modules/forever/bin/forever start -c 'node --harmony' src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
     "stop-forever": "node_modules/forever/bin/forever stop src/server/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
