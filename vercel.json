@@ -1,17 +1,5 @@
 {
   "version": 2,
   "buildCommand": "npm run full-dev-build",
-  "devCommand": "npm run start",
-  "builds": [
-    {
-      "src": "./app.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
-  ]
+  "devCommand": "npm run start"
 }
