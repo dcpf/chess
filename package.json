@@ -2,7 +2,7 @@
   "name": "chess",
   "version": "0.0.0",
   "description": "Dave's Chess By Email",
-  "main": "/",
+  "main": "app.js",
   "author": "David Piersol-Freedman",
   "license": "BSD-2-Clause",
   "engines": {
