@@ -2,6 +2,8 @@
   "version": 2,
   "builds": [
     {
+      "build": "npm run full-dev-build",
+      "start": "npm run start",
       "src": "./app.js",
       "use": "@vercel/node"
     }
