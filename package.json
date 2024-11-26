@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/dcpf/chess/issues"
   },
-  "homepage": "https://github.com/dcpf/chess",
+  "homepage": "http://dcpf.github.io/chess",
   "repository": {
     "type": "git",
     "url": "https://github.com/dcpf/chess.git"
@@ -22,6 +22,8 @@
     "devbuild": "grunt dev",
     "start": "node src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
     "devstart": "node dist/server/app.js --hostName 127.0.0.1 --port 8081 --usePortInLinks",
+    "predeploy" : "npm run tsc && npm run devbuild",
+    "deploy" : "gh-pages -d build",
     "start-forever": "node_modules/forever/bin/forever start -c 'node --harmony' src/server/app.js --hostName 127.0.0.1 --port 8080 --usePortInLinks",
     "stop-forever": "node_modules/forever/bin/forever stop src/server/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -48,6 +50,7 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.9.0",
     "forever": "^0.15.0",
+    "gh-pages": "^6.2.0",
     "grunt": "^0.4.0",
     "grunt-cli": "^0.1.0",
     "grunt-contrib-clean": "^0.6.0",
