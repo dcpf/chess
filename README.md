@@ -1,4 +1,9 @@
-To run in dev mode:
+App is currently hosted on render.com: https://chess-2xoz.onrender.com/
+
+This is on render.com's free tier, so please allow ~15 seconds for the node process to start up on initial hit to the URL above.
+
+
+To run on your local machine:
 
 1. Transpile TypeScript to JavaScript
 ```
